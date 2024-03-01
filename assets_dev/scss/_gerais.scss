@@ -1,0 +1,60 @@
+html,
+body {
+  width: 100%;
+  font-size: 16px;
+}
+
+.sessao {
+  width: 100%;
+  padding: 8em 0em;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.titulo {
+  margin-bottom: 2em;
+}
+
+.input-group-text {
+  background-color: #ffc107 !important;
+}
+
+.form-control {
+  border: 1px solid #ffc107;
+  border-radius: 5px;
+  padding-left: 1em;
+  box-shadow: none;
+  height: 50px;
+  color: #ffc107;
+
+  &:focus {
+    box-shadow: 0 0 0 0.25rem #dfc166 !important;
+  }
+}
+
+.accordion-button {
+  background-color: $cor_escura_forte;
+  color: #f1efea !important;
+  border: 1px solid #ffc107 !important;
+}
+
+.accordion-button.collapsed {
+  background-color: #f1f0ed !important;
+  border: 1px solid #ffc107 !important;
+  color: $cor_escura_forte;
+}
+
+.accordion-body {
+  color: $cor_escura_forte;
+}
+
+.btn-solicitacao {
+    &:hover{
+    background-color: #343a40 !important;
+    color: #fff;
+    box-shadow: 0px 0px 10px #fff;
+    transition: 0.3s;
+  }
+}

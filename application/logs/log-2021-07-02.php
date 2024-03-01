@@ -1,0 +1,37 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2021-07-02 14:02:21 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:02:22 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:02:23 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:08:53 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:08:54 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:13:13 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:13:14 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:15:50 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:15:50 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:16:34 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:16:34 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:16:43 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:16:44 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:17:20 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:17:21 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:17:40 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:17:41 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:18:13 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:18:14 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:18:56 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:18:56 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:19:10 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:19:11 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:19:25 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:19:25 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:19:35 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:19:36 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:19:49 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:19:49 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:22:14 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:22:14 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:25:48 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:25:49 --> 404 Page Not Found: Assets/img
+ERROR - 2021-07-02 14:27:19 --> 404 Page Not Found: Assets/js
+ERROR - 2021-07-02 14:27:20 --> 404 Page Not Found: Assets/img

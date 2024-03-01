@@ -1,0 +1,178 @@
+#pagina-principal {
+  width: 100%;
+  min-height: 100vh;
+
+  .header-menu {
+    background-color: white;
+    box-shadow: 3px 3px 3px rgba($color: #000000, $alpha: 0.3);
+
+    .navbar-nav {
+      .nav-link {
+        color: #343a40;
+        &:hover {
+          color: #ffc107;
+          transition: 0.5s;
+        }
+        @media (max-width: 800px) {
+          .custom-control-label {
+            margin-left: 2.3em !important;
+          }
+        }
+      }
+    }
+  }
+
+  .home {
+    background: white;
+    background-image: url("../img/simple-wave-lines-background-35.png");
+    background-position: right center;
+    background-size: cover;
+    .titulo {
+      color: #ffc107;
+    }
+    .subtitulo {
+      color: #343a40;
+    }
+
+    .area-contato-topo {
+      a {
+        font-size: 30px !important;
+        color: #ffc107;
+        &:hover {
+          color: $cor_escura_forte;
+          transition: 0.4s;
+        }
+      }
+    }
+  }
+
+  .servicos {
+    background-color: $cor_amarelo_escuro;
+
+    color: white;
+
+    ul {
+      li {
+        i {
+          font-size: 1.5em;
+        }
+        span {
+          font-size: 1.5em;
+          margin-left: 1em;
+        }
+      }
+    }
+  }
+
+  .vantagens {
+    background-color: white;
+    color: #ffc107;
+
+    ul {
+      li {
+        i {
+          font-size: 1.5em;
+        }
+        span {
+          font-size: 1.5em;
+          margin-left: 1em;
+        }
+      }
+    }
+  }
+
+  .sobre {
+    text-align: center;
+    background-color: $cor_amarelo_escuro;
+    color: white;
+
+    @media (max-width: 800px) {
+      text-align: start;
+    }
+
+    .figcaption {
+      max-width: 100px;
+      max-height: 100px;
+      min-width: 80px;
+      min-height: 80px;
+      background-color: white;
+      padding: 5px;
+      border-radius: 50%;
+      text-align: center;
+
+      img {
+        width: 90%;
+        margin: 0.9em auto;
+
+        &.img-small {
+          width: 125% !important;
+          margin: 1.7em -10px !important;
+        }
+
+        &.img-midium {
+          width: 110% !important;
+          margin: 1.4em -10px !important;
+        }
+
+        &.img-midium-other {
+          margin: 2.4em -10px !important;
+          width: 100% !important;
+        }
+      }
+    }
+  }
+
+  .duvidas-frequentes {
+    background-color: white;
+    color: #ffc107;
+
+    .accordion {
+      align-self: center;
+      .accordion-item {
+        margin-bottom: 1em;
+      }
+    }
+  }
+
+  .contato {
+    background-color: $cor_amarelo_escuro;
+    color: white;
+
+    .btn-contato {
+      background-color: white;
+      color: $cor_escura_padrao;
+
+      &:hover {
+        background-color: $cor_escura_padrao;
+        color: white;
+        transition: 0.5s;
+      }
+    }
+  }
+}
+
+footer {
+  .titulo {
+    border-bottom: 1px solid grey;
+  }
+
+  hr {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 1.5em;
+  }
+
+  a {
+    font-size: 18px;
+    color: $cor_amarelo_escuro;
+
+    &:hover {
+      color: $cor_escura_noite;
+      transition: 0.3s;
+    }
+
+    &.link-social {
+      font-size: 30px;
+    }
+  }
+}
