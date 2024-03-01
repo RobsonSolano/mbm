@@ -1,0 +1,4 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2022-07-15 09:01:10 --> Severity: Core Warning --> PHP Startup: Unable to load dynamic library 'libXrender.so' (tried: /usr/lib/php/20190902/libXrender.so (/usr/lib/php/20190902/libXrender.so: cannot open shared object file: No such file or directory), /usr/lib/php/20190902/libXrender.so.so (/usr/lib/php/20190902/libXrender.so.so: cannot open shared object file: No such file or directory)) Unknown 0
+ERROR - 2022-07-15 09:01:53 --> Severity: Core Warning --> PHP Startup: Unable to load dynamic library 'libXrender.so' (tried: /usr/lib/php/20190902/libXrender.so (/usr/lib/php/20190902/libXrender.so: cannot open shared object file: No such file or directory), /usr/lib/php/20190902/libXrender.so.so (/usr/lib/php/20190902/libXrender.so.so: cannot open shared object file: No such file or directory)) Unknown 0

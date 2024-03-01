@@ -1,0 +1,76 @@
+#pagina-principal.pagina-dark {
+  background-color: #343a40;
+  color: white !important;
+
+  .navbar {
+    background-color: #292d31 !important;
+    p,
+    a,
+    h1,
+    h2,
+    h3,
+    h4 {
+      color: white !important;
+    }
+  }
+
+  .home {
+    background-color: #343a40 !important;
+    background-image: url("../img/simple-wave-lines-background-35.png");
+    background-position: right center;
+    background-size: cover;
+    .titulo {
+      color: #ffc107;
+    }
+    .subtitulo {
+      color: white;
+    }
+  }
+
+  .servicos {
+    color: white !important;
+    background-color: $cor_escura_noite;
+  }
+
+  .vantagens {
+    color: #ffc107;
+    background-color: $cor_escura_padrao;
+  }
+
+  .sobre {
+    color: white !important;
+    background-color: $cor_escura_noite;
+  }
+
+  .duvidas-frequentes {
+    color: #ffc107;
+    background-color: $cor_escura_padrao;
+  }
+
+  .contato {
+    color: white !important;
+    background-color: $cor_escura_noite;
+
+    .btn-contato {
+      background-color: $cor_amarelo_padrao;
+      color: white;
+
+      &:hover {
+        background-color: white;
+        color: $cor_escura_padrao;
+        transition: 0.5s;
+      }
+    }
+  }
+  footer {
+    background-color: $cor_escura_padrao;
+
+    a {
+      color: white;
+
+      &:hover {
+        color: $cor_amarelo_escuro;
+      }
+    }
+  }
+}
