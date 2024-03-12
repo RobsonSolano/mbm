@@ -104,3 +104,4 @@ define('QUANTIDADE_PAGINACAO', 15);
 define('NOME_PROJETO', 'Afiliou');
 define('ABS_PATH_UPLOAD_PRODUTOS', 'upload/produtos/');
 define('ABS_PATH_UPLOAD_CATEGORIA', 'upload/categorias/');
+define('APPLICATION_NAME', 'MBM Climatização');

@@ -15,15 +15,44 @@
   }
 
   .home {
-    background-color: #343a40 !important;
-    background-image: url("../img/simple-wave-lines-background-35.png");
+    background-image: url("../img/bg-banner.png");
     background-position: right center;
     background-size: cover;
-    .titulo {
-      color: #ffc107;
+    background-repeat: no-repeat;
+    padding: 10em 0 8em 0 !important;
+    margin-top: 4em;
+
+    @media (max-width: 1024px){
+      background-size: 250%;
+      background-position: left center;
     }
-    .subtitulo {
-      color: white;
+
+    @media (max-width: 767px) {
+      padding: 5em 0 4em 0 !important;
+      background-position: left bottom;
+      background-size: 450%;
+    }
+
+    .titulo{
+      font-weight: 600;
+      font-size: 3em;
+      
+       @media (max-width: 1024px) {
+        font-size: 2em;
+      }
+
+      @media (max-width: 767px) {
+        color: #fff;
+        font-size: 2.5em;
+      }
+    }
+
+    .descricao{
+      font-size: 18px;
+      line-height: 1.8em;
+      @media (max-width: 768px) {
+        color:  #fff;
+      }
     }
   }
 
@@ -33,7 +62,7 @@
   }
 
   .vantagens {
-    color: #ffc107;
+    color: #3A94E8;
     background-color: $cor_escura_padrao;
   }
 
@@ -43,7 +72,7 @@
   }
 
   .duvidas-frequentes {
-    color: #ffc107;
+    color: #3A94E8;
     background-color: $cor_escura_padrao;
   }
 
@@ -73,4 +102,13 @@
       }
     }
   }
+}
+
+
+.navbar-light .navbar-toggler{
+  border-color: #fff !important;
+  
+}
+.navbar-light .navbar-toggler-icon{
+  filter: invert(1);
 }
