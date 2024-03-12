@@ -10,7 +10,7 @@
       .nav-link {
         color: #343a40;
         &:hover {
-          color: #ffc107;
+          color: #3a94e8;
           transition: 0.5s;
         }
         @media (max-width: 800px) {
@@ -22,27 +22,60 @@
     }
   }
 
+  // .home {
+  //   background: #343a40;
+  //   background-image: url("../img/bg-topo-home.png");
+  //   background-position: right center;
+  //   background-size: cover;
+  //   padding: 2em 0 0em 0 !important;
+
+  //   @media (max-width: 998px) {
+  //     padding: 5em 0 2em 0 !important;
+  //   }
+
+  //   @media (max-width: 768px) {
+  //     padding: 5em 0 !important;
+  //     margin-top: 4.5em;
+  //   }
+  //   .titulo {
+  //     color: #3a94e8;
+  //   }
+  //   .subtitulo {
+  //     color: #343a40;
+  //   }
+
+  //   .area-contato-topo {
+  //     a {
+  //       font-size: 30px !important;
+  //       color: #3a94e8;
+  //       &:hover {
+  //         color: $cor_escura_forte;
+  //         transition: 0.4s;
+  //       }
+  //     }
+  //   }
+  // }
+
   .home {
-    background: white;
-    background-image: url("../img/simple-wave-lines-background-35.png");
+    background-image: url("../img/bg-banner.png");
     background-position: right center;
-    background-size: cover;
-    .titulo {
-      color: #ffc107;
-    }
-    .subtitulo {
-      color: #343a40;
+    background-size: contain;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    padding: 10em 0 12em 0 !important;
+
+    @media (max-width: 768px) {
+      padding: 6em 0 3em 0 !important;
+      margin-right: 3em;
     }
 
-    .area-contato-topo {
-      a {
-        font-size: 30px !important;
-        color: #ffc107;
-        &:hover {
-          color: $cor_escura_forte;
-          transition: 0.4s;
-        }
-      }
+    .titulo{
+      font-weight: 600;
+    }
+
+    .descricao{
+      font-size: 16px;
+      line-height: 1.8em;
     }
   }
 
@@ -66,7 +99,7 @@
 
   .vantagens {
     background-color: white;
-    color: #ffc107;
+    color: #3a94e8;
 
     ul {
       li {
@@ -124,7 +157,7 @@
 
   .duvidas-frequentes {
     background-color: white;
-    color: #ffc107;
+    color: #3a94e8;
 
     .accordion {
       align-self: center;

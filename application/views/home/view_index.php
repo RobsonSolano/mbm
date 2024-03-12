@@ -7,228 +7,291 @@
 	}
 </style>
 <!-- Home -->
-<section class="home sessao" id="home">
+<section class="sessao home" id="home">
 	<div class="container">
 		<div class="row">
-
-			<div class="col-12 col-sm-12 col-md-6 d-flex">
+			<div class="col-12 col-sm-12 col-md-6 col-lg-7 d-flex mb-4 mb-md-0">
 				<div class="align-self-center">
 
-					<h1 class="h1 titulo">Soluções financeiras</h1>
+					<h1 class="h1 titulo mb-4">MBM Climatização</h1>
 
-					<p class="subtitulo">
-						Com base no seu perfil, nós te indicaremos a melhor solução financeira para sua necessidade! Temos o crédito ideal para você.
+					<p class="descricao">
+						Garanta o melhor desempenho do seu ar condicionado e o conforto da sua familia com a nossa manutenção especializada.
+					</p>
+					<p class="descricao">
+						Oferecemos uma ampla gama de serviços elétricos para atender as suas necessidades
 					</p>
 
-					<div class="area-contato-topo">
-						<h3 class="text-white"></h3>
-						<a href="https://www.instagram.com/mdm.financeira/" target="_blank" title="Visite nossa página no Instagram" data-toggle="tooltip">
-							<span class="fa fa-instagram"></span>
-						</a>
-						<a href="http://api.whatsapp.com/send?phone=+5511958183686&text=<?php echo $mensagem_whatsapp ?>" title="Entre em contato pelo Whatsapp" data-toggle="tooltip">
-							<span class="fa fa-whatsapp ml-3"></span>
-						</a>
-					</div>
+					<a href="http://api.whatsapp.com/send?phone=+5511949676793&text=<?php echo $mensagem_whatsapp ?>" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2" target="_blank" title="Entre em contato pelo Whatsapp">
+						<span class="h4">
+							<i class="fa fa-whatsapp mr-1"></i> Saiba mais
+						</span>
+					</a>
 
 				</div>
 			</div>
-			<!-- Fim dos textos -->
-			<!-- Imagem da seção -->
-			<div class="col-md-6 d-none d-md-block d-flex">
-				<div class="area-ima-topo align-self-center">
-					<img src="<?php echo base_url('assets/img/woman-home.png') ?>" class="ml-5" width="100%" title="Modelo_Finans">
+			<div class="col-12 col-md-6 col-lg-5 d-flex mt-5 mt-md-0">
+				<div class="area-ima-topo align-self-center d-flex justify-content-center w-100">
+					<ul class="list-unstyled d-flex justify-content-start flex-column w-100">
+						<li class="d-flex justify-content-start align-items-center gap-4 mb-3">
+							<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler rounded-circle border border-white bg-dark p-3 icons-tabler-outline icon-tabler-tool">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path d="M7 10h3v-3l-3.5 -3.5a6 6 0 0 1 8 8l6 6a2 2 0 0 1 -3 3l-6 -6a6 6 0 0 1 -8 -8l3.5 3.5" />
+							</svg>
+							<span class="hard-title bolder">Excelência técnica</span>
+						</li>
+						<li class="d-flex justify-content-center align-items-center gap-4 mb-3">
+							<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler rounded-circle border border-white bg-dark p-3 icons-tabler-outline icon-tabler-shield-lock">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
+								<path d="M12 11m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+								<path d="M12 12l0 2.5" />
+							</svg>
+							<span class="hard-title bolder">Suporte e segurança</span>
+						</li>
+						<li class="d-flex justify-content-end align-items-center gap-4 mb-3">
+							<svg  xmlns="http://www.w3.org/2000/svg"  width="60"  height="60"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler rounded-circle border border-white bg-dark p-3 icons-tabler-outline icon-tabler-brand-whatsapp"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" /><path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" /></svg>
+							<span class="hard-title bolder">Atendimento rápido</span>
+						</li>
+					</ul>
 				</div>
 			</div>
-			<!-- Fim da imagem -->
-
 		</div>
 	</div>
 </section>
-<!-- /. Home -->
 
-<!-- Sessão de beneficios -->
+<!-- Sessão de Serviços -->
 <section class="servicos sessao" id="servicos">
-	<div class="container">
+	<div class="elementor-container elementor-column-gap-no two_elementor_element">
+		<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-f9ac80d two_elementor_element" data-id="f9ac80d" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+				<section class="elementor-section elementor-inner-section elementor-element elementor-element-f90285d elementor-section-boxed elementor-section-height-default elementor-section-height-default two_elementor_element elementskit-parallax-multi-container" data-id="f90285d" data-element_type="section">
+					<div class="elementor-container elementor-column-gap-default two_elementor_element">
+						<div class="elementor-column elementor-col-100 elementor-inner-column elementor-element elementor-element-2ac0b4f two_elementor_element" data-id="2ac0b4f" data-element_type="column">
+							<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+								<div class="elementor-element elementor-element-086ef0c elementor-widget elementor-widget-elementskit-heading two_elementor_element animated fadeInUp animated fadeInUp animated zoomIn animated zoomIn" data-id="086ef0c" data-element_type="widget" id="xs-title-br" data-settings="{}" data-widget_type="elementskit-heading.default">
+									<div class="elementor-widget-container two_elementor_element">
+										<div class="ekit-wid-con two_elementor_element">
+											<div class="ekit-heading elementskit-section-title-wraper text_center ekit_heading_tablet-text_center ekit_heading_mobile-text_left two_elementor_element">
+												<h2 class="ekit-heading--title elementskit-section-title two_elementor_element">Conheça nossos serviços</h2>
+												<div class="ekit-heading__description two_elementor_element">
+													<p class="two_elementor_element"><span style="font-weight: 400" class="two_elementor_element">Saiba quais são os segmentos de mercado mais atendidos pela SIGMA.</span></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				
+				<section class="elementor-section elementor-inner-section elementor-element elementor-element-97a1d4e elementor-section-boxed elementor-section-height-default elementor-section-height-default two_elementor_element elementskit-parallax-multi-container" data-id="97a1d4e" data-element_type="section">
+					<div class="elementor-container elementor-column-gap-default two_elementor_element">
+						<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-7819d31 two_elementor_element" data-id="7819d31" data-element_type="column">
+							<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+								<div class="elementor-element elementor-element-2ec65a3 xs-tax-iconbox ekit-equal-height-enable elementor-widget elementor-widget-elementskit-icon-box two_elementor_element" data-id="2ec65a3" data-element_type="widget" data-widget_type="elementskit-icon-box.default">
+									<div class="elementor-widget-container two_elementor_element">
+										<div class="ekit-wid-con two_elementor_element"> <!-- link opening -->
+											<!-- end link opening -->
 
-		<div class="row">
-			<div class="col-12 col-sm-12 col-md-12 col-lg-12">
-				<h2 class="titulo text-center mb-5">
-					Nossos serviços
-					<hr>
-				</h2>
+											<div class="elementskit-infobox text-center text-center icon-top-align elementor-animation-float two_elementor_element">
+												<div class="elementskit-box-header two_elementor_element">
+													<div class="elementskit-info-box-icon two_elementor_element">
+														<noscript class="two_elementor_element"><img loading="lazy" loading="lazy" decoding="async" width="198" height="171" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-2.png" class=" wp-image-7335 attachment- size-" alt="" /></noscript><img loading="lazy" decoding="async" width="198" height="171" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-2.png" data-src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-2.png" class="lazy wp-image-7335 attachment- size- two_elementor_element entered loaded" alt="" data-ll-status="loaded">
+													</div>
+												</div>
+												<div class="box-body two_elementor_element">
+													<h1 class="elementskit-info-box-title two_elementor_element">
+														Sistemas climatizados </h1>
+													<p class="two_elementor_element">A Climatização é a disciplina responsável pelo condicionamento do ar ambiente, de forma a gerar conforto, qualidade e segurança no ar consumido pelos ocupantes dos espaços sejam corporativos ou comerciais</p>
+													<div class="box-footer disable_hover_button two_elementor_element">
+														<div class="btn-wraper two_elementor_element">
+															<a href="https://www.sigmaecp.com.br/climatizacao/" target="_self" rel="" class="elementskit-btn whitespace--normal elementor-animation- two_elementor_element">
+																Ver Mais </a>
+														</div>
+													</div>
+												</div>
 
 
-				<div class="row d-flex justify-content-around">
-					<div class="col-12 col-sm-6 text-center mb-5">
-						<h4>
-							<i class="fa fa-check-circle-o" aria-hidden="true"></i>
-							Empréstimo Consignado
-						</h4>
-					</div>
-					<div class="col-12 col-sm-6 text-center mb-5">
-						<h4>
-							<i class="fa fa-check-circle-o" aria-hidden="true"></i>
-							Empréstimo Pessoal
-						</h4>
-					</div>
-					<div class="col-12 col-sm-6 text-center mb-5">
-						<h4>
-							<i class="fa fa-check-circle-o" aria-hidden="true"></i>
-							Empréstimo pessoal <br> com garantia de veículo
-						</h4>
-					</div>
-					<div class="col-12 col-sm-6 text-center mb-5">
-						<h4>
-							<i class="fa fa-check-circle-o" aria-hidden="true"></i>
-							Empréstimo Saque <br> Aniversario (FGTS)
-						</h4>
-					</div>
-					<div class="col-12 col-sm-6 text-center">
-						<h4>
-							<i class="fa fa-check-circle-o" aria-hidden="true"></i>
-							Empréstimo na conta de energia
-						</h4>
-					</div>
-				</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-a9fd17d two_elementor_element" data-id="a9fd17d" data-element_type="column">
+							<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+								<div class="elementor-element elementor-element-5c68af5 xs-tax-iconbox ekit-equal-height-disable elementor-widget elementor-widget-elementskit-icon-box two_elementor_element" data-id="5c68af5" data-element_type="widget" data-widget_type="elementskit-icon-box.default">
+									<div class="elementor-widget-container two_elementor_element">
+										<div class="ekit-wid-con two_elementor_element"> <!-- link opening -->
+											<!-- end link opening -->
 
+											<div class="elementskit-infobox text-center text-center icon-top-align elementor-animation-float two_elementor_element">
+												<div class="elementskit-box-header two_elementor_element">
+													<div class="elementskit-info-box-icon two_elementor_element">
+														<noscript class="two_elementor_element"><img loading="lazy" loading="lazy" decoding="async" width="234" height="234" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4.png" class="attachment- size-" alt="" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4.png 234w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4-150x150.png 150w" sizes="(max-width: 234px) 100vw, 234px" /></noscript><img loading="lazy" decoding="async" width="234" height="234" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4.png" data-src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4.png" class="lazy attachment- size- two_elementor_element entered loaded" alt="" data-srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4.png 234w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4-150x150.png 150w" data-sizes="(max-width: 234px) 100vw, 234px" data-ll-status="loaded" sizes="(max-width: 234px) 100vw, 234px" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4.png 234w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-4-150x150.png 150w">
+													</div>
+												</div>
+												<div class="box-body two_elementor_element">
+													<h1 class="elementskit-info-box-title two_elementor_element">
+														Refrigeração Comercial e Industrial </h1>
+													<p class="two_elementor_element">Planejamos, implementamos e oferecemos manutenção em sistemas de refrigeração comercial e industrial que precisam manter produtos congelados ou resfriados.</p>
+													<div class="box-footer disable_hover_button two_elementor_element">
+														<div class="btn-wraper two_elementor_element">
+															<a href="https://www.sigmaecp.com.br/refrigeracao/" target="_self" rel="" class="elementskit-btn whitespace--normal elementor-animation- two_elementor_element">
+																Ver Mais </a>
+														</div>
+													</div>
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-1fe1acd two_elementor_element" data-id="1fe1acd" data-element_type="column">
+							<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+								<div class="elementor-element elementor-element-987a694 xs-tax-iconbox ekit-equal-height-disable elementor-widget elementor-widget-elementskit-icon-box two_elementor_element" data-id="987a694" data-element_type="widget" data-widget_type="elementskit-icon-box.default">
+									<div class="elementor-widget-container two_elementor_element">
+										<div class="ekit-wid-con two_elementor_element"> <!-- link opening -->
+											<!-- end link opening -->
+
+											<div class="elementskit-infobox text-center text-center icon-top-align elementor-animation-float two_elementor_element">
+												<div class="elementskit-box-header two_elementor_element">
+													<div class="elementskit-info-box-icon two_elementor_element">
+														<noscript class="two_elementor_element"><img loading="lazy" loading="lazy" decoding="async" width="248" height="248" src="https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2.png" class="attachment- size-" alt="" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2.png 248w, https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2-150x150.png 150w" sizes="(max-width: 248px) 100vw, 248px" /></noscript><img loading="lazy" decoding="async" width="248" height="248" src="https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2.png" data-src="https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2.png" class="lazy attachment- size- two_elementor_element entered loaded" alt="" data-srcset="https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2.png 248w, https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2-150x150.png 150w" data-sizes="(max-width: 248px) 100vw, 248px" data-ll-status="loaded" sizes="(max-width: 248px) 100vw, 248px" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2.png 248w, https://www.sigmaecp.com.br/wp-content/uploads/2023/06/x-2-150x150.png 150w">
+													</div>
+												</div>
+												<div class="box-body two_elementor_element">
+													<h1 class="elementskit-info-box-title two_elementor_element">
+														Assistência Técnica - PMOC </h1>
+													<p class="two_elementor_element">Garanta um ambiente livre de contaminação, evitando transmissão de algumas doenças relacionadas à má qualidade do ar, mas também faz com que a vida útil dos equipamentos aumente.</p>
+													<div class="box-footer disable_hover_button two_elementor_element">
+														<div class="btn-wraper two_elementor_element">
+															<a href="https://www.sigmaecp.com.br/assistencia-tecnica-pmoc/" target="_self" rel="" class="elementskit-btn whitespace--normal elementor-animation- two_elementor_element">
+																Ver Mais </a>
+														</div>
+													</div>
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				<section class="elementor-section elementor-inner-section elementor-element elementor-element-2cbdc79 elementor-section-boxed elementor-section-height-default elementor-section-height-default two_elementor_element elementskit-parallax-multi-container" data-id="2cbdc79" data-element_type="section">
+					<div class="elementor-container elementor-column-gap-default two_elementor_element">
+						<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-d73fa42 two_elementor_element" data-id="d73fa42" data-element_type="column">
+							<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+								<div class="elementor-element elementor-element-6945a92 xs-tax-iconbox ekit-equal-height-disable elementor-widget elementor-widget-elementskit-icon-box two_elementor_element" data-id="6945a92" data-element_type="widget" data-widget_type="elementskit-icon-box.default">
+									<div class="elementor-widget-container two_elementor_element">
+										<div class="ekit-wid-con two_elementor_element"> <!-- link opening -->
+											<!-- end link opening -->
+
+											<div class="elementskit-infobox text-center text-center icon-top-align elementor-animation-float two_elementor_element">
+												<div class="elementskit-box-header two_elementor_element">
+													<div class="elementskit-info-box-icon two_elementor_element">
+														<noscript class="two_elementor_element"><img loading="lazy" loading="lazy" decoding="async" width="245" height="245" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6.png" class="attachment- size-" alt="" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6.png 245w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6-150x150.png 150w" sizes="(max-width: 245px) 100vw, 245px" /></noscript><img loading="lazy" decoding="async" width="245" height="245" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6.png" data-src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6.png" class="lazy attachment- size- two_elementor_element entered loaded" alt="" data-srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6.png 245w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6-150x150.png 150w" data-sizes="(max-width: 245px) 100vw, 245px" data-ll-status="loaded" sizes="(max-width: 245px) 100vw, 245px" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6.png 245w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-6-150x150.png 150w">
+													</div>
+												</div>
+												<div class="box-body two_elementor_element">
+													<h1 class="elementskit-info-box-title two_elementor_element">
+														Projeto e Consultoria </h1>
+													<p class="two_elementor_element">A SIGMA cobre todas as etapas de projetos. Oferecemos a assessoria. e desenvolvemos e executamos seus projetos alinhados com o que há de melhor no mercado AVAC-R</p>
+													<div class="box-footer disable_hover_button two_elementor_element">
+														<div class="btn-wraper two_elementor_element">
+															<a href="https://www.sigmaecp.com.br/projetos-e-consultoria/" target="_self" rel="" class="elementskit-btn whitespace--normal elementor-animation- two_elementor_element">
+																Ver Mais </a>
+														</div>
+													</div>
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-c84e20e two_elementor_element" data-id="c84e20e" data-element_type="column">
+							<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+								<div class="elementor-element elementor-element-00fe874 xs-tax-iconbox ekit-equal-height-disable elementor-widget elementor-widget-elementskit-icon-box two_elementor_element" data-id="00fe874" data-element_type="widget" data-widget_type="elementskit-icon-box.default">
+									<div class="elementor-widget-container two_elementor_element">
+										<div class="ekit-wid-con two_elementor_element"> <!-- link opening -->
+											<!-- end link opening -->
+
+											<div class="elementskit-infobox text-center text-center icon-top-align elementor-animation-float two_elementor_element">
+												<div class="elementskit-box-header two_elementor_element">
+													<div class="elementskit-info-box-icon two_elementor_element">
+														<noscript class="two_elementor_element"><img loading="lazy" loading="lazy" decoding="async" width="217" height="217" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7.png" class="attachment- size-" alt="" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7.png 217w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7-150x150.png 150w" sizes="(max-width: 217px) 100vw, 217px" /></noscript><img loading="lazy" decoding="async" width="217" height="217" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7.png" data-src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7.png" class="lazy attachment- size- two_elementor_element entered loaded" alt="" data-srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7.png 217w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7-150x150.png 150w" data-sizes="(max-width: 217px) 100vw, 217px" data-ll-status="loaded" sizes="(max-width: 217px) 100vw, 217px" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7.png 217w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-7-150x150.png 150w">
+													</div>
+												</div>
+												<div class="box-body two_elementor_element">
+													<h1 class="elementskit-info-box-title two_elementor_element">
+														Soluções Sustentáveis </h1>
+													<p class="two_elementor_element">Pioneira no uso de tecnologias sustentáveis em sistemas AVC-R, ajudamos nossos clientes a operar com economia, eficiência e zero impacto ambiental.</p>
+													<div class="box-footer disable_hover_button two_elementor_element">
+														<div class="btn-wraper two_elementor_element">
+															<a href="https://www.sigmaecp.com.br/solucoes-sustentaveis/" target="_self" rel="" class="elementskit-btn whitespace--normal elementor-animation- two_elementor_element">
+																Ver Mais </a>
+														</div>
+													</div>
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="elementor-column elementor-col-33 elementor-inner-column elementor-element elementor-element-c7d0c21 two_elementor_element" data-id="c7d0c21" data-element_type="column">
+							<div class="elementor-widget-wrap elementor-element-populated two_elementor_element">
+								<div class="elementor-element elementor-element-08ed9f9 xs-tax-iconbox ekit-equal-height-disable elementor-widget elementor-widget-elementskit-icon-box two_elementor_element" data-id="08ed9f9" data-element_type="widget" data-widget_type="elementskit-icon-box.default">
+									<div class="elementor-widget-container two_elementor_element">
+										<div class="ekit-wid-con two_elementor_element"> <!-- link opening -->
+											<!-- end link opening -->
+
+											<div class="elementskit-infobox text-center text-center icon-top-align elementor-animation-float two_elementor_element">
+												<div class="elementskit-box-header two_elementor_element">
+													<div class="elementskit-info-box-icon two_elementor_element">
+														<noscript class="two_elementor_element"><img loading="lazy" loading="lazy" decoding="async" width="243" height="242" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8.png" class="attachment- size-" alt="" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8.png 243w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8-150x150.png 150w" sizes="(max-width: 243px) 100vw, 243px" /></noscript><img loading="lazy" decoding="async" width="243" height="242" src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8.png" data-src="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8.png" class="lazy attachment- size- two_elementor_element entered loaded" alt="" data-srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8.png 243w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8-150x150.png 150w" data-sizes="(max-width: 243px) 100vw, 243px" data-ll-status="loaded" sizes="(max-width: 243px) 100vw, 243px" srcset="https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8.png 243w, https://www.sigmaecp.com.br/wp-content/uploads/2021/04/Ativo-8-150x150.png 150w">
+													</div>
+												</div>
+												<div class="box-body two_elementor_element">
+													<h1 class="elementskit-info-box-title two_elementor_element">
+														Eficiência Energética </h1>
+													<p class="two_elementor_element">A eficiência energética consiste em obter o melhor desempenho dos sistemas e dispositivos atrelados ao menor consumo de energia (de qualquer espécie) possível.</p>
+													<div class="box-footer disable_hover_button two_elementor_element">
+														<div class="btn-wraper two_elementor_element">
+															<a href="https://www.sigmaecp.com.br/eficiencia-energetica/" target="_self" rel="" class="elementskit-btn whitespace--normal elementor-animation- two_elementor_element">
+																Ver Mais </a>
+														</div>
+													</div>
+												</div>
+
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				
 			</div>
 		</div>
 	</div>
 </section>
 <!-- /. Sessão de beneficios -->
-
-<!-- Sessão de vantagens -->
-<section class="vantagens sessao" id="vantagens">
-	<div class="container">
-
-		<div class="row">
-			<div class="col-12 col-sm-12 col-md-12 col-lg-12">
-				<h2 class="titulo text-center">
-					Aprovação rápida, simples e segura.
-				</h2>
-				<div class="row">
-					<div class="col-12 col-sm-6 text-center">
-
-						<img width="120" class="img-responsive mb-2" src="<?php echo base_url('assets/img/relogio.png') ?>" alt="Aprovação em até 15 minutos">
-
-						<p>Aprovação em até<br>15 minutos</p>
-
-					</div>
-					<div class="col-12 col-sm-6 text-center">
-
-						<img width="120" class="img-responsive mb-2" src="<?php echo base_url('assets/img/portateis.png') ?>" alt="Nosso processo é 100% digital">
-
-						<p>Nosso processo é<br>100% digital</p>
-
-					</div>
-				</div>
-				<br>
-				<div class="row">
-					<div class="col-12 col-sm-6 text-center">
-
-						<img width="180" class="img-responsive mb-2" src="<?php echo base_url('assets/img/dinheiro.png') ?>" alt="Dinheiro na conta em até 1 hora">
-
-						<p>Dinheiro na conta<br>em até 1 hora</p>
-
-					</div>
-					<div class="col-12 col-sm-6 text-center">
-
-						<img width="120" class="img-responsive mb-2" src="<?php echo base_url('assets/img/calendario.png') ?>" alt="Até 30 dias para começar a pagar">
-
-						<p>Até 30 dias para<br>começar a pagar</p>
-
-					</div>
-				</div>
-
-			</div>
-		</div>
-
-	</div>
-</section>
-<!-- /. Sessão de vantagens -->
-
-<!-- Sessão de como funciona -->
-<section class="sobre sessao" id="sobre">
-	<div class="container">
-
-		<div class="row">
-			<div class="col-12 col-sm-12 col-md-5 px-2 mb-4">
-				<h2 class="text-center">Quem somos?</h2>
-				<hr>
-				<div class="row">
-					<div class="col-12">
-						<p class="text-left">
-							A MDM Soluções Financeira nasceu em 2020, e já vem atuando e mudando a vida de muitos brasileiros.<br>
-							Nosso propósito vai além de oferecer as melhores soluções financeiras para nossos clientes.<br>
-							Muito mais que empréstimos, trabalhamos para que você possa ir mais longe.<br>
-							Queremos transformar sonhos em realidade, vontade em sucesso e oportunidades em conquistas e que você realize seus objetivos.<br>
-							Por isso, seja qual for o tamanho dos seus sonhos, queremos estar com você em todos os momentos!
-						</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-12 col-sm-12 col-md-7">
-
-				<h2 class=" text-center">
-					Trabalhamos com os melhores bancos
-				</h2>
-				<hr>
-				<div class="row">
-					<div class="col-4 mb-3 mb-3">
-						<div class="figcaption">
-							<img class="img-responsive" src="<?php echo base_url('assets/img/bancos/santander.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive" src="<?php echo base_url('assets/img/bancos/itau.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive" src="<?php echo base_url('assets/img/bancos/brasil.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive" src="<?php echo base_url('assets/img/bancos/bradesco.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive" src="<?php echo base_url('assets/img/bancos/ole.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive" src="<?php echo base_url('assets/img/bancos/pan.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive img-midium" src="<?php echo base_url('assets/img/bancos/mercantil.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive img-small" src="<?php echo base_url('assets/img/bancos/safra.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-					<div class="col-4 mb-4">
-						<div class="figcaption">
-							<img class="img-responsive img-midium-other" src="<?php echo base_url('assets/img/bancos/daycoval.png') ?>" alt="" srcset="">
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
-</section>
-<!-- /. Sessão de como funciona -->
 
 <!-- Sessão de como funciona -->
 <section class="duvidas-frequentes sessao" id="duvidas-frequentes">
@@ -442,24 +505,3 @@
 	</div>
 </section>
 <!-- Sessão de contato -->
-
-<div class="modal fade" tabindex="-1" id="modal-informativo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-md">
-		<div class="modal-content text-white p-3" style="background-color: #FF9800;">
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-12">
-						<h3 class="text-center">Aviso importante!</h3>
-						<hr>
-						<p class="text-center">
-							Cuidado com golpes e fraudes, correspondente bancários conveniados e certificados pelo Banco Central não realizam nenhum tipo de cobrança antecipadamente e nem apos a contratação de empréstimos!
-						</p>
-					</div>
-					<div class="col-12 text-right">
-						<button type="button" class="btn btn-outline-dark text-white" data-dismiss="modal">Entendi</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>

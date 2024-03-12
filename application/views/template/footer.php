@@ -3,8 +3,8 @@
 		<div class="row">
 
 			<div class="col-12 col-sm-12 col-md-4 mb-3 text-center">
-				<img width="150" height="70" class="logotipo-normal img-responsive" src="<?php echo base_url('assets/img/logotipo.png') ?>" alt="MDM Consultoria Financeira" srcset="">
-				<img width="150" height="70" class="logotipo-branco d-none img-responsive" src="<?php echo base_url('assets/img/logotipo-white.png') ?>" alt="MDM Consultoria Financeira" srcset="">
+				<img width="200" height="70" class="logotipo-normal d-none img-responsive" src="<?php echo base_url('assets/img/logotipo.svg') ?>" alt="<?php echo APPLICATION_NAME ?>Consultoria Financeira" srcset="">
+				<img width="200" height="70" class="logotipo-branco img-responsive" src="<?php echo base_url('assets/img/logotipo-white.svg') ?>" alt="<?php echo APPLICATION_NAME ?>Consultoria Financeira" srcset="">
 			</div>
 
 			<div class="col-6 col-sm-6 col-md-4 p-0 text-center mb-3">
@@ -13,9 +13,6 @@
 				<ul class="list-group">
 					<li class="list-group-item bg-transparent border-0 p-0 mb-2">
 						<a href="#servicos" class="page-scroll">Serviços</a>
-					</li>
-					<li class="list-group-item bg-transparent border-0 p-0 mb-2">
-						<a href="#vantagens" class="page-scroll">Vantagens</a>
 					</li>
 					<li class="list-group-item bg-transparent border-0 p-0 mb-2">
 						<a href="#sobre" class="page-scroll">Sobre</a>
@@ -32,10 +29,10 @@
 			<div class="col-6 col-sm-6 col-md-4 mb-3 p-0 text-center">
 				<h5 class="mb-4 font-weight-bold text-uppercase">Redes Sociais</h5>
 				<hr>
-				<a href="https://www.instagram.com/mdm.financeira/" data-toggle="tooltip" class="link-social" target="_blank" title="Visite nossa página no Instagram">
+				<a href="https://www.instagram.com/mbm.climatizacao/?utm_source=qr&igsh=MWR3OW5rYTZ5aXpvaQ%3D%3D" data-toggle="tooltip" class="link-social" target="_blank" title="Visite nossa página no Instagram">
 					<i class="fa fa-instagram mr-1"></i>
 				</a>
-				<a href="http://api.whatsapp.com/send?phone=+5511958183686&text=<?php echo $mensagem_whatsapp ?>" data-toggle="tooltip" class="link-social ml-3" title="Entre em contato pelo Whatsapp">
+				<a href="http://api.whatsapp.com/send?phone=+5511949676793&text=<?php echo $mensagem_whatsapp ?>" data-toggle="tooltip" class="link-social ml-3" target="_blank"  title="Entre em contato pelo Whatsapp">
 					<i class="fa fa-whatsapp mr-1"></i>
 				</a>
 
