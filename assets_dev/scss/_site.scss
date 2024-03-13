@@ -10,8 +10,8 @@
       .nav-link {
         color: #343a40;
         &:hover {
-          color: #ffc107;
-          transition: 0.5s;
+          color: #3a94e8 !important;
+          transition: 0.3s;
         }
         @media (max-width: 800px) {
           .custom-control-label {
@@ -22,51 +22,66 @@
     }
   }
 
+  // .home {
+  //   background: #343a40;
+  //   background-image: url("../img/bg-topo-home.png");
+  //   background-position: right center;
+  //   background-size: cover;
+  //   padding: 2em 0 0em 0 !important;
+
+  //   @media (max-width: 998px) {
+  //     padding: 5em 0 2em 0 !important;
+  //   }
+
+  //   @media (max-width: 768px) {
+  //     padding: 5em 0 !important;
+  //     margin-top: 4.5em;
+  //   }
+  //   .titulo {
+  //     color: #3a94e8;
+  //   }
+  //   .subtitulo {
+  //     color: #343a40;
+  //   }
+
+  //   .area-contato-topo {
+  //     a {
+  //       font-size: 30px !important;
+  //       color: #3a94e8;
+  //       &:hover {
+  //         color: $cor_escura_forte;
+  //         transition: 0.4s;
+  //       }
+  //     }
+  //   }
+  // }
+
   .home {
-    background: white;
-    background-image: url("../img/simple-wave-lines-background-35.png");
+    background-image: url("../img/bg-banner.png");
     background-position: right center;
-    background-size: cover;
-    .titulo {
-      color: #ffc107;
+    background-size: contain;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    padding: 10em 0 12em 0 !important;
+
+    @media (max-width: 768px) {
+      padding: 6em 0 3em 0 !important;
+      margin-right: 3em;
     }
-    .subtitulo {
-      color: #343a40;
+
+    .titulo{
+      font-weight: 600;
     }
 
-    .area-contato-topo {
-      a {
-        font-size: 30px !important;
-        color: #ffc107;
-        &:hover {
-          color: $cor_escura_forte;
-          transition: 0.4s;
-        }
-      }
-    }
-  }
-
-  .servicos {
-    background-color: $cor_amarelo_escuro;
-
-    color: white;
-
-    ul {
-      li {
-        i {
-          font-size: 1.5em;
-        }
-        span {
-          font-size: 1.5em;
-          margin-left: 1em;
-        }
-      }
+    .descricao{
+      font-size: 16px;
+      line-height: 1.8em;
     }
   }
 
   .vantagens {
     background-color: white;
-    color: #ffc107;
+    color: #3a94e8;
 
     ul {
       li {
@@ -124,7 +139,7 @@
 
   .duvidas-frequentes {
     background-color: white;
-    color: #ffc107;
+    color: #3a94e8;
 
     .accordion {
       align-self: center;
@@ -173,6 +188,47 @@ footer {
 
     &.link-social {
       font-size: 30px;
+    }
+  }
+}
+
+
+.card-servicos{
+  border-radius: 1em !important;
+  min-height: 380px;
+  border: 1px solid transparent;
+  transition: .3s;
+
+  @media (max-width: 1024px){
+    min-height: 500px;
+  }
+
+  @media (max-width: 768px){
+    min-height: 430px;
+  }
+
+  @media (max-width: 600px){
+    min-height: max-content;
+  }
+
+  &:hover{
+    border: 1px solid #ee6767;
+    transition: .3s;
+    box-shadow: 0px 0px 10px 2px #ee6767;
+  }
+
+  .btn-saiba-mais{
+    background-color: #ee6767;
+    transition: .3s;
+    border: 1px solid transparent;
+
+    &:hover,&:focus, &:focus-visible, &:active{
+      background-color: #ED5353;
+      transition: .3s;
+      border: 1px solid #ED5353;
+      box-shadow: none !important;
+      outline-offset: none !important;
+      outline: none !important;
     }
   }
 }
