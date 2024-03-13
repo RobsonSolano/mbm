@@ -106,7 +106,7 @@ class Home extends CI_Controller
 					"%0A*Acessei%20o%20site%20" . base_url() . "*" .
 					"%0AGostaria%20de%20saber%20mais.";
 
-				header("location: http://api.whatsapp.com/send?phone=+5511958183686&text=$mensagem");
+				header("location: http://api.whatsapp.com/send?phone=+5511949676793&text=$mensagem");
 			}
 		}
 	}
