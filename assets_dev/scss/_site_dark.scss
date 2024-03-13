@@ -3,7 +3,7 @@
   color: white !important;
 
   .navbar {
-    background-color: #292d31 !important;
+    background-color: #1a1b1d !important;
     p,
     a,
     h1,
@@ -15,7 +15,7 @@
   }
 
   .home {
-    background-image: url("../img/bg-banner.png");
+    background-image: url("../img/bg-banner.webp");
     background-position: right center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -57,8 +57,9 @@
   }
 
   .servicos {
+    text-align: center;
     color: white !important;
-    background-color: $cor_escura_noite;
+    background-image: radial-gradient(circle at 90% 46.666666666666664%, #00B1C1 0%, 17.5%, rgba(0,177,193,0) 35%), radial-gradient(circle at 0% 100%, rgba(0,177,193,0.99) 0%, 18.5%, rgba(0,177,193,0) 37%), radial-gradient(circle at 93.66668065388998% 42.66666730244955%, #00B1C1 0%, 12%, rgba(0,177,193,0) 40%), radial-gradient(circle at 48.9013671875% 49.521484375%, #18509E 0%, 100%, rgba(24,80,158,0) 100%);
   }
 
   .vantagens {

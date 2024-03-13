@@ -72,3 +72,11 @@ a {
     font-size: 1.7em;
   }
 }
+
+.nav-link{
+  padding-bottom: 10px;
+  &:hover{
+    color: #3A94E8 !important;
+    border-bottom:1px solid #4c7faf;
+  }
+}
