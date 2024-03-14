@@ -65,8 +65,6 @@ a {
 
 .hard-title{
   font-size: 2em;
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: $cor_escura_forte;
 
   @media (max-width: 768px){
     font-size: 1.7em;
@@ -79,4 +77,61 @@ a {
     color: #3A94E8 !important;
     border-bottom:1px solid #4c7faf;
   }
+}
+
+
+.circle-icon{
+  background-color: #18509E !important;
+
+  &:hover{
+    transition: .8s;
+    transform: rotateY(360deg);
+  }
+}
+
+.hard-title {
+  font-weight: 600;
+}
+
+.topo-li{
+  width: max-content;
+}
+
+.btn-saiba-mais{
+  background-color: #ee6767 !important;
+  transition: .3s;
+  border: 1px solid transparent !important;
+
+  &:hover,&:focus, &:focus-visible, &:active{
+    background-color: #ED5353 !important;
+    transition: .3s;
+    border: 1px solid #ED5353 !important;
+    box-shadow: none !important;
+    outline-offset: none !important;
+    outline: none !important;
+  }
+}
+
+.form-control{
+  &:hover,&:active, &:focus, &:focus-visible, &:focus-within{
+    box-shadow: none !important;
+    border: 1px solid #3A94E8 !important;
+    outline: none !important;
+  }
+}
+
+.g-recaptcha{
+  &.border-danger{
+    box-shadow: 0px 0px 2px 2px #dc3545 !important;
+    margin-bottom: 1em;
+  }
+}
+
+#whatsapp-flutuante {
+  position: fixed;
+  content: "";
+  right: 5em;
+  bottom: 5em;
+  -webkit-filter: drop-shadow(5px 5px 5px #000);
+  filter: drop-shadow(5px 5px 5px #000);
 }
