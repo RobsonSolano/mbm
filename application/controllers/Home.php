@@ -16,7 +16,7 @@ class Home extends CI_Controller
 		$this->load->library('form_validation');
 	}
 
-	public function index($error = '', $name_error = "", $cpf_error = "")
+	public function index($error = '', $recaptcha_not_checked = false)
 	{
 
 		$cumprimento = "";
@@ -35,14 +35,8 @@ class Home extends CI_Controller
 			$data['form_error'] = 'form_error';
 		}
 
-		if (!empty($name_error)) {
-			$data['name_error'] = $name_error;
-			$data['form_error'] = 'form_error';
-		}
-
-		if (!empty($cpf_error)) {
-			$data['cpf_error'] = 'cpf_error';
-			$data['form_error'] = 'form_error';
+		if($recaptcha_not_checked){
+			$data['recaptcha_not_checked'] = true;
 		}
 
 		$this->load->view('template/header', $data);
@@ -61,52 +55,42 @@ class Home extends CI_Controller
 			'required|trim',
 			array('required' => 'O campo %s é obrigatório.')
 		);
-
-		$this->form_validation->set_rules(
-			'cpf',
-			'CPF',
-			'required|trim',
-			array('required' => 'O campo %s é obrigatório.')
-		);
-		$this->form_validation->set_rules(
-			'renda',
-			'Renda',
-			'required|trim',
-			array('required' => 'O campo %s é obrigatório.')
-		);
 		$this->form_validation->set_rules(
 			'email',
 			'E-mail',
-			'trim'
+			'required|trim|valid_email',
+			array('required' => 'O campo %s é obrigatório.', 'valid_email' => 'O e-mail informado não é válido')
 		);
 
-		if ($this->form_validation->run() == FALSE) {
-			$this->index('error');
+		$this->form_validation->set_rules(
+			'celular',
+			'Celular',
+			'required|trim',
+			array('required' => 'O campo %s é obrigatório.')
+		);
+
+		if ($this->form_validation->run() == FALSE || empty($item['g-recaptcha-response'])) {
+			$recaptcha_not_checked = false;
+			if(empty($item['g-recaptcha-response'])){
+				$recaptcha_not_checked = true;
+			}
+			$this->index('error', $recaptcha_not_checked);
 		} else {
 
 			if ($this->_verify_full_name($item['nome']) == false) {
 				$this->index('error', 'name_error');
-			} elseif (validaCPF($item['cpf']) == false) {
-				$this->index('error', null, 'cpf_error');
 			} else {
 
-				$nome_completo = explode(' ', trim($item['nome']));
+				// Enviar e-mail
+				$send_email = send_email_contato('Testando envio', 'Teste', $item['email'], $item);
 
-				$nome = ucfirst($nome_completo[0]);
-				$sobrenome = ucfirst($nome_completo[1]);
-
-				$mensagem = "*Nome:*%20" . $nome . '%20' . $sobrenome .
-					"%0A*CPF:*%20" . $item['cpf'];
-
-				if (!empty($item['email'])) {
-					$mensagem .= "%0A*E-mail:*%20" . $item['email'];
+				if (!$send_email) {
+					echo "Não enviou";
+				} else {
+					echo "Enviou";
 				}
 
-				$mensagem .= "%0A*Renda:*%20" . $item['renda'] .
-					"%0A*Acessei%20o%20site%20" . base_url() . "*" .
-					"%0AGostaria%20de%20saber%20mais.";
-
-				header("location: http://api.whatsapp.com/send?phone=+5511949676793&text=$mensagem");
+				exit;
 			}
 		}
 	}

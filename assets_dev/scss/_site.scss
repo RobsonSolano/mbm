@@ -77,6 +77,7 @@
       font-size: 16px;
       line-height: 1.8em;
     }
+
   }
 
   .vantagens {
@@ -150,8 +151,8 @@
   }
 
   .contato {
-    background-color: $cor_amarelo_escuro;
-    color: white;
+    background-color: #f8f8ff;
+    color: #010101;
 
     .btn-contato {
       background-color: white;
@@ -217,18 +218,5 @@ footer {
     box-shadow: 0px 0px 10px 2px #ee6767;
   }
 
-  .btn-saiba-mais{
-    background-color: #ee6767;
-    transition: .3s;
-    border: 1px solid transparent;
-
-    &:hover,&:focus, &:focus-visible, &:active{
-      background-color: #ED5353;
-      transition: .3s;
-      border: 1px solid #ED5353;
-      box-shadow: none !important;
-      outline-offset: none !important;
-      outline: none !important;
-    }
-  }
+  
 }
