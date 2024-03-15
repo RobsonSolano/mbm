@@ -82,7 +82,7 @@ class Home extends CI_Controller
 			} else {
 
 				// Enviar e-mail
-				$send_email = send_email_contato('Testando envio', 'Novo contato pelo site', $item);
+				$send_email = send_email_contato('Nova Solicitação de orçamento', 'Novo contato pelo site', $item);
 
 				if (!$send_email) {
 					$this->session->set_flashdata('flash_message', ['mensagem' => '<strong>Falha ao enviar e-mail.</strong><br>Por favor tente novamente', 'tipo' => 'warning']);
