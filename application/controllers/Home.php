@@ -82,15 +82,16 @@ class Home extends CI_Controller
 			} else {
 
 				// Enviar e-mail
-				$send_email = send_email_contato('Testando envio', 'Teste', $item['email'], $item);
+				$send_email = send_email_contato('Testando envio', 'Novo contato pelo site', $item);
 
 				if (!$send_email) {
-					echo "Não enviou";
+					$this->session->set_flashdata('flash_message', ['mensagem' => '<strong>Falha ao enviar e-mail.</strong><br>Por favor tente novamente', 'tipo' => 'warning']);
+					
 				} else {
-					echo "Enviou";
+                    $this->session->set_flashdata('flash_message', ['mensagem' => '<strong>E-mail enviado com sucesso</strong><br>Em breve nossa equipe entrará em contato<br><small>Nós agradecemos o contato</small>.', 'tipo' => 'success']);
 				}
 
-				exit;
+				redirect(base_url());
 			}
 		}
 	}

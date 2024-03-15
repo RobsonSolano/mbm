@@ -9,14 +9,14 @@ if (!function_exists('send_codigo_to_email')) {
    * @param array $data 
    * @return bool 
    */
-  function send_email_contato($title, $subject, $to, $data)
+  function send_email_contato($title, $subject, $data)
   {
 
     $ci = &get_instance();
 
     $ci->email->from($ci->email->smtp_user, $title);
 
-    $ci->email->to($to);
+    $ci->email->to($ci->email->smtp_user);
 
     $ci->email->subject($subject);
 

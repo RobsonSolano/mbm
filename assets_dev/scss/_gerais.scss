@@ -132,6 +132,50 @@ a {
   content: "";
   right: 5em;
   bottom: 5em;
-  -webkit-filter: drop-shadow(5px 5px 5px #000);
-  filter: drop-shadow(5px 5px 5px #000);
+  // -webkit-filter: drop-shadow(5px 5px 5px #000);
+  // filter: drop-shadow(5px 5px 5px #000);
+}
+
+
+@keyframes flash_message {
+  0% {
+    top: -5em;
+    opacity: 0;
+  }
+
+  25% {
+    top: 0.5em;
+    opacity: 1;
+  }
+
+  50% {
+    top: 0.5em;
+    opacity: 1;
+  }
+
+  100% {
+    top: -5em;
+    opacity: 0;
+  }
+}
+
+.flash-message {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  opacity: 0;
+  animation: flash_message 10s;
+  z-index: 99999 !important;
+
+  .alert {
+    width: max-content;
+    text-align: center;
+    h5 {
+      font-size: 1em;
+      line-height: 1.2em;
+      strong {
+        font-size: 1.2em;
+      }
+    }
+  }
 }
