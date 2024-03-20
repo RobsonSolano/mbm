@@ -104,3 +104,8 @@ define('QUANTIDADE_PAGINACAO', 15);
 define('NOME_PROJETO', 'Afiliou');
 define('ABS_PATH_UPLOAD_PRODUTOS', 'upload/produtos/');
 define('ABS_PATH_UPLOAD_CATEGORIA', 'upload/categorias/');
+define('APPLICATION_NAME', 'MBM Climatização');
+
+// Google
+define('SITE_KEY_RECAPTCHA','6Ld9ifchAAAAAP4w0x40DwhpswKkPLnSXXsUSS85');
+define('SITE_SECRET_RECAPTCHA','6Ld9ifchAAAAACe-2VskZjipcB8J8N1mesEBt3op');

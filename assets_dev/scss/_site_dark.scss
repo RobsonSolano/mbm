@@ -1,9 +1,8 @@
 #pagina-principal.pagina-dark {
-  background-color: #343a40;
   color: white !important;
 
   .navbar {
-    background-color: #292d31 !important;
+    background-color: #1a1b1d !important;
     p,
     a,
     h1,
@@ -15,25 +14,78 @@
   }
 
   .home {
-    background-color: #343a40 !important;
-    background-image: url("../img/simple-wave-lines-background-35.png");
+    background-image: url("../img/bg-banner.webp");
     background-position: right center;
     background-size: cover;
-    .titulo {
-      color: #ffc107;
+    background-repeat: no-repeat;
+    padding: 10em 0 8em 0 !important;
+    margin-top: 3em;
+
+    @media (max-width: 1024px) {
+      background-size: 250%;
+      background-position: left center;
     }
-    .subtitulo {
-      color: white;
+
+    @media (max-width: 767px) {
+      padding: 5em 0 4em 0 !important;
+      background-position: left bottom;
+      background-size: 450%;
+    }
+
+    .titulo {
+      font-weight: 600;
+      font-size: 3em;
+
+      @media (max-width: 1024px) {
+        font-size: 2em;
+      }
+
+      @media (max-width: 767px) {
+        color: #fff;
+        font-size: 2.5em;
+      }
+    }
+
+    .descricao {
+      font-size: 18px;
+      line-height: 1.8em;
+      @media (max-width: 768px) {
+        color: #fff;
+      }
     }
   }
 
   .servicos {
+    text-align: center;
     color: white !important;
-    background-color: $cor_escura_noite;
+    background-image: radial-gradient(
+        circle at 90% 46.666666666666664%,
+        #00b1c1 0%,
+        17.5%,
+        rgba(0, 177, 193, 0) 35%
+      ),
+      radial-gradient(
+        circle at 0% 100%,
+        rgba(0, 177, 193, 0.99) 0%,
+        18.5%,
+        rgba(0, 177, 193, 0) 37%
+      ),
+      radial-gradient(
+        circle at 93.66668065388998% 42.66666730244955%,
+        #00b1c1 0%,
+        12%,
+        rgba(0, 177, 193, 0) 40%
+      ),
+      radial-gradient(
+        circle at 48.9013671875% 49.521484375%,
+        #18509e 0%,
+        100%,
+        rgba(24, 80, 158, 0) 100%
+      );
   }
 
   .vantagens {
-    color: #ffc107;
+    color: #3a94e8;
     background-color: $cor_escura_padrao;
   }
 
@@ -43,13 +95,19 @@
   }
 
   .duvidas-frequentes {
-    color: #ffc107;
-    background-color: $cor_escura_padrao;
+    background-color: #141515;
+    .subtitulo {
+      color: #ffffff;
+    }
+
+    .descricao {
+      color: #f8f8ff;
+    }
   }
 
   .contato {
-    color: white !important;
-    background-color: $cor_escura_noite;
+    background-color: #f8f8ff;
+    color: #010101;
 
     .btn-contato {
       background-color: $cor_amarelo_padrao;
@@ -63,14 +121,27 @@
     }
   }
   footer {
-    background-color: $cor_escura_padrao;
+    padding: 7em 0;
+    background-color: #f8f8ff !important;
+    color: #010101 !important;
 
     a {
-      color: white;
+      color: #010101 !important;
 
       &:hover {
         color: $cor_amarelo_escuro;
       }
     }
   }
+}
+
+.navbar-light .navbar-toggler {
+  border-color: #fff !important;
+}
+.navbar-light .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+.rodape-inferior {
+  background-color: #141515 !important;
 }
