@@ -22,7 +22,12 @@
 						Oferecemos uma ampla gama de serviços elétricos para atender as suas necessidades
 					</p>
 
-					<a href="http://api.whatsapp.com/send?phone=+5511949676793&text=Ol%C3%A1%2C%20venho%20atrav%C3%A9s%20do%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2" target="_blank" title="Entre em contato pelo Whatsapp">
+					<a href="https://web.whatsapp.com/send?phone=5511949676793&text=Ol%C3%A1%2C%20venho%20atrav%C3%A9s%20do%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2 d-none d-md-inline-block" target="_blank" title="Entre em contato pelo Whatsapp">
+						<span class="h5">
+							<i class="fa fa-whatsapp mr-1"></i> Saiba mais
+						</span>
+					</a>
+					<a href="https://wa.me/5511949676793?text=Ol%C3%A1%2C%20venho%20atrav%C3%A9s%20do%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2  d-inline-block d-md-none" target="_blank" title="Entre em contato pelo Whatsapp">
 						<span class="h5">
 							<i class="fa fa-whatsapp mr-1"></i> Saiba mais
 						</span>
@@ -195,7 +200,7 @@
 
 			<div class="col-12 col-sm-12 col-md-10 col-lg-9 align-self-center">
 
-				<?php echo form_open('home/enviar') ?>
+				<?php echo form_open('home/enviar',  ['id' => 'contactForm']); ?>
 
 				<div class="row">
 
@@ -211,9 +216,9 @@
 							]; ?>
 
 							<?php $data_error = !empty(form_error($data['id'])) || !empty($name_error) ? 'border border-danger' : '' ?>
-							<?php $data['class'] = 'form-control input-simulacao ' . $data_error; ?>
+							<?php $data['class'] = 'js-input-nome form-control input-simulacao ' . $data_error; ?>
 
-							<label for="<?php echo $data['id'] ?>">Nome completo</label>
+							<label for="<?php echo $data['id'] ?>">Nome completo *</label>
 							<?php echo form_input($data) ?>
 							<small class="text-danger">
 								<?php echo form_error($data['id']) ?>
@@ -230,14 +235,14 @@
 								'name' => 'email',
 								'id' => 'email',
 								'placeholder' => 'Digite seu e-mail',
-								'class' => 'form-control input-simulacao',
+								'class' => 'js-input-email form-control input-simulacao',
 								'value' => set_value('email', null, false)
 							]; ?>
 
 							<?php $data_error = !empty(form_error($data['id'])) ? 'border border-danger' : '' ?>
 							<?php $data['class'] = 'form-control input-simulacao ' . $data_error; ?>
 
-							<label for="<?php echo $data['id'] ?>">E-mail</label>
+							<label for="<?php echo $data['id'] ?>">E-mail *</label>
 							<?php echo form_input($data) ?>
 							<small class="text-danger">
 								<?php echo form_error($data['id']) ?>
@@ -252,14 +257,14 @@
 								'name' => 'celular',
 								'id' => 'celular',
 								'placeholder' => '(00) 90000-0000',
-								'class' => 'form-control celular-mask',
+								'class' => 'js-input-celular form-control celular-mask',
 								'value' => set_value('celular', null, false)
 							]; ?>
 
 							<?php $data_error = !empty(form_error($data['id'])) ? 'border border-danger' : '' ?>
 							<?php $data['class'] = 'form-control celular-mask ' . $data_error; ?>
 
-							<label for="<?php echo $data['id'] ?>">Celular</label>
+							<label for="<?php echo $data['id'] ?>">Celular *</label>
 							<?php echo form_input($data) ?>
 							<small class="text-danger">
 								<?php echo form_error($data['id']) ?>
@@ -268,8 +273,8 @@
 					</div>
 
 					<div class="col-12">
-						<label for="observacao">Observação (<small>Deixe alguma observação</small>)</label>
-						<textarea name="observacao" id="obervacao" rows="7" class="form-control" value="<?php echo set_value('observacao') ?>"></textarea>
+						<label for="observacao">Observação * (<small>Deixe alguma observação</small>)</label>
+						<textarea name="observacao" id="obervacao" rows="7" class="js-input-message form-control" value="<?php echo set_value('observacao') ?>"><?php echo set_value('observacao') ?></textarea>
 					</div>
 					<div class="col-12 d-flex justify-content-center py-3 flex-column align-items-center">
 						<div id="recaptcha" class="g-recaptcha <?php echo isset($recaptcha_not_checked) && $recaptcha_not_checked == true ? 'border-danger' : '' ?>" data-sitekey="<?php echo SITE_KEY_RECAPTCHA ?>" data-callback="onSubmitRecaptcha"></div>
@@ -282,7 +287,7 @@
 					</div>
 
 					<div class="col-12 mt-3 mb-3 d-flex justify-content-center">
-						<button type="submit" class="btn btn-lg btn-saiba-mais text-white rounded-pill px-4 d-flex gap-4 align-items-center">
+						<button type="submit" class="btn btn-lg btn-saiba-mais text-white rounded-pill px-4 d-flex gap-4 align-items-center js-btn-enviar-email">
 							Solicitar orçamento
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail-forward" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
 								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
