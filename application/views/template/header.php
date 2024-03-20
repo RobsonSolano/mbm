@@ -63,6 +63,7 @@
 
 	<?php $flash_message = $this->session->flashdata('flash_message'); ?>
 	<?php if (isset($flash_message)) { ?>
+		<?php $this->session->unset('flash_message') ?>
 		<div class="flash-message d-flex justify-content-center">
 			<div class="alert flash alert-<?php echo $flash_message['tipo'] ?>">
 				<h5><?php echo $flash_message['mensagem'] ?></h5>

@@ -77,6 +77,11 @@ class Home extends CI_Controller
 			$this->index('error', $recaptcha_not_checked);
 		} else {
 
+			if(empty($item['g-recaptcha-response'])){
+				$recaptcha_not_checked = true;
+				$this->index('error', true);
+				exit;
+			}
 			if ($this->_verify_full_name($item['nome']) == false) {
 				$this->index('error', 'name_error');
 			} else {
