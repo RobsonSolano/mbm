@@ -28,9 +28,9 @@ class Recaptcha extends CI_Controller
       $this->form_validation->set_rules('recaptcha', 'Recaptcha', 'callback__valid_recaptcha');
 
       if ($this->form_validation->run() == false) {
-        var_dump(validation_errors(), 'errooow');
+        return true;
       } else {
-        var_dump($this->input->post(), 'Aeee');
+        return false;
       }
 
       exit;
@@ -39,7 +39,7 @@ class Recaptcha extends CI_Controller
 
   public function _valid_recaptcha($g_recaptcha_response)
   {
-    
+
     if ($this->mc_recaptcha->validated() == TRUE) {
 
       return TRUE;

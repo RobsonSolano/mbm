@@ -39,8 +39,6 @@
 		}
 	}
 
-	$('#modal-informativo').modal('show');
-
 
 })();
 
