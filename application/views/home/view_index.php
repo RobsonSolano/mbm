@@ -22,8 +22,8 @@
 						Oferecemos uma ampla gama de serviços elétricos para atender as suas necessidades
 					</p>
 
-					<a href="http://api.whatsapp.com/send?phone=+5511949676793&text=<?php echo $mensagem_whatsapp ?>" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2" target="_blank" title="Entre em contato pelo Whatsapp">
-						<span class="h4">
+					<a href="http://api.whatsapp.com/send?phone=+5511949676793&text=Ol%C3%A1%2C%20venho%20atrav%C3%A9s%20do%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2" target="_blank" title="Entre em contato pelo Whatsapp">
+						<span class="h5">
 							<i class="fa fa-whatsapp mr-1"></i> Saiba mais
 						</span>
 					</a>
@@ -133,7 +133,7 @@
 						<h4 class="text-dark">
 							Manutenção e Consultoria
 						</h4>
-						<p class="text-dark">A manutenção é extremamente importante para manter o funcionamento, qualidade e previnir possíveis defeitos, mas também prestamos consultoria para análise de prevenções e implantações de equipamentos</p>
+						<p class="text-dark">A manutenção é extremamente importante para manter o funcionamento, qualidade e prevenção, também prestamos consultoria para análise de instalação de equipamentos</p>
 						<a href="<?php echo base_url('contato') ?>" target="_self" rel="" class="mb-1 btn btn-dark text-white rounded-pill px-4 btn-saiba-mais">
 							Saiba mais
 						</a>
@@ -273,7 +273,7 @@
 					</div>
 					<div class="col-12 d-flex justify-content-center py-3 flex-column align-items-center">
 						<div id="recaptcha" class="g-recaptcha <?php echo isset($recaptcha_not_checked) && $recaptcha_not_checked == true ? 'border-danger' : '' ?>" data-sitekey="<?php echo SITE_KEY_RECAPTCHA ?>" data-callback="onSubmitRecaptcha"></div>
-						<?php if(isset($recaptcha_not_checked) && $recaptcha_not_checked == true){ ?>
+						<?php if (isset($recaptcha_not_checked) && $recaptcha_not_checked == true) { ?>
 							<p class="text-danger"><small>Por favor marque a caixa de validação acima.</small></p>
 						<?php } ?>
 					</div>
@@ -309,7 +309,17 @@
 	<div class="container">
 		<div class="row mb-5">
 			<div class="col-12 text-center">
-				<h2>Dúvidas Frequentes</h2>
+				<h2 class="subtitulo">
+					Dúvidas Frequentes&nbsp;
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-question" width="35" height="35" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+						<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+						<path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
+						<path d="M19 22v.01" />
+						<path d="M19 19a2.003 2.003 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+					</svg>
+					<!-- <img loading="lazy" decoding="async" width="30" height="30" src="<?php echo base_url('assets/img/em_duvida.png') ?>" class="lazy" alt=""> -->
+				</h2>
 			</div>
 		</div>
 		<div class="row">
@@ -325,13 +335,12 @@
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingOne">
 									<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-										Cobra taxa antecipada para liberação de empréstimo?
+										Como faço para solicitar orçamento?
 									</button>
 								</h2>
 								<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 									<div class="accordion-body">
-										Não, correspondente bancários conveniados e certificados pelo banco central do Brasil não realizam esse tipo de cobrança.
-										Muito cuidado, pode ser golpe.
+										Entre em contato através do formulário ou clique em algum ícone do Whatsapp para iniciar um atendimento
 									</div>
 								</div>
 							</div>
@@ -341,18 +350,12 @@
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingTwo">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-										Quais tipos de empréstimos disponíveis?
+										Quais serviços a MBM trabalha?
 									</button>
 								</h2>
 								<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
 									<div class="accordion-body">
-										Empréstimo Consignado : Esse empréstimo é descontado diretamente da folha de pagamento, tem taxas diferenciadas, liberado para Servidores Públicos, Municipais e Federais, também pensionista e aposentados do INSS e algumas empresas privadas que possui convênio.
-										Empréstimo Pessoal: atende autônomos, pagamento via boleto ou débito em conta, liberação dos valores de acordo com o perfil de cada cliente e não libera com restrição no nome.
-										Empréstimo pessoal com garantia de veículo: Pagamento via boleto ou debito em conta, necessário ter um veículo quitado com ano maior de 2006.
-										Empréstimo FGTS: Antecipação de até 7 anos do saque aniversário FGTS
-										Liberação para todos os públicos desde de que tenha saldo FGTS, sem burocracia e consultar ao SPC/Serasa.
-										Empréstimo na conta de energia: Liberação de valores onde é cobrado diretamente da conta de energia, mesmo com restrição, requisito não ter conta em atraso e a mesma ser no nome do solicitante.
-
+										Trabalhamos com Instalação e manutenção de Sistemas climatizados e Refrigeração Comercial e Industrial, também fornecemos Assistência Técnica e Consultoria sempre buscando Soluções Sustentáveis com máxima Eficiência Energética.
 									</div>
 								</div>
 							</div>
@@ -362,12 +365,12 @@
 							<div class="accordion-item">
 								<h2 class="accordion-header" id="headingThree">
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-										Quais principais banco você trabalha ?
+										Quais marcas a MBM trabalha?
 									</button>
 								</h2>
 								<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
 									<div class="accordion-body">
-										Santander, Olé , Banco do Brasil , Pan , Safra , Mercantil , Daycoval, Itaú , Bradesco e outros ...
+										Somos autorizados a fazer manutenção nas marcas: Fujitsu, Daiklin, LG, Samsung, e Mídea Carrier, em breve atenderemos outras marcar também.
 									</div>
 								</div>
 							</div>
@@ -384,21 +387,21 @@
 
 
 <script src='https://www.google.com/recaptcha/api.js'></script>
-  <script>
-    (function() {
+<script>
+	(function() {
 
-      $("#form-contato").on('submit', function(e) {
-        e.preventDefault();
-        validateRecaptcha();
-      });
+		$("#form-contato").on('submit', function(e) {
+			e.preventDefault();
+			validateRecaptcha();
+		});
 
-      function validateRecaptcha(event) {
-        grecaptcha.execute();
-      }
+		function validateRecaptcha(event) {
+			grecaptcha.execute();
+		}
 
-    })();
+	})();
 
-    function onSubmitRecaptcha(response) {
-      document.getElementById('form-recaptcha').submit();
-    }
-  </script>
+	function onSubmitRecaptcha(response) {
+		document.getElementById('form-recaptcha').submit();
+	}
+</script>
