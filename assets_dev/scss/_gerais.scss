@@ -239,12 +239,20 @@ footer {
       rgba(24, 80, 158, 0) 100%
     ) !important;
 
+    @media (max-width: 900px){
+      text-align: center;
+    }
+
   .titulo-not-found {
     font-size: 200px;
     background: linear-gradient(to right, #f8f8f8, #d42536) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent;
     font-weight: 900;
+
+    @media (max-width: 900px){
+      font-size: 150px;
+    }
   }
 
   .page-not-found-btn-voltar {
