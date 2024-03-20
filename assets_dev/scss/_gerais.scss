@@ -195,7 +195,7 @@ footer {
   border-radius: 10px !important;
 
   .accordion-header {
-    border-radius:  10px !important;
+    border-radius: 10px !important;
 
     .accordion-button {
       border-radius: 10px !important;
@@ -208,7 +208,57 @@ footer {
   }
 }
 
-
 .accordion-button:not(.collapsed)::after {
   filter: brightness(0) invert(1);
+}
+
+#page-not-found {
+  overflow-x: hidden;
+  background-image: radial-gradient(
+      circle at 90% 46.66667%,
+      #00b1c1 0%,
+      17.5%,
+      rgba(0, 177, 193, 0) 35%
+    ),
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(0, 177, 193, 0.99) 0%,
+      18.5%,
+      rgba(0, 177, 193, 0) 37%
+    ),
+    radial-gradient(
+      circle at 93.66668% 42.66667%,
+      #00b1c1 0%,
+      12%,
+      rgba(0, 177, 193, 0) 40%
+    ),
+    radial-gradient(
+      circle at 48.90137% 49.52148%,
+      #18509e 0%,
+      100%,
+      rgba(24, 80, 158, 0) 100%
+    ) !important;
+
+  .titulo-not-found {
+    font-size: 200px;
+    background: linear-gradient(to right, #f8f8f8, #d42536) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+  }
+
+  .page-not-found-btn-voltar {
+    width: max-content !important; 
+    @media (max-width: 900px){
+      width: 100% !important;
+    }
+  }
+
+  .page-not-found-img{
+    width: 600px;
+
+    @media (max-width: 1024px){
+      width: 100% !important;
+    }
+  }
 }
