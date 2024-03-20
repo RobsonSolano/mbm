@@ -17,8 +17,9 @@
 
 	<script src="<?php echo base_url('assets/js_fixos/jquery.js') ?>"></script>
 	<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-
+	1
 	<title><?php echo APPLICATION_NAME ?></title>
+	<meta name="description" content="MBM Climatização - Garanta o melhor desempenho do seu ar condicionado e o conforto da sua familia com a nossa manutenção especializada">
 </head>
 
 <body id="pagina-principal" class="pagina-dark">
@@ -41,11 +42,12 @@
 					<li class="nav-item">
 						<a class="nav-link page-scroll" href="#servicos">Serviços</a>
 					</li>
+
 					<li class="nav-item">
-						<a class="nav-link page-scroll" href="#sobre">Sobre</a>
-					</li>
-					<li class="nav-item mr-5">
 						<a class="nav-link page-scroll" href="#contato">Contato</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link page-scroll" href="#duvidas-frequentes">FAQ</a>
 					</li>
 					<!-- <li class="nav-item">
 						<div class="nav-link custom-control custom-switch altera-tema" title="Alterar tema da página" data-toggle="tooltip">
@@ -53,9 +55,7 @@
 							<label class="altera-tema custom-control-label" for="customSwitch1"></label>
 						</div>
 					</li> -->
-
 				</ul>
-
 			</div>
 		</div>
 	</nav>
