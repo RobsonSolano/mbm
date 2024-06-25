@@ -69,6 +69,13 @@ class Home extends CI_Controller
 			array('required' => 'O campo %s é obrigatório.')
 		);
 
+		$this->form_validation->set_rules(
+			'cidade',
+			'Cidade',
+			'required|trim',
+			array('required' => 'O campo %s é obrigatório.')
+		);
+
 		if ($this->form_validation->run() == FALSE || empty($item['g-recaptcha-response'])) {
 			$recaptcha_not_checked = false;
 			if(empty($item['g-recaptcha-response'])){
@@ -77,10 +84,15 @@ class Home extends CI_Controller
 			$this->index('error', $recaptcha_not_checked);
 		} else {
 
+			if(empty($item['g-recaptcha-response'])){
+				$recaptcha_not_checked = true;
+				$this->index('error', true);
+				exit;
+			}
 			if ($this->_verify_full_name($item['nome']) == false) {
 				$this->index('error', 'name_error');
+				exit;
 			} else {
-
 				// Enviar e-mail
 				$send_email = send_email_contato('Nova Solicitação de orçamento', 'Novo contato pelo site', $item);
 

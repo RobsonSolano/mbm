@@ -1,9 +1,52 @@
 <style>
-	.btn-solicitacao:hover {
-		background-color: #343a40 !important;
-		color: #fff;
-		box-shadow: 0px 0px 10px #fff;
-		transition: 0.3s;
+
+	.chosen-container-single{
+		width: 100% !important;
+	}
+	/* Estilo para o Chosen.js */
+	.chosen-container-single,
+	.chosen-container-single:active,
+	.chosen-container-single:focus,
+	.chosen-container-single:focus-visible,
+	.chosen-container-single:focus-within,
+	.chosen-container-single.chosen-with-drop {
+		width: 100%;
+		height: calc(2.5rem + 2px);
+		border: 1px solid #ced4da;
+		/* Cor da borda padrão do Bootstrap */
+		border-radius: 0.25rem;
+		/* Raio das bordas padrão do Bootstrap */
+		background-color: #fff;
+		background: #fff;
+		/* Cor de fundo padrão do Bootstrap */
+		padding: 0.375rem 0.75rem;
+		/* Preenchimento padrão do Bootstrap */
+		font-size: 1rem;
+		/* Tamanho da fonte padrão do Bootstrap */
+		line-height: 1.5;
+		/* Altura da linha padrão do Bootstrap */
+		outline: none;
+	}
+
+	/* Estilo para o texto selecionado */
+	.chosen-container-single .chosen-single,
+	.chosen-container-single .chosen-single:active,
+	.chosen-container-single .chosen-single:focus,
+	.chosen-container-single .chosen-single:focus-visible,
+	.chosen-container-single .chosen-single:focus-within,
+	.chosen-container-single.chosen-with-drop .chosen-single {
+		height: 100%;
+		border: none;
+		border-radius: 0;
+		background-color: #fff;
+		box-shadow: none;
+		color: #212529;
+		/* Cor do texto padrão do Bootstrap */
+		padding: 0;
+		background: #fff;
+		border: none;
+		outline: none;
+		border: 1px solid #fff;
 	}
 </style>
 <!-- Home -->
@@ -22,7 +65,12 @@
 						Oferecemos uma ampla gama de serviços elétricos para atender as suas necessidades
 					</p>
 
-					<a href="http://api.whatsapp.com/send?phone=+5511949676793&text=Ol%C3%A1%2C%20venho%20atrav%C3%A9s%20do%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2" target="_blank" title="Entre em contato pelo Whatsapp">
+					<a href="https://web.whatsapp.com/send?phone=5511949676793&text=Ol%C3%A1%2C%20venho%20atrav%C3%A9s%20do%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2 d-none d-md-inline-block" target="_blank" title="Entre em contato pelo Whatsapp">
+						<span class="h5">
+							<i class="fa fa-whatsapp mr-1"></i> Saiba mais
+						</span>
+					</a>
+					<a href="https://wa.me/5511949676793?text=Ol%C3%A1%2C%20venho%20atrav%C3%A9s%20do%20site%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento" class="btn btn-primary text-white rounded-pill mt-3 px-4 py-2  d-inline-block d-md-none" target="_blank" title="Entre em contato pelo Whatsapp">
 						<span class="h5">
 							<i class="fa fa-whatsapp mr-1"></i> Saiba mais
 						</span>
@@ -31,7 +79,7 @@
 				</div>
 			</div>
 			<div class="col-12 col-md-12 col-lg-5 d-flex mt-5 mt-md-0 mt-5 mt-0">
-				<div class="area-ima-topo align-self-center d-flex justify-content-center justify-content-lg-end w-100">
+				<div class="area-ima-topo align-self-center d-flex justify-content-start justify-content-lg-end w-100">
 					<ul class="list-unstyled d-flex justify-content-start flex-column">
 						<li class="d-flex justify-content-start justify-content-lg-end align-items-center gap-4 mb-3 topo-li">
 							<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler rounded-circle border border-white circle-icon p-3 icons-tabler-outline icon-tabler-tool">
@@ -84,7 +132,7 @@
 						<h4 class="text-dark">
 							Sistemas climatizados
 						</h4>
-						<p class="text-dark">A Climatização é a disciplina responsável pelo condicionamento do ar ambiente, de forma a gerar conforto, qualidade e segurança no ar consumido pelos ocupantes dos espaços sejam corporativos ou comerciais</p>
+						<p class="text-dark">A Climatização é a disciplina responsável pelo condicionamento do ar ambiente, de forma a gerar conforto, qualidade e segurança no ar consumido pelos ocupantes dos espaços sejam corporativos ou comerciais.</p>
 						<a href="<?php echo base_url('contato') ?>" target="_self" rel="" class="mb-1 btn btn-dark text-white rounded-pill px-4 btn-saiba-mais">
 							Saiba mais
 						</a>
@@ -133,7 +181,7 @@
 						<h4 class="text-dark">
 							Manutenção e Consultoria
 						</h4>
-						<p class="text-dark">A manutenção é extremamente importante para manter o funcionamento, qualidade e prevenção, também prestamos consultoria para análise de instalação de equipamentos</p>
+						<p class="text-dark">A manutenção é extremamente importante para manter o funcionamento, qualidade e prevenção, também prestamos consultoria para análise de instalação de equipamentos.</p>
 						<a href="<?php echo base_url('contato') ?>" target="_self" rel="" class="mb-1 btn btn-dark text-white rounded-pill px-4 btn-saiba-mais">
 							Saiba mais
 						</a>
@@ -195,7 +243,7 @@
 
 			<div class="col-12 col-sm-12 col-md-10 col-lg-9 align-self-center">
 
-				<?php echo form_open('home/enviar') ?>
+				<?php echo form_open('home/enviar',  ['id' => 'contactForm']); ?>
 
 				<div class="row">
 
@@ -211,9 +259,9 @@
 							]; ?>
 
 							<?php $data_error = !empty(form_error($data['id'])) || !empty($name_error) ? 'border border-danger' : '' ?>
-							<?php $data['class'] = 'form-control input-simulacao ' . $data_error; ?>
+							<?php $data['class'] = 'js-input-nome form-control input-simulacao ' . $data_error; ?>
 
-							<label for="<?php echo $data['id'] ?>">Nome completo</label>
+							<label for="<?php echo $data['id'] ?>">Nome completo *</label>
 							<?php echo form_input($data) ?>
 							<small class="text-danger">
 								<?php echo form_error($data['id']) ?>
@@ -223,21 +271,21 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-sm-12 col-md-6">
+					<div class="col-12 col-sm-12 col-md-12 col-lg-4">
 						<div class="form-group">
 							<?php $data = [
 								'type' => 'email',
 								'name' => 'email',
 								'id' => 'email',
 								'placeholder' => 'Digite seu e-mail',
-								'class' => 'form-control input-simulacao',
+								'class' => 'js-input-email form-control input-simulacao',
 								'value' => set_value('email', null, false)
 							]; ?>
 
 							<?php $data_error = !empty(form_error($data['id'])) ? 'border border-danger' : '' ?>
 							<?php $data['class'] = 'form-control input-simulacao ' . $data_error; ?>
 
-							<label for="<?php echo $data['id'] ?>">E-mail</label>
+							<label for="<?php echo $data['id'] ?>">E-mail *</label>
 							<?php echo form_input($data) ?>
 							<small class="text-danger">
 								<?php echo form_error($data['id']) ?>
@@ -245,21 +293,21 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-sm-12 col-md-6">
+					<div class="col-12 col-sm-12 col-md-6 col-lg-4">
 						<div class="form-group">
 							<?php $data = [
 								'type' => 'text',
 								'name' => 'celular',
 								'id' => 'celular',
 								'placeholder' => '(00) 90000-0000',
-								'class' => 'form-control celular-mask',
+								'class' => 'js-input-celular form-control celular-mask',
 								'value' => set_value('celular', null, false)
 							]; ?>
 
 							<?php $data_error = !empty(form_error($data['id'])) ? 'border border-danger' : '' ?>
 							<?php $data['class'] = 'form-control celular-mask ' . $data_error; ?>
 
-							<label for="<?php echo $data['id'] ?>">Celular</label>
+							<label for="<?php echo $data['id'] ?>">Celular *</label>
 							<?php echo form_input($data) ?>
 							<small class="text-danger">
 								<?php echo form_error($data['id']) ?>
@@ -267,9 +315,23 @@
 						</div>
 					</div>
 
+					<div class="col-12 col-sm-6 col-lg-4">
+						<div class="form-group">
+							<label for="cidades">Selecione sua cidade *</label>
+							<?php
+							// Cria o select
+							echo form_dropdown('cidade', get_cidades_proximas(), '', ['class' => 'form-control chosen-select', 'id' => 'cidades','required' => 'required']);
+							?>
+							<small class="text-danger">
+								<?php echo form_error('cidade') ?>
+							</small>
+						</div>
+					</div>
+
+
 					<div class="col-12">
-						<label for="observacao">Observação (<small>Deixe alguma observação</small>)</label>
-						<textarea name="observacao" id="obervacao" rows="7" class="form-control" value="<?php echo set_value('observacao') ?>"></textarea>
+						<label for="observacao">Observação * (<small>Deixe alguma observação</small>)</label>
+						<textarea name="observacao" id="obervacao" rows="7" class="js-input-message form-control" value="<?php echo set_value('observacao') ?>"><?php echo set_value('observacao') ?></textarea>
 					</div>
 					<div class="col-12 d-flex justify-content-center py-3 flex-column align-items-center">
 						<div id="recaptcha" class="g-recaptcha <?php echo isset($recaptcha_not_checked) && $recaptcha_not_checked == true ? 'border-danger' : '' ?>" data-sitekey="<?php echo SITE_KEY_RECAPTCHA ?>" data-callback="onSubmitRecaptcha"></div>
@@ -282,7 +344,7 @@
 					</div>
 
 					<div class="col-12 mt-3 mb-3 d-flex justify-content-center">
-						<button type="submit" class="btn btn-lg btn-saiba-mais text-white rounded-pill px-4 d-flex gap-4 align-items-center">
+						<button type="submit" class="btn btn-lg btn-saiba-mais text-white rounded-pill px-4 d-flex gap-4 align-items-center js-btn-enviar-email">
 							Solicitar orçamento
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail-forward" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
 								<path stroke="none" d="M0 0h24v24H0z" fill="none" />

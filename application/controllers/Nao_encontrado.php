@@ -13,7 +13,8 @@ class Nao_encontrado extends CI_Controller
 
 	public function index()
 	{
-		$this->load->view('template/header');
+		$data['hide_whatsapp'] = true;
+		$this->load->view('template/header', $data);
 		$this->load->view('view_pagina_nao_encontrada');
 		$this->load->view('template/footer');
 	}

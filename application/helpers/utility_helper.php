@@ -59,3 +59,59 @@ if (!function_exists('validaCPF')) {
 		return true;
 	}
 }
+
+if (!function_exists('get_cidades_proximas')) {
+	function get_cidades_proximas($txt_padrao = "Selecione sua cidade", $selected = "")
+	{
+		$cidades_proximas = [
+			'' => $txt_padrao,
+			'Americana' => 'Americana',
+			'Araçariguama' => 'Araçariguama',
+			'Araçoiaba da Serra' => 'Araçoiaba da Serra',
+			'Boituva' => 'Boituva',
+			'Cabreúva' => 'Cabreúva',
+			'Campinas' => 'Campinas',
+			'Capivari' => 'Capivari',
+			'Cerquilho' => 'Cerquilho',
+			'Conchal' => 'Conchal',
+			'Cordeirópolis' => 'Cordeirópolis',
+			'Elias Fausto' => 'Elias Fausto',
+			'Hortolândia' => 'Hortolândia',
+			'Indaiatuba' => 'Indaiatuba',
+			'Itu' => 'Itu',
+			'Itupeva' => 'Itupeva',
+			'Jaguariúna' => 'Jaguariúna',
+			'Jarinu' => 'Jarinu',
+			'Jundiaí' => 'Jundiaí',
+			'Louveira' => 'Louveira',
+			'Monte Mor' => 'Monte Mor',
+			'Nova Odessa' => 'Nova Odessa',
+			'Paulínia' => 'Paulínia',
+			'Piedade' => 'Piedade',
+			'Pilar do Sul' => 'Pilar do Sul',
+			'Piracicaba' => 'Piracicaba',
+			'Porto Feliz' => 'Porto Feliz',
+			'Rafard' => 'Rafard',
+			'Rio das Pedras' => 'Rio das Pedras',
+			'Salto' => 'Salto',
+			'Salto de Pirapora' => 'Salto de Pirapora',
+			'Santa Bárbara dOeste' => 'Santa Bárbara dOeste',
+			'Santa Gertrudes' => 'Santa Gertrudes',
+			'Santa Maria da Serra' => 'Santa Maria da Serra',
+			'Santo Antônio de Posse' => 'Santo Antônio de Posse',
+			'Sorocaba' => 'Sorocaba',
+			'Sumaré' => 'Sumaré',
+			'Tatuí' => 'Tatuí',
+			'Tietê' => 'Tietê',
+			'Valinhos' => 'Valinhos',
+			'Vinhedo' => 'Vinhedo',
+			'Votorantim' => 'Votorantim'
+		];
+
+		if(!empty($selected)){
+			return $cidades_proximas[$selected];
+		}
+
+		return $cidades_proximas;
+	}
+}
