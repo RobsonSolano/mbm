@@ -1,9 +1,52 @@
 <style>
-	.btn-solicitacao:hover {
-		background-color: #343a40 !important;
-		color: #fff;
-		box-shadow: 0px 0px 10px #fff;
-		transition: 0.3s;
+
+	.chosen-container-single{
+		width: 100% !important;
+	}
+	/* Estilo para o Chosen.js */
+	.chosen-container-single,
+	.chosen-container-single:active,
+	.chosen-container-single:focus,
+	.chosen-container-single:focus-visible,
+	.chosen-container-single:focus-within,
+	.chosen-container-single.chosen-with-drop {
+		width: 100%;
+		height: calc(2.5rem + 2px);
+		border: 1px solid #ced4da;
+		/* Cor da borda padrão do Bootstrap */
+		border-radius: 0.25rem;
+		/* Raio das bordas padrão do Bootstrap */
+		background-color: #fff;
+		background: #fff;
+		/* Cor de fundo padrão do Bootstrap */
+		padding: 0.375rem 0.75rem;
+		/* Preenchimento padrão do Bootstrap */
+		font-size: 1rem;
+		/* Tamanho da fonte padrão do Bootstrap */
+		line-height: 1.5;
+		/* Altura da linha padrão do Bootstrap */
+		outline: none;
+	}
+
+	/* Estilo para o texto selecionado */
+	.chosen-container-single .chosen-single,
+	.chosen-container-single .chosen-single:active,
+	.chosen-container-single .chosen-single:focus,
+	.chosen-container-single .chosen-single:focus-visible,
+	.chosen-container-single .chosen-single:focus-within,
+	.chosen-container-single.chosen-with-drop .chosen-single {
+		height: 100%;
+		border: none;
+		border-radius: 0;
+		background-color: #fff;
+		box-shadow: none;
+		color: #212529;
+		/* Cor do texto padrão do Bootstrap */
+		padding: 0;
+		background: #fff;
+		border: none;
+		outline: none;
+		border: 1px solid #fff;
 	}
 </style>
 <!-- Home -->
@@ -36,7 +79,7 @@
 				</div>
 			</div>
 			<div class="col-12 col-md-12 col-lg-5 d-flex mt-5 mt-md-0 mt-5 mt-0">
-				<div class="area-ima-topo align-self-center d-flex justify-content-center justify-content-lg-end w-100">
+				<div class="area-ima-topo align-self-center d-flex justify-content-start justify-content-lg-end w-100">
 					<ul class="list-unstyled d-flex justify-content-start flex-column">
 						<li class="d-flex justify-content-start justify-content-lg-end align-items-center gap-4 mb-3 topo-li">
 							<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler rounded-circle border border-white circle-icon p-3 icons-tabler-outline icon-tabler-tool">
@@ -89,7 +132,7 @@
 						<h4 class="text-dark">
 							Sistemas climatizados
 						</h4>
-						<p class="text-dark">A Climatização é a disciplina responsável pelo condicionamento do ar ambiente, de forma a gerar conforto, qualidade e segurança no ar consumido pelos ocupantes dos espaços sejam corporativos ou comerciais</p>
+						<p class="text-dark">A Climatização é a disciplina responsável pelo condicionamento do ar ambiente, de forma a gerar conforto, qualidade e segurança no ar consumido pelos ocupantes dos espaços sejam corporativos ou comerciais.</p>
 						<a href="<?php echo base_url('contato') ?>" target="_self" rel="" class="mb-1 btn btn-dark text-white rounded-pill px-4 btn-saiba-mais">
 							Saiba mais
 						</a>
@@ -138,7 +181,7 @@
 						<h4 class="text-dark">
 							Manutenção e Consultoria
 						</h4>
-						<p class="text-dark">A manutenção é extremamente importante para manter o funcionamento, qualidade e prevenção, também prestamos consultoria para análise de instalação de equipamentos</p>
+						<p class="text-dark">A manutenção é extremamente importante para manter o funcionamento, qualidade e prevenção, também prestamos consultoria para análise de instalação de equipamentos.</p>
 						<a href="<?php echo base_url('contato') ?>" target="_self" rel="" class="mb-1 btn btn-dark text-white rounded-pill px-4 btn-saiba-mais">
 							Saiba mais
 						</a>
@@ -228,7 +271,7 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-sm-12 col-md-6">
+					<div class="col-12 col-sm-12 col-md-12 col-lg-4">
 						<div class="form-group">
 							<?php $data = [
 								'type' => 'email',
@@ -250,7 +293,7 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-sm-12 col-md-6">
+					<div class="col-12 col-sm-12 col-md-6 col-lg-4">
 						<div class="form-group">
 							<?php $data = [
 								'type' => 'text',
@@ -271,6 +314,20 @@
 							</small>
 						</div>
 					</div>
+
+					<div class="col-12 col-sm-6 col-lg-4">
+						<div class="form-group">
+							<label for="cidades">Selecione sua cidade *</label>
+							<?php
+							// Cria o select
+							echo form_dropdown('cidade', get_cidades_proximas(), '', ['class' => 'form-control chosen-select', 'id' => 'cidades','required' => 'required']);
+							?>
+							<small class="text-danger">
+								<?php echo form_error('cidade') ?>
+							</small>
+						</div>
+					</div>
+
 
 					<div class="col-12">
 						<label for="observacao">Observação * (<small>Deixe alguma observação</small>)</label>

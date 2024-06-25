@@ -12,12 +12,12 @@
 	<!-- =====BOX ICONS===== -->
 	<link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 	<script src="<?php echo base_url('assets/js_fixos/jquery.js') ?>"></script>
 	<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-	1
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
+
 	<title><?php echo APPLICATION_NAME ?></title>
 	<meta name="description" content="MBM Climatização - Garanta o melhor desempenho do seu ar condicionado e o conforto da sua familia com a nossa manutenção especializada">
 </head>
@@ -60,10 +60,9 @@
 		</div>
 	</nav>
 	<!-- /. Header -->
-
+	 
 	<?php $flash_message = $this->session->flashdata('flash_message'); ?>
 	<?php if (isset($flash_message)) { ?>
-		<?php $this->session->unset('flash_message') ?>
 		<div class="flash-message d-flex justify-content-center">
 			<div class="alert flash alert-<?php echo $flash_message['tipo'] ?>">
 				<h5><?php echo $flash_message['mensagem'] ?></h5>
