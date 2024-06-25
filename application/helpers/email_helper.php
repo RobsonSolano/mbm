@@ -16,7 +16,7 @@ if (!function_exists('send_codigo_to_email')) {
 
     $ci->email->from($ci->email->smtp_user, $title);
 
-    $ci->email->to($ci->email->smtp_user);
+    $ci->email->to('climatizacaombm@gmail.com');
 
     $ci->email->subject($subject);
 
@@ -24,6 +24,7 @@ if (!function_exists('send_codigo_to_email')) {
       'nome' => $data['nome'],
       'email' => $data['email'],
       'celular' => $data['celular'],
+      'cidade' => $data['cidade'],
       'observacao' => $data['observacao']
     ];
 

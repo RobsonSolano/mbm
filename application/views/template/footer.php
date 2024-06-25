@@ -54,7 +54,8 @@
 						<strong>Horario de atendimento:
 						</strong> 9:00 ás 18 horas (dias úteis).
 					</p>
-					<p>E-mail de contato: mdmsolucoesfinanceiras@gmail.com</p>
+					<p>E-mail de contato: mbmclimatizacaoar@gmail.com</p>
+					<p>CNPJ: 55.628.829/0001-25</p>
 					<p class="mr-4">&copy; Todos os direitos reservados - <?php echo date('Y') ?></p>
 				</div>
 			</div>
@@ -79,7 +80,9 @@
 	</a>
 </span>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Inclui o JavaScript do Chosen.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
@@ -87,6 +90,13 @@
 
 <!--===== MAIN JS =====-->
 <script src="<?php echo base_url('assets/js/main.min.js') ?>"></script>
+
+<script>
+        // Inicializa o plugin Chosen.js
+        $(document).ready(function(){
+            $('#cidades').chosen();
+        });
+    </script>
 </body>
 
 </html>

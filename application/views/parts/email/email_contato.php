@@ -35,6 +35,7 @@
         <p><strong>Nome</strong>: <?php echo $nome ?></p>
         <p><strong>E-mail</strong>: <a href="mailto:<?php echo $email ?>"><?php echo $email ?></a></p>
         <p><strong>Celular</strong>: <a href="tel:+<?php echo $celular ?>"><?php echo $celular ?></a></p>
+        <p><strong>Cidade</strong>: <?php echo $cidade ?></p>
         <p><strong>Observação</strong>:
             <?php echo isset($observacao) && !empty($observacao) ? $observacao : "Nenhuma observação informada." ?>
         </p>
