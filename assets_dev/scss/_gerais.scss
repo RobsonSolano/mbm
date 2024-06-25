@@ -65,9 +65,10 @@ a {
 
 .hard-title {
   font-size: 2em;
+  font-weight: 600;
 
   @media (max-width: 768px) {
-    font-size: 1.7em;
+    font-size: 1.5em;
   }
 }
 
@@ -86,10 +87,6 @@ a {
     transition: 0.8s;
     transform: rotateY(360deg);
   }
-}
-
-.hard-title {
-  font-weight: 600;
 }
 
 .rodape,
@@ -239,12 +236,20 @@ footer {
       rgba(24, 80, 158, 0) 100%
     ) !important;
 
+    @media (max-width: 900px){
+      text-align: center;
+    }
+
   .titulo-not-found {
     font-size: 200px;
     background: linear-gradient(to right, #f8f8f8, #d42536) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent;
     font-weight: 900;
+
+    @media (max-width: 900px){
+      font-size: 150px;
+    }
   }
 
   .page-not-found-btn-voltar {
