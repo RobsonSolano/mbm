@@ -248,7 +248,7 @@
 				<div class="row">
 
 					<div class="col-12 col-sm-12">
-						<div class="form-group">
+						<div class="form-group mb-3">
 							<?php $data = [
 								'type' => 'text',
 								'name' => 'nome',
@@ -272,7 +272,7 @@
 					</div>
 
 					<div class="col-12 col-sm-12 col-md-12 col-lg-4">
-						<div class="form-group">
+						<div class="form-group mb-3">
 							<?php $data = [
 								'type' => 'email',
 								'name' => 'email',
@@ -294,7 +294,7 @@
 					</div>
 
 					<div class="col-12 col-sm-12 col-md-6 col-lg-4">
-						<div class="form-group">
+						<div class="form-group mb-3">
 							<?php $data = [
 								'type' => 'text',
 								'name' => 'celular',
@@ -316,7 +316,7 @@
 					</div>
 
 					<div class="col-12 col-sm-6 col-lg-4">
-						<div class="form-group">
+						<div class="form-group mb-3">
 							<label for="cidades">Selecione sua cidade *</label>
 							<?php
 							// Cria o select
