@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Handle Angular and Laravel / Symfony style 'index.php' hiding
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+
+# Disable server signature start
+ServerSignature Off
+# Disable server signature end

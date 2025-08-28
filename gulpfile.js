@@ -41,11 +41,11 @@ const sounds_dist = 'assets/sounds/';
 const fonts_dist = 'assets/fonts/';
 const sass_dist = 'assets/scss/';
 
-// Modules Assets
-const css_modules = 'application/modules/**/assets/css/*.css';
-const sass_modules = 'application/modules/**/assets/scss/*.scss';
-const js_modules = 'application/modules/**/assets/js/*.js';
-const img_modules = 'application/modules/**/assets/img/*';
+// Modules Assets (CI4 structure)
+const css_modules = 'app/modules/**/assets/css/*.css';
+const sass_modules = 'app/modules/**/assets/scss/*.scss';
+const js_modules = 'app/modules/**/assets/js/*.js';
+const img_modules = 'app/modules/**/assets/img/*';
 
 const css_dist_modules = 'assets/css/modules/';
 const js_dist_modules = 'assets/js/modules/';
