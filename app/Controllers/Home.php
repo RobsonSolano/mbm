@@ -75,16 +75,14 @@ class Home extends BaseController
             ]
         ]);
 
-        if (!$validation->withRequest($this->request)->run() || empty($item['g-recaptcha-response'])) {
-            $recaptcha_not_checked = false;
-            if (empty($item['g-recaptcha-response'])) {
-                $recaptcha_not_checked = true;
-            }
+        // Verificar reCAPTCHA
+        $recaptcha = new \App\Libraries\Mc_recaptcha();
+        $recaptcha_valid = $recaptcha->validated();
+        
+        if (!$validation->withRequest($this->request)->run() || !$recaptcha_valid) {
+            $recaptcha_not_checked = !$recaptcha_valid;
             return $this->index('error', $recaptcha_not_checked);
         } else {
-            if (empty($item['g-recaptcha-response'])) {
-                return $this->index('error', true);
-            }
             
             if ($this->_verify_full_name($item['nome']) == false) {
                 return $this->index('error', 'name_error');
@@ -111,6 +109,21 @@ class Home extends BaseController
         }
     }
 
+
+    /**
+     *
+     */
+    public function view_email_contato()
+    {
+        $data['nome'] = 'João da Silva';
+        $data['email'] = 'joao@silva.com';
+        $data['celular'] = '(11) 99999-9999';
+        $data['cidade'] = 'São Paulo';
+        $data['observacao'] = 'Gostaria de saber mais sobre os serviços de climatização';
+
+        return view('parts/email/email_contato', $data);
+    }
+    
     private function _verify_full_name($name)
     {
         $nome_completo = explode(' ', trim($name));
@@ -121,4 +134,5 @@ class Home extends BaseController
             return false;
         }
     }
+
 }
