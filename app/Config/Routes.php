@@ -11,6 +11,9 @@ if (ENVIRONMENT == 'development') {
     $routes->get('/view_email_contato', 'Home::view_email_contato');
 }
 
+// Rota para teste de envio de email
+$routes->get('/teste_envio_email', 'Home::teste_envio_email');
+
 $routes->post('/enviar', 'Home::enviar');
 $routes->get('/404', 'NaoEncontrado::index');
 

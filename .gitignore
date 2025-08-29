@@ -1,3 +1,4 @@
 writable/debugbar/*
 writable/logs/*.log
 writable/sessions/*
+.env
