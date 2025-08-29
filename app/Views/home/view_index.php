@@ -331,7 +331,7 @@
 
 					<div class="col-12">
 						<label for="observacao">Observação * (<small>Deixe alguma observação</small>)</label>
-						<textarea name="observacao" id="obervacao" rows="7" class="js-input-message form-control" value="<?php echo set_value('observacao') ?>"><?php echo set_value('observacao') ?></textarea>
+						<textarea name="observacao" id="obervacao" rows="10" style="min-height: 150px;" class="js-input-message form-control" value="<?php echo set_value('observacao') ?>"><?php echo set_value('observacao') ?></textarea>
 					</div>
 					<div class="col-12 d-flex justify-content-center py-3 flex-column align-items-center">
 						<div id="recaptcha" class="g-recaptcha <?php echo isset($recaptcha_not_checked) && $recaptcha_not_checked == true ? 'border-danger' : '' ?>" data-sitekey="<?php echo SITE_KEY_RECAPTCHA ?>" data-callback="onSubmitRecaptcha"></div>

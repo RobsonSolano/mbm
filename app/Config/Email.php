@@ -6,9 +6,24 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail = 'naoresponder@mbmclimacizacao.com.br';
-    public string $fromName = 'MBM Climatização';
+    public string $fromEmail = '';
+    public string $fromName = '';
     public string $recipients = '';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Load from environment variables
+        $this->fromEmail = env('email.fromEmail', 'hello@example.com');
+        $this->fromName = env('email.fromName', 'MBM Climatizacao');
+        $this->protocol = env('email.protocol', 'smtp');
+        $this->SMTPHost = env('email.SMTPHost', 'mailhog');
+        $this->SMTPPort = (int) env('email.SMTPPort', 1025);
+        $this->SMTPUser = env('email.SMTPUser', '');
+        $this->SMTPPass = env('email.SMTPPass', '');
+        $this->SMTPCrypto = env('email.SMTPCrypto', '');
+    }
 
     /**
      * The "user agent"
@@ -18,7 +33,7 @@ class Email extends BaseConfig
     /**
      * The mail sending protocol: mail, sendmail, smtp
      */
-    public string $protocol = 'mail';
+    public string $protocol = 'smtp';
 
     /**
      * The server path to Sendmail.
@@ -28,7 +43,7 @@ class Email extends BaseConfig
     /**
      * SMTP Server Address
      */
-    public string $SMTPHost = '';
+    public string $SMTPHost = 'mailhog';
 
     /**
      * SMTP Username
@@ -43,7 +58,7 @@ class Email extends BaseConfig
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 25;
+    public int $SMTPPort = 1025;
 
     /**
      * SMTP Timeout (in seconds)
