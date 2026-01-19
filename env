@@ -22,15 +22,15 @@ CI_ENVIRONMENT = development
 
 app.baseURL = 'https://php81.nano.docker/_estudos/pessoal/mbm/'
 
-# Email Configuration
+# Email Configuration - Teste Gmail passo a passo
 email.protocol = smtp
-email.SMTPHost = mailhog
-email.SMTPPort = 1025
+email.SMTPHost = ""
+email.SMTPPort = 587
 email.SMTPUser = ""
 email.SMTPPass = ""
-email.SMTPCrypto = ""
-email.fromEmail = "hello@example.com"
-email.fromName = "MBM Climatizacao"
+email.SMTPCrypto = "tls"
+email.fromEmail = ""
+email.fromName = ""
 # If you have trouble with `.`, you could also use `_`.
 # app_baseURL = ''
 # app.forceGlobalSecureRequests = false

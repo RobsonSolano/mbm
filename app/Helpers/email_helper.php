@@ -10,13 +10,30 @@ if (!function_exists('send_email_contato')) {
      */
     function send_email_contato($title, $subject, $data)
     {
-        $email = \Config\Services::email();
+        // Configurações Gmail que funcionaram no PHPMailer
+        $config = [
+            'protocol' => 'smtp',
+            'SMTPHost' => 'smtp.gmail.com',
+            'SMTPPort' => 587,
+            'SMTPUser' => 'climatizacaombm@gmail.com',
+            'SMTPPass' => 'zzou ofwe jikm jfpo', // Mesma senha que funcionou no PHPMailer
+            'SMTPCrypto' => 'tls',
+            'SMTPAuth' => true,
+            'mailType' => 'html',
+            'charset' => 'UTF-8',
+            'wordWrap' => true,
+            'SMTPTimeout' => 60,
+            'newline' => "\r\n",
+            'CRLF' => "\r\n"
+        ];
+        
+        $email = \Config\Services::email($config);
         
         // Usar configurações do .env
-        $fromEmail = env('email.fromEmail', 'hello@example.com');
+        $fromEmail = env('email.fromEmail', 'nao-responder@mbmclimatizacao.kesug.com');
         $fromName = env('email.fromName', 'MBM Climatizacao');
         
-        $email->setFrom($fromEmail, $title);
+        $email->setFrom($fromEmail, 'Contato via Site - MBM');
         $email->setTo('climatizacaombm@gmail.com');
         $email->setSubject($subject);
         $email->setReplyTo($fromEmail);
