@@ -288,6 +288,20 @@ class Home extends BaseController
             return redirect()->to(base_url());
         }
 
+        // Valida e normaliza o celular (remove caracteres não numéricos e limita a 11 dígitos)
+        $celular = preg_replace('/\D/', '', $this->request->getPost('celular'));
+        if (strlen($celular) > 11) {
+            $celular = substr($celular, 0, 11);
+        }
+        if (strlen($celular) < 10) {
+            $session = session();
+            $session->setFlashdata('flash_message', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe um número de celular válido (11 dígitos).', 
+                'tipo' => 'danger'
+            ]);
+            return redirect()->to(base_url());
+        }
+
         // Salva solicitação no banco
         $ip = $this->request->getIPAddress();
         $navegador = $this->request->getUserAgent()->getAgentString();
@@ -295,7 +309,7 @@ class Home extends BaseController
         $dados = [
             'nome' => $nome,
             'email' => $this->request->getPost('email'),
-            'celular' => $this->request->getPost('celular'),
+            'celular' => $celular,
             'cidade' => $this->request->getPost('cidade'),
             'observacao' => $this->request->getPost('observacao'),
             'ip' => $ip,

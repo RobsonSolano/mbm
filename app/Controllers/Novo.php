@@ -69,8 +69,11 @@ class Novo extends BaseController
             ],
             'celular' => [
                 'label' => 'Celular',
-                'rules' => 'required|trim',
-                'errors' => ['required' => 'O campo {field} é obrigatório.']
+                'rules' => 'required|trim|max_length[15]',
+                'errors' => [
+                    'required' => 'O campo {field} é obrigatório.',
+                    'max_length' => 'O {field} deve ter no máximo 11 dígitos.'
+                ]
             ],
             'cidade' => [
                 'label' => 'Cidade',
@@ -105,6 +108,20 @@ class Novo extends BaseController
             return redirect()->to(base_url('novo'));
         }
 
+        // Valida e normaliza o celular (remove caracteres não numéricos e limita a 11 dígitos)
+        $celular = preg_replace('/\D/', '', $this->request->getPost('celular'));
+        if (strlen($celular) > 11) {
+            $celular = substr($celular, 0, 11);
+        }
+        if (strlen($celular) < 10) {
+            $session = session();
+            $session->setFlashdata('flash_message', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe um número de celular válido (11 dígitos).', 
+                'tipo' => 'danger'
+            ]);
+            return redirect()->to(base_url('novo'));
+        }
+
         // Salva solicitação no banco
         $ip = $this->request->getIPAddress();
         $navegador = $this->request->getUserAgent()->getAgentString();
@@ -112,7 +129,7 @@ class Novo extends BaseController
         $dados = [
             'nome' => $nome,
             'email' => $this->request->getPost('email'),
-            'celular' => $this->request->getPost('celular'),
+            'celular' => $celular,
             'cidade' => $this->request->getPost('cidade'),
             'observacao' => $this->request->getPost('observacao'),
             'ip' => $ip,

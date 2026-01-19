@@ -467,7 +467,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="celular_modal" class="form-label">Celular *</label>
-                    <input type="text" class="form-control celular-mask" id="celular_modal" name="celular" placeholder="(00) 90000-0000" required>
+                    <input type="text" class="form-control celular-mask" id="celular_modal" name="celular" placeholder="(11) 99999-9999" required maxlength="15">
                 </div>
                 <div class="mb-3">
                     <label for="cidade_modal" class="form-label">Cidade *</label>

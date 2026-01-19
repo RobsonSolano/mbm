@@ -69,6 +69,66 @@
     </div>
 </div>
 
+<!-- Cards Clientes -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-dark border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2 opacity-75">Total Clientes</h6>
+                        <h2 class="mb-0 fw-bold"><?php echo number_format($total_clientes ?? 0) ?></h2>
+                        <small class="opacity-75">cadastrados</small>
+                    </div>
+                    <i class="fas fa-users fa-3x opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-danger border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2 opacity-75">Clientes Bloqueados</h6>
+                        <h2 class="mb-0 fw-bold"><?php echo number_format($clientes_bloqueados ?? 0) ?></h2>
+                        <small class="opacity-75">bloqueados</small>
+                    </div>
+                    <i class="fas fa-lock fa-3x opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-info border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2 opacity-75">Solicitações Não Lidas</h6>
+                        <h2 class="mb-0 fw-bold"><?php echo number_format($solicitacoes_nao_lidas ?? 0) ?></h2>
+                        <small class="opacity-75">não lidas</small>
+                    </div>
+                    <i class="fas fa-envelope fa-3x opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-secondary border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2 opacity-75">Clientes Não Lidos</h6>
+                        <h2 class="mb-0 fw-bold"><?php echo number_format($clientes_nao_lidos ?? 0) ?></h2>
+                        <small class="opacity-75">não lidos</small>
+                    </div>
+                    <i class="fas fa-user fa-3x opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Estatísticas de Acessos -->
 <div class="row mb-4">
     <div class="col-md-4 mb-4">
