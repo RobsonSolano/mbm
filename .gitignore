@@ -2,3 +2,8 @@ writable/debugbar/*
 writable/logs/*.log
 writable/sessions/*
 .env
+
+
+# Ignore node_modules and vendor
+node_modules/*
+vendor/*
