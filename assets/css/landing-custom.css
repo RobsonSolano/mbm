@@ -1,0 +1,30 @@
+/* Apenas estilos customizados adicionais */
+.hero-gradient {
+    background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%);
+}
+
+.service-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.icon-wrapper {
+    transition: all 0.4s ease;
+}
+
+.service-card:hover .icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}

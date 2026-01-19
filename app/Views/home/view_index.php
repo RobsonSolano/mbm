@@ -447,6 +447,52 @@
 
 <!-- Sessão de contato -->
 
+<!-- Modal de Solicitação de Atendimento -->
+<div class="modal fade" id="modalSolicitacao" tabindex="-1" aria-labelledby="modalSolicitacaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalSolicitacaoLabel">Solicitar Atendimento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <?php echo form_open(base_url('home/solicitar'), ['id' => 'formSolicitacao']); ?>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="nome_modal" class="form-label">Nome Completo *</label>
+                    <input type="text" class="form-control" id="nome_modal" name="nome" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email_modal" class="form-label">E-mail *</label>
+                    <input type="email" class="form-control" id="email_modal" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="celular_modal" class="form-label">Celular *</label>
+                    <input type="text" class="form-control celular-mask" id="celular_modal" name="celular" placeholder="(00) 90000-0000" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cidade_modal" class="form-label">Cidade *</label>
+                    <input type="text" class="form-control" id="cidade_modal" name="cidade" required>
+                </div>
+                <div class="mb-3">
+                    <label for="observacao_modal" class="form-label">Observação *</label>
+                    <textarea class="form-control" id="observacao_modal" name="observacao" rows="4" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Enviar Solicitação</button>
+            </div>
+            <?php echo form_close(); ?>
+        </div>
+    </div>
+</div>
+
+<!-- Botão flutuante para abrir modal -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+    <button type="button" class="btn btn-primary btn-lg rounded-circle" data-bs-toggle="modal" data-bs-target="#modalSolicitacao" title="Solicitar Atendimento">
+        <i class="fa fa-envelope"></i>
+    </button>
+</div>
 
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script>
