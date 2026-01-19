@@ -12,7 +12,7 @@ class SolicitacaoModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nome', 'email', 'celular', 'cidade', 'observacao', 'status', 'ip', 'navegador'];
+    protected $allowedFields    = ['nome', 'email', 'celular', 'cidade', 'observacao', 'observacao_admin', 'status', 'lido', 'ip', 'navegador'];
 
     // Dates
     protected $useTimestamps = true;

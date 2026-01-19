@@ -5,5 +5,5 @@ writable/sessions/*
 
 
 # Ignore node_modules and vendor
-node_modules/
-vendor/
+node_modules/*
+vendor/*

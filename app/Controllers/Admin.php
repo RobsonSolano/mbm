@@ -7,6 +7,8 @@ use App\Models\SolicitacaoModel;
 use App\Models\MarcaModel;
 use App\Models\ParceiroModel;
 use App\Models\AcessoModel;
+use App\Models\ClienteModel;
+use App\Models\ServicoClienteModel;
 
 class Admin extends BaseController
 {
@@ -15,6 +17,8 @@ class Admin extends BaseController
     protected $marcaModel;
     protected $parceiroModel;
     protected $acessoModel;
+    protected $clienteModel;
+    protected $servicoClienteModel;
 
     public function __construct()
     {
@@ -23,6 +27,8 @@ class Admin extends BaseController
         $this->marcaModel = new MarcaModel();
         $this->parceiroModel = new ParceiroModel();
         $this->acessoModel = new AcessoModel();
+        $this->clienteModel = new ClienteModel();
+        $this->servicoClienteModel = new ServicoClienteModel();
         date_default_timezone_set('America/Sao_Paulo');
     }
 
@@ -168,6 +174,24 @@ class Admin extends BaseController
         $data['total_marcas'] = $this->marcaModel->countAllResults();
         $data['total_parceiros'] = $this->parceiroModel->countAllResults();
         $data['total_acessos'] = $this->acessoModel->countAllResults();
+        
+        // Estatísticas de clientes (com try-catch caso as tabelas ainda não existam)
+        try {
+            $data['total_clientes'] = $this->clienteModel->contarAtivos();
+            $data['clientes_bloqueados'] = $this->clienteModel->contarBloqueados();
+            $data['clientes_nao_lidos'] = $this->clienteModel->contarNaoLidos();
+        } catch (\Exception $e) {
+            $data['total_clientes'] = 0;
+            $data['clientes_bloqueados'] = 0;
+            $data['clientes_nao_lidos'] = 0;
+        }
+        
+        // Solicitações não lidas (com try-catch caso a coluna ainda não exista)
+        try {
+            $data['solicitacoes_nao_lidas'] = $this->solicitacaoModel->where('lido', 0)->countAllResults();
+        } catch (\Exception $e) {
+            $data['solicitacoes_nao_lidas'] = 0;
+        }
 
         $db = \Config\Database::connect();
 
@@ -312,7 +336,7 @@ class Admin extends BaseController
     }
 
     /**
-     * Gestão de Marcas
+     * Listagem de Marcas
      */
     public function marcas()
     {
@@ -320,52 +344,13 @@ class Admin extends BaseController
             return redirect()->to(base_url('admin/login'));
         }
 
-        if ($this->request->getMethod() === 'post') {
-            $acao = $this->request->getPost('acao');
-
-            if ($acao === 'criar') {
-                $logo = '';
-                $file = $this->request->getFile('logo_file');
-                if ($file && $file->isValid()) {
-                    $logo = $this->uploadImagem($file, 'marcas');
-                }
-                
-                $dados = [
-                    'nome' => $this->request->getPost('nome'),
-                    'logo' => $logo,
-                    'descricao' => $this->request->getPost('descricao'),
-                    'ordem' => (int)$this->request->getPost('ordem') ?? 0,
-                    'ativo' => $this->request->getPost('ativo') ? 1 : 0
-                ];
-                $this->marcaModel->insert($dados);
-                $session = session();
-                $session->setFlashdata('sucesso', 'Marca criada com sucesso!');
-            } elseif ($acao === 'editar') {
-                $id = $this->request->getPost('id');
-                $marcaAntiga = $this->marcaModel->find($id);
-                
-                $logo = $marcaAntiga['logo'] ?? '';
-                $file = $this->request->getFile('logo_file');
-                if ($file && $file->isValid()) {
-                    $logo = $this->uploadImagem($file, 'marcas', $logo);
-                }
-                
-                $dados = [
-                    'nome' => $this->request->getPost('nome'),
-                    'logo' => $logo,
-                    'descricao' => $this->request->getPost('descricao'),
-                    'ordem' => (int)$this->request->getPost('ordem') ?? 0,
-                    'ativo' => $this->request->getPost('ativo') ? 1 : 0
-                ];
-                $this->marcaModel->update($id, $dados);
-                $session = session();
-                $session->setFlashdata('sucesso', 'Marca atualizada com sucesso!');
-            } elseif ($acao === 'excluir') {
-                $id = $this->request->getPost('id');
-                $this->marcaModel->delete($id);
-                $session = session();
-                $session->setFlashdata('sucesso', 'Marca excluída com sucesso!');
-            }
+        // Handle delete via POST
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = $this->request->getPost('id');
+            $this->marcaModel->delete($id);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Marca excluída com sucesso!');
+            return redirect()->to(base_url('admin/marcas'));
         }
 
         $data['marcas'] = $this->marcaModel->orderBy('ordem', 'ASC')->findAll();
@@ -375,7 +360,90 @@ class Admin extends BaseController
     }
 
     /**
-     * Gestão de Parceiros
+     * Visualizar Marca
+     */
+    public function marcaView($id)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['marca'] = $this->marcaModel->find($id);
+        if (!$data['marca']) {
+            $session = session();
+            $session->setFlashdata('erro', 'Marca não encontrada.');
+            return redirect()->to(base_url('admin/marcas'));
+        }
+
+        $data['title'] = 'Marca - ' . $data['marca']['nome'];
+        $data['content'] = view('admin/marca_view', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Formulário de Marca (criar/editar)
+     */
+    public function marcaForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['marca'] = null;
+        if ($id) {
+            $data['marca'] = $this->marcaModel->find($id);
+            if (!$data['marca']) {
+                $session = session();
+                $session->setFlashdata('erro', 'Marca não encontrada.');
+                return redirect()->to(base_url('admin/marcas'));
+            }
+        }
+
+        $data['title'] = $id ? 'Editar Marca' : 'Nova Marca';
+        $data['content'] = view('admin/marca_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar Marca
+     */
+    public function marcaSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $marcaAntiga = $id ? $this->marcaModel->find($id) : null;
+        
+        $logo = $marcaAntiga['logo'] ?? '';
+        $file = $this->request->getFile('logo_file');
+        if ($file && $file->isValid()) {
+            $logo = $this->uploadImagem($file, 'marcas', $logo);
+        }
+        
+        $dados = [
+            'nome' => $this->request->getPost('nome'),
+            'logo' => $logo,
+            'descricao' => $this->request->getPost('descricao'),
+            'ordem' => (int)($this->request->getPost('ordem') ?? 0),
+            'ativo' => $this->request->getPost('ativo') ? 1 : 0
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->marcaModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Marca atualizada com sucesso!');
+        } else {
+            $this->marcaModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Marca criada com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/marcas'));
+    }
+
+    /**
+     * Listagem de Parceiros
      */
     public function parceiros()
     {
@@ -383,59 +451,499 @@ class Admin extends BaseController
             return redirect()->to(base_url('admin/login'));
         }
 
-        if ($this->request->getMethod() === 'post') {
-            $acao = $this->request->getPost('acao');
-
-            if ($acao === 'criar') {
-                $logo = '';
-                $file = $this->request->getFile('logo_file');
-                if ($file && $file->isValid()) {
-                    $logo = $this->uploadImagem($file, 'parceiros');
-                }
-                
-                $dados = [
-                    'nome' => $this->request->getPost('nome'),
-                    'logo' => $logo,
-                    'link' => $this->request->getPost('link'),
-                    'descricao' => $this->request->getPost('descricao'),
-                    'ordem' => (int)$this->request->getPost('ordem') ?? 0,
-                    'ativo' => $this->request->getPost('ativo') ? 1 : 0
-                ];
-                $this->parceiroModel->insert($dados);
-                $session = session();
-                $session->setFlashdata('sucesso', 'Parceiro criado com sucesso!');
-            } elseif ($acao === 'editar') {
-                $id = $this->request->getPost('id');
-                $parceiroAntigo = $this->parceiroModel->find($id);
-                
-                $logo = $parceiroAntigo['logo'] ?? '';
-                $file = $this->request->getFile('logo_file');
-                if ($file && $file->isValid()) {
-                    $logo = $this->uploadImagem($file, 'parceiros', $logo);
-                }
-                
-                $dados = [
-                    'nome' => $this->request->getPost('nome'),
-                    'logo' => $logo,
-                    'link' => $this->request->getPost('link'),
-                    'descricao' => $this->request->getPost('descricao'),
-                    'ordem' => (int)$this->request->getPost('ordem') ?? 0,
-                    'ativo' => $this->request->getPost('ativo') ? 1 : 0
-                ];
-                $this->parceiroModel->update($id, $dados);
-                $session = session();
-                $session->setFlashdata('sucesso', 'Parceiro atualizado com sucesso!');
-            } elseif ($acao === 'excluir') {
-                $id = $this->request->getPost('id');
-                $this->parceiroModel->delete($id);
-                $session = session();
-                $session->setFlashdata('sucesso', 'Parceiro excluído com sucesso!');
-            }
+        // Handle delete via POST
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = $this->request->getPost('id');
+            $this->parceiroModel->delete($id);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Parceiro excluído com sucesso!');
+            return redirect()->to(base_url('admin/parceiros'));
         }
 
         $data['parceiros'] = $this->parceiroModel->orderBy('ordem', 'ASC')->findAll();
         $data['title'] = 'Gestão de Parceiros';
         $data['content'] = view('admin/parceiros', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Visualizar Parceiro
+     */
+    public function parceiroView($id)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['parceiro'] = $this->parceiroModel->find($id);
+        if (!$data['parceiro']) {
+            $session = session();
+            $session->setFlashdata('erro', 'Parceiro não encontrado.');
+            return redirect()->to(base_url('admin/parceiros'));
+        }
+
+        $data['title'] = 'Parceiro - ' . $data['parceiro']['nome'];
+        $data['content'] = view('admin/parceiro_view', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Formulário de Parceiro (criar/editar)
+     */
+    public function parceiroForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['parceiro'] = null;
+        if ($id) {
+            $data['parceiro'] = $this->parceiroModel->find($id);
+            if (!$data['parceiro']) {
+                $session = session();
+                $session->setFlashdata('erro', 'Parceiro não encontrado.');
+                return redirect()->to(base_url('admin/parceiros'));
+            }
+        }
+
+        $data['title'] = $id ? 'Editar Parceiro' : 'Novo Parceiro';
+        $data['content'] = view('admin/parceiro_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar Parceiro
+     */
+    public function parceiroSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $parceiroAntigo = $id ? $this->parceiroModel->find($id) : null;
+        
+        $logo = $parceiroAntigo['logo'] ?? '';
+        $file = $this->request->getFile('logo_file');
+        if ($file && $file->isValid()) {
+            $logo = $this->uploadImagem($file, 'parceiros', $logo);
+        }
+        
+        $dados = [
+            'nome' => $this->request->getPost('nome'),
+            'logo' => $logo,
+            'link' => $this->request->getPost('link'),
+            'descricao' => $this->request->getPost('descricao'),
+            'ordem' => (int)($this->request->getPost('ordem') ?? 0),
+            'ativo' => $this->request->getPost('ativo') ? 1 : 0
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->parceiroModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Parceiro atualizado com sucesso!');
+        } else {
+            $this->parceiroModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Parceiro criado com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/parceiros'));
+    }
+
+    /**
+     * Contar solicitações não lidas (para atualizar badge)
+     */
+    public function contarSolicitacoesNaoLidas()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false, 'count' => 0]);
+        }
+
+        try {
+            $count = $this->solicitacaoModel->where('lido', 0)->countAllResults();
+            return $this->response->setJSON(['success' => true, 'count' => $count]);
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['success' => false, 'count' => 0]);
+        }
+    }
+
+    /**
+     * Marcar solicitação como lida/não lida
+     */
+    public function marcarSolicitacaoLida()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Não autorizado']);
+        }
+
+        $id = $this->request->getPost('id');
+        $lido = $this->request->getPost('lido') == '1' ? 1 : 0;
+
+        if ($id) {
+            try {
+                $this->solicitacaoModel->update($id, ['lido' => $lido]);
+                return $this->response->setJSON([
+                    'success' => true, 
+                    'message' => $lido ? 'Marcado como lido' : 'Marcado como não lido'
+                ]);
+            } catch (\Exception $e) {
+                log_message('error', 'Erro ao marcar solicitação como lida: ' . $e->getMessage());
+                return $this->response->setJSON([
+                    'success' => false, 
+                    'message' => 'Erro ao atualizar'
+                ]);
+            }
+        }
+
+        return $this->response->setJSON(['success' => false, 'message' => 'ID inválido']);
+    }
+
+    /**
+     * Adicionar observação do admin na solicitação
+     */
+    public function adicionarObservacaoSolicitacao()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $observacao = $this->request->getPost('observacao_admin');
+
+        if ($id && $observacao) {
+            $this->solicitacaoModel->update($id, ['observacao_admin' => $observacao]);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Observação adicionada com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/solicitacoes'));
+    }
+
+    /**
+     * Gestão de Clientes
+     */
+    public function clientes()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $ordenacao = $this->request->getGet('ordenacao') ?? 'id';
+        $direcao = $this->request->getGet('direcao') ?? 'DESC';
+        $filtroNome = $this->request->getGet('filtro_nome') ?? '';
+        $filtroEmail = $this->request->getGet('filtro_email') ?? '';
+        $filtroCelular = $this->request->getGet('filtro_celular') ?? '';
+        $filtroCidade = $this->request->getGet('filtro_cidade') ?? '';
+
+        $query = $this->clienteModel->where('deletado', 0);
+
+        if ($filtroNome) {
+            $query->like('nome_completo', $filtroNome);
+        }
+        if ($filtroEmail) {
+            $query->like('email', $filtroEmail);
+        }
+        if ($filtroCelular) {
+            $query->like('celular', $filtroCelular);
+        }
+        if ($filtroCidade) {
+            $query->like('cidade', $filtroCidade);
+        }
+
+        $totalClientes = $this->clienteModel->where('deletado', 0)->countAllResults(false);
+        $data['clientes'] = $query->orderBy($ordenacao, $direcao)->findAll();
+        $data['totalClientes'] = $totalClientes;
+        $data['ordenacao'] = $ordenacao;
+        $data['direcao'] = $direcao;
+        $data['filtroNome'] = $filtroNome;
+        $data['filtroEmail'] = $filtroEmail;
+        $data['filtroCelular'] = $filtroCelular;
+        $data['filtroCidade'] = $filtroCidade;
+        $data['title'] = 'Gestão de Clientes (' . number_format($totalClientes, 0, ',', '.') . ')';
+        $data['content'] = view('admin/clientes', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Criar/Editar Cliente
+     */
+    public function clienteForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['cliente'] = null;
+        if ($id) {
+            $data['cliente'] = $this->clienteModel->buscarPorId($id);
+            if (!$data['cliente']) {
+                $session = session();
+                $session->setFlashdata('erro', 'Cliente não encontrado.');
+                return redirect()->to(base_url('admin/clientes'));
+            }
+        }
+
+        if ($this->request->getMethod() === 'post') {
+            // Valida e normaliza o celular (remove caracteres não numéricos e limita a 11 dígitos)
+            $celular = preg_replace('/\D/', '', $this->request->getPost('celular'));
+            if (strlen($celular) > 11) {
+                $celular = substr($celular, 0, 11);
+            }
+            if (strlen($celular) < 10) {
+                $session = session();
+                $session->setFlashdata('erro', 'Por favor, informe um número de celular válido (mínimo 10 dígitos).');
+                return redirect()->to(base_url($id ? "admin/cliente/{$id}/editar" : 'admin/cliente/novo'));
+            }
+            
+            $dados = [
+                'nome_completo' => $this->request->getPost('nome_completo'),
+                'celular' => $celular,
+                'email' => $this->request->getPost('email'),
+                'endereco' => $this->request->getPost('endereco'),
+                'cidade' => $this->request->getPost('cidade'),
+                'observacoes' => $this->request->getPost('observacoes'),
+                'bloqueado' => $this->request->getPost('bloqueado') ? 1 : 0
+            ];
+
+            $session = session();
+            if ($id) {
+                $this->clienteModel->update($id, $dados);
+                $session->setFlashdata('sucesso', 'Cliente atualizado com sucesso!');
+            } else {
+                $this->clienteModel->insert($dados);
+                $session->setFlashdata('sucesso', 'Cliente criado com sucesso!');
+            }
+
+            return redirect()->to(base_url('admin/clientes'));
+        }
+
+        $data['title'] = $id ? 'Editar Cliente' : 'Novo Cliente';
+        $data['content'] = view('admin/cliente_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Visualizar Cliente (Modal/Ajax)
+     */
+    public function clienteDetalhes($id)
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['error' => 'Não autorizado']);
+        }
+
+        $cliente = $this->clienteModel->buscarPorId($id);
+        
+        if ($cliente) {
+            // Marca como lido ao visualizar
+            $this->clienteModel->marcarComoLido($id);
+            return $this->response->setJSON(['success' => true, 'cliente' => $cliente]);
+        }
+
+        return $this->response->setJSON(['success' => false]);
+    }
+
+    /**
+     * Contar clientes não lidos (para atualizar badge)
+     */
+    public function contarClientesNaoLidos()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false, 'count' => 0]);
+        }
+
+        try {
+            $count = $this->clienteModel->contarNaoLidos();
+            return $this->response->setJSON(['success' => true, 'count' => $count]);
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['success' => false, 'count' => 0]);
+        }
+    }
+
+    /**
+     * Marcar cliente como lido/não lido
+     */
+    public function marcarClienteLido()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Não autorizado']);
+        }
+
+        $id = $this->request->getPost('id');
+        $lido = $this->request->getPost('lido') == '1' ? 1 : 0;
+
+        if ($id) {
+            try {
+                if ($lido) {
+                    $this->clienteModel->marcarComoLido($id);
+                } else {
+                    $this->clienteModel->marcarComoNaoLido($id);
+                }
+                return $this->response->setJSON([
+                    'success' => true, 
+                    'message' => $lido ? 'Cliente marcado como lido' : 'Cliente marcado como não lido'
+                ]);
+            } catch (\Exception $e) {
+                log_message('error', 'Erro ao marcar cliente como lido: ' . $e->getMessage());
+                return $this->response->setJSON([
+                    'success' => false, 
+                    'message' => 'Erro ao atualizar'
+                ]);
+            }
+        }
+
+        return $this->response->setJSON(['success' => false, 'message' => 'ID inválido']);
+    }
+
+    /**
+     * Deletar Cliente (soft delete)
+     */
+    public function clienteDeletar($id)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $this->clienteModel->deletar($id);
+        $session = session();
+        $session->setFlashdata('sucesso', 'Cliente excluído com sucesso!');
+        return redirect()->to(base_url('admin/clientes'));
+    }
+
+    /**
+     * Histórico de Serviços do Cliente
+     */
+    public function clienteServicos($clienteId)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['cliente'] = $this->clienteModel->buscarPorId($clienteId);
+        if (!$data['cliente']) {
+            $session = session();
+            $session->setFlashdata('erro', 'Cliente não encontrado.');
+            return redirect()->to(base_url('admin/clientes'));
+        }
+
+        $data['servicos'] = $this->servicoClienteModel->buscarPorCliente($clienteId);
+        $data['title'] = 'Serviços - ' . $data['cliente']['nome_completo'];
+        $data['content'] = view('admin/cliente_servicos', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Adicionar/Editar Serviço do Cliente
+     */
+    public function clienteServicoForm($clienteId, $servicoId = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['cliente'] = $this->clienteModel->buscarPorId($clienteId);
+        if (!$data['cliente']) {
+            $session = session();
+            $session->setFlashdata('erro', 'Cliente não encontrado.');
+            return redirect()->to(base_url('admin/clientes'));
+        }
+
+        $data['servico'] = null;
+        if ($servicoId) {
+            $data['servico'] = $this->servicoClienteModel->find($servicoId);
+        }
+
+        if ($this->request->getMethod() === 'post') {
+            $dados = [
+                'cliente_id' => $clienteId,
+                'titulo' => $this->request->getPost('titulo'),
+                'descricao' => $this->request->getPost('descricao'),
+                'data_inicio' => $this->request->getPost('data_inicio'),
+                'data_finalizacao' => $this->request->getPost('data_finalizacao')
+            ];
+
+            $session = session();
+            if ($servicoId) {
+                $this->servicoClienteModel->update($servicoId, $dados);
+                $session->setFlashdata('sucesso', 'Serviço atualizado com sucesso!');
+            } else {
+                $this->servicoClienteModel->insert($dados);
+                $session->setFlashdata('sucesso', 'Serviço adicionado com sucesso!');
+            }
+
+            return redirect()->to(base_url("admin/cliente/{$clienteId}/servicos"));
+        }
+
+        $data['title'] = $servicoId ? 'Editar Serviço' : 'Novo Serviço';
+        $data['content'] = view('admin/cliente_servico_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Excluir Serviço do Cliente
+     */
+    public function clienteServicoDeletar($clienteId, $servicoId)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $this->servicoClienteModel->delete($servicoId);
+        $session = session();
+        $session->setFlashdata('sucesso', 'Serviço excluído com sucesso!');
+        return redirect()->to(base_url("admin/cliente/{$clienteId}/servicos"));
+    }
+
+    /**
+     * Perfil do Admin
+     */
+    public function perfil()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $session = session();
+        $adminId = $session->get('admin_id');
+        $data['admin'] = $this->authAdminModel->find($adminId);
+
+        if ($this->request->getMethod() === 'post') {
+            $dados = [
+                'nome' => $this->request->getPost('nome'),
+                'email' => $this->request->getPost('email')
+            ];
+
+            $novaSenha = $this->request->getPost('nova_senha');
+            $confirmarSenha = $this->request->getPost('confirmar_senha');
+
+            if ($novaSenha) {
+                if ($novaSenha === $confirmarSenha) {
+                    $dados['senha'] = $novaSenha; // O model já faz o hash
+                    $this->authAdminModel->update($adminId, $dados);
+                    
+                    $session->setFlashdata('sucesso', 'Dados atualizados! Faça login novamente.');
+                    // Faz logout
+                    $session->remove('admin_logado');
+                    $session->remove('admin_id');
+                    $session->remove('admin_email');
+                    $session->remove('admin_nome');
+                    $session->destroy();
+                    return redirect()->to(base_url('admin/login'));
+                } else {
+                    $session->setFlashdata('erro', 'As senhas não conferem.');
+                    return redirect()->to(base_url('admin/perfil'));
+                }
+            } else {
+                $this->authAdminModel->update($adminId, $dados);
+                $session->setFlashdata('sucesso', 'Dados atualizados com sucesso!');
+                // Atualiza nome na sessão
+                $session->set('admin_nome', $dados['nome']);
+                $session->set('admin_email', $dados['email']);
+                return redirect()->to(base_url('admin/perfil'));
+            }
+        }
+
+        $data['title'] = 'Meu Perfil';
+        $data['content'] = view('admin/perfil', $data);
         return view('admin/layout', $data);
     }
 }

@@ -1,8 +1,8 @@
 <div class="row mb-3">
     <div class="col-12">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalParceiro" onclick="limparForm()">
+        <a href="<?php echo base_url('admin/parceiro/novo') ?>" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i> Novo Parceiro
-        </button>
+        </a>
     </div>
 </div>
 
@@ -58,102 +58,58 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary" 
-                                            onclick="editarParceiro(<?php echo htmlspecialchars(json_encode($parceiro)) ?>)">
+                                    <a href="<?php echo base_url('admin/parceiro/' . $parceiro['id']) ?>" 
+                                       class="btn btn-sm btn-info" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="<?php echo base_url('admin/parceiro/' . $parceiro['id'] . '/editar') ?>" 
+                                       class="btn btn-sm btn-primary" title="Editar">
                                         <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalDeletarParceiro<?php echo $parceiro['id'] ?>"
+                                            title="Excluir">
+                                        <i class="fas fa-trash"></i>
                                     </button>
-                                    <form method="post" action="<?php echo base_url('admin/parceiros') ?>" 
-                                          class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir?')">
-                                        <input type="hidden" name="acao" value="excluir">
-                                        <input type="hidden" name="id" value="<?php echo $parceiro['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
                                 </td>
                             </tr>
+
+                            <!-- Modal Confirmar Exclusão Parceiro -->
+                            <div class="modal fade" id="modalDeletarParceiro<?php echo $parceiro['id'] ?>" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h4 class="modal-title">
+                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                Deseja deletar esse registro?
+                                            </h4>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-danger mb-0">
+                                                <strong>Esta ação não poderá ser desfeita.</strong>
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                <i class="fas fa-times me-1"></i> Cancelar
+                                            </button>
+                                            <form method="post" action="<?php echo base_url('admin/parceiros') ?>" class="d-inline">
+                                                <input type="hidden" name="acao" value="excluir">
+                                                <input type="hidden" name="id" value="<?php echo $parceiro['id'] ?>">
+                                                <button type="submit" class="btn btn-danger">
+                                                    <i class="fas fa-trash me-1"></i> Confirmar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
 </div>
-
-<!-- Modal Parceiro -->
-<div class="modal fade" id="modalParceiro" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalParceiroTitle">Novo Parceiro</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <?php echo form_open_multipart(base_url('admin/parceiros'), ['id' => 'formParceiro']); ?>
-            <div class="modal-body">
-                <input type="hidden" name="acao" id="acaoParceiro" value="criar">
-                <input type="hidden" name="id" id="idParceiro">
-                
-                <div class="mb-3">
-                    <label for="nome" class="form-label">Nome *</label>
-                    <input type="text" class="form-control" id="nome" name="nome" required>
-                </div>
-                <div class="mb-3">
-                    <label for="logo_file" class="form-label">Logo (upload opcional)</label>
-                    <input type="file" class="form-control" id="logo_file" name="logo_file" 
-                           accept="image/*">
-                    <small class="text-muted">Formatos: JPG, PNG, GIF, WEBP</small>
-                    <div id="logoPreview" class="mt-2"></div>
-                </div>
-                <div class="mb-3">
-                    <label for="link" class="form-label">Link (URL)</label>
-                    <input type="url" class="form-control" id="link" name="link" 
-                           placeholder="https://exemplo.com.br">
-                </div>
-                <div class="mb-3">
-                    <label for="descricao" class="form-label">Descrição</label>
-                    <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="ordem" class="form-label">Ordem</label>
-                    <input type="number" class="form-control" id="ordem" name="ordem" value="0">
-                </div>
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked>
-                        <label class="form-check-label" for="ativo">Ativo</label>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-            <?php echo form_close(); ?>
-        </div>
-    </div>
-</div>
-
-<script>
-function limparForm() {
-    document.getElementById('formParceiro').reset();
-    document.getElementById('acaoParceiro').value = 'criar';
-    document.getElementById('idParceiro').value = '';
-    document.getElementById('modalParceiroTitle').textContent = 'Novo Parceiro';
-    document.getElementById('ativo').checked = true;
-}
-
-function editarParceiro(parceiro) {
-    document.getElementById('acaoParceiro').value = 'editar';
-    document.getElementById('idParceiro').value = parceiro.id;
-    document.getElementById('nome').value = parceiro.nome;
-    document.getElementById('logo').value = parceiro.logo || '';
-    document.getElementById('link').value = parceiro.link || '';
-    document.getElementById('descricao').value = parceiro.descricao || '';
-    document.getElementById('ordem').value = parceiro.ordem || 0;
-    document.getElementById('ativo').checked = parceiro.ativo == 1;
-    document.getElementById('modalParceiroTitle').textContent = 'Editar Parceiro';
-    
-    var modal = new bootstrap.Modal(document.getElementById('modalParceiro'));
-    modal.show();
-}
-</script>

@@ -592,6 +592,7 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Celular/WhatsApp *</label>
                         <input type="tel" name="celular" id="celular" required 
                                placeholder="(11) 99999-9999"
+                               maxlength="15"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all">
                     </div>
                     
@@ -627,18 +628,27 @@
     </div>
 
     <script>
-        // Máscara de telefone
+        // Máscara de telefone celular (limita a 11 dígitos: 2 DDD + 9 números)
         function mascaraTelefone(input) {
             let valor = input.value.replace(/\D/g, '');
             
+            // Limita a 11 dígitos (2 DDD + 9 números do celular)
+            if (valor.length > 11) {
+                valor = valor.substring(0, 11);
+            }
+            
+            // Aplica máscara apenas para celular (11 dígitos)
             if (valor.length <= 10) {
                 // Telefone fixo: (11) 1234-5678
-                valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2');
-                valor = valor.replace(/(\d)(\d{4})$/, '$1-$2');
-            } else {
-                // Celular: (11) 91234-5678
-                valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2');
-                valor = valor.replace(/(\d)(\d{4})$/, '$1-$2');
+                valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})$/, function(match, ddd, parte1, parte2) {
+                    if (parte2) {
+                        return '(' + ddd + ') ' + parte1 + '-' + parte2;
+                    }
+                    return '(' + ddd + ') ' + parte1;
+                });
+            } else if (valor.length === 11) {
+                // Celular: (11) 99999-9999
+                valor = valor.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
             }
             
             input.value = valor;
@@ -646,6 +656,18 @@
         
         document.getElementById('celular').addEventListener('input', function(e) {
             mascaraTelefone(e.target);
+        });
+        
+        // Validação adicional ao perder o foco
+        document.getElementById('celular').addEventListener('blur', function(e) {
+            let valor = e.target.value.replace(/\D/g, '');
+            if (valor.length > 0 && valor.length < 10) {
+                e.target.setCustomValidity('Por favor, informe um número de celular válido (11 dígitos)');
+            } else if (valor.length === 11 && valor[2] !== '9') {
+                e.target.setCustomValidity('O celular deve começar com 9 após o DDD');
+            } else {
+                e.target.setCustomValidity('');
+            }
         });
         
         // Feedback visual do formulário
