@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
+
 class NaoEncontrado extends BaseController
 {
     public function index(): string
