@@ -1,4 +1,4 @@
-node_modules
-assets/css
-assets/js
-assets/img
+writable/debugbar/*
+writable/logs/*.log
+writable/sessions/*
+.env
