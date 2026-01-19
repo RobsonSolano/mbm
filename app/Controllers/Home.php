@@ -3,19 +3,29 @@
 namespace App\Controllers;
 
 use App\Models\HomeModel;
+use App\Models\AcessoModel;
+use App\Models\SolicitacaoModel;
 
 class Home extends BaseController
 {
     protected $homeModel;
+    protected $acessoModel;
+    protected $solicitacaoModel;
 
     public function __construct()
     {
         $this->homeModel = new HomeModel();
+        $this->acessoModel = new AcessoModel();
+        $this->solicitacaoModel = new SolicitacaoModel();
         date_default_timezone_set('America/Sao_Paulo');
     }
 
     public function index($error = '', $recaptcha_not_checked = false): string
     {
+        // Registra acesso
+        $ip = $this->request->getIPAddress();
+        $navegador = $this->request->getUserAgent()->getAgentString();
+        $this->acessoModel->registrarAcesso($ip, $navegador);
         $cumprimento = "";
 
         if (date('h') < 12) {
@@ -222,6 +232,107 @@ class Home extends BaseController
         }
     }
     
+    public function solicitar()
+    {
+        $validation = \Config\Services::validation();
+        
+        $validation->setRules([
+            'nome' => [
+                'label' => 'Nome Completo',
+                'rules' => 'required|trim|min_length[3]',
+                'errors' => ['required' => 'O campo {field} é obrigatório.']
+            ],
+            'email' => [
+                'label' => 'E-mail',
+                'rules' => 'required|trim|valid_email',
+                'errors' => [
+                    'required' => 'O campo {field} é obrigatório.',
+                    'valid_email' => 'O e-mail informado não é válido'
+                ]
+            ],
+            'celular' => [
+                'label' => 'Celular',
+                'rules' => 'required|trim',
+                'errors' => ['required' => 'O campo {field} é obrigatório.']
+            ],
+            'cidade' => [
+                'label' => 'Cidade',
+                'rules' => 'required|trim',
+                'errors' => ['required' => 'O campo {field} é obrigatório.']
+            ],
+            'observacao' => [
+                'label' => 'Observação',
+                'rules' => 'required|trim',
+                'errors' => ['required' => 'O campo {field} é obrigatório.']
+            ]
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            $session = session();
+            $session->setFlashdata('flash_message', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, preencha todos os campos corretamente.', 
+                'tipo' => 'danger'
+            ]);
+            return redirect()->to(base_url());
+        }
+
+        // Verifica se é nome completo
+        $nome = $this->request->getPost('nome');
+        $nome_completo = explode(' ', trim($nome));
+        if (empty($nome_completo[0]) || empty($nome_completo[1])) {
+            $session = session();
+            $session->setFlashdata('flash_message', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe o nome completo.', 
+                'tipo' => 'danger'
+            ]);
+            return redirect()->to(base_url());
+        }
+
+        // Valida e normaliza o celular (remove caracteres não numéricos e limita a 11 dígitos)
+        $celular = preg_replace('/\D/', '', $this->request->getPost('celular'));
+        if (strlen($celular) > 11) {
+            $celular = substr($celular, 0, 11);
+        }
+        if (strlen($celular) < 10) {
+            $session = session();
+            $session->setFlashdata('flash_message', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe um número de celular válido (11 dígitos).', 
+                'tipo' => 'danger'
+            ]);
+            return redirect()->to(base_url());
+        }
+
+        // Salva solicitação no banco
+        $ip = $this->request->getIPAddress();
+        $navegador = $this->request->getUserAgent()->getAgentString();
+
+        $dados = [
+            'nome' => $nome,
+            'email' => $this->request->getPost('email'),
+            'celular' => $celular,
+            'cidade' => $this->request->getPost('cidade'),
+            'observacao' => $this->request->getPost('observacao'),
+            'ip' => $ip,
+            'navegador' => $navegador,
+            'status' => 'pendente'
+        ];
+
+        $this->solicitacaoModel->insert($dados);
+
+        // Envia e-mail (mantém compatibilidade com sistema antigo)
+        if (function_exists('send_email_contato')) {
+            send_email_contato('Nova Solicitação de atendimento', 'Novo contato pelo site', $dados);
+        }
+
+        $session = session();
+        $session->setFlashdata('flash_message', [
+            'mensagem' => '<strong>Solicitação enviada com sucesso!</strong><br>Em breve nossa equipe entrará em contato.<br><small>Nós agradecemos o contato</small>.', 
+            'tipo' => 'success'
+        ]);
+
+        return redirect()->to(base_url());
+    }
+
     private function _verify_full_name($name)
     {
         $nome_completo = explode(' ', trim($name));
