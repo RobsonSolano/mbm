@@ -10,6 +10,9 @@ $routes->get('/novo', 'Novo::index');
 $routes->post('/novo/solicitar', 'Novo::solicitar');
 $routes->post('/home/solicitar', 'Home::solicitar');
 
+// Uploads - servir imagens
+$routes->get('/uploads/(marcas|parceiros)/(:any)', 'Uploads::index/$1/$2');
+
 // Admin routes
 $routes->get('/admin', 'Admin::index');
 $routes->get('/admin/login', 'Admin::login');

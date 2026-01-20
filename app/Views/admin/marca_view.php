@@ -10,7 +10,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8 mx-auto">
+    <div class="col-md-12 mx-auto">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">
@@ -40,7 +40,7 @@
                     <div class="col-12 mb-3">
                         <label class="text-muted small">Logo:</label>
                         <div>
-                            <img src="<?php echo base_url('writable/uploads/marcas/' . $marca['logo']) ?>" 
+                            <img src="<?php echo base_url('uploads/marcas/' . $marca['logo']) ?>" 
                                  alt="<?php echo esc($marca['nome']) ?>" 
                                  class="img-thumbnail" style="max-height: 200px;">
                         </div>
