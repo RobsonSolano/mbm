@@ -36,6 +36,41 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+
+        /* Garantir que menu hambúrguer fique oculto acima de lg */
+        @media (min-width: 1024px) {
+            #menuToggle {
+                display: none !important;
+            }
+        }
+
+        /* Garantir que links apareçam acima de lg */
+        @media (min-width: 1024px) {
+            .menu-desktop {
+                display: flex !important;
+            }
+        }
+
+        /* Garantir que links fiquem ocultos abaixo de lg */
+        @media (max-width: 1023px) {
+            .menu-desktop {
+                display: none !important;
+            }
+        }
+
+        /* Garantir que botão Solicitar apareça acima de lg */
+        @media (min-width: 1024px) {
+            .btn-solicitar-desktop {
+                display: inline-flex !important;
+            }
+        }
+
+        /* Garantir que botão Solicitar fique oculto abaixo de lg */
+        @media (max-width: 1023px) {
+            .btn-solicitar-desktop {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -53,7 +88,8 @@
                     </a>
                 </div>
 
-                <div class="hidden md:flex space-x-8">
+                <!-- Menu Desktop (oculto abaixo de lg, visível a partir de lg) -->
+                <div class="menu-desktop hidden lg:flex space-x-8">
                     <a href="#servicos" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Serviços</a>
                     <a href="#beneficios" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Benefícios</a>
                     <a href="#marcas" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Marcas</a>
@@ -61,17 +97,39 @@
                         <a href="#parceiros" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Parceiros</a>
                     <?php endif; ?>
                     <a href="#faq" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">FAQ</a>
+                    <a href="#contato" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Contato</a>
                 </div>
 
                 <div class="flex items-center space-x-4">
+                    <!-- Botão Solicitar Atendimento (oculto abaixo de lg, visível a partir de lg) -->
                     <button type="button" onclick="document.getElementById('modalSolicitacao').classList.remove('hidden')"
-                        class="inline-flex items-center justify-center px-4 py-3 bg-white text-primary-700 font-bold rounded-full hover:bg-primary-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105">
+                        class="btn-solicitar-desktop hidden lg:inline-flex items-center justify-center px-4 py-3 bg-white text-primary-700 font-bold rounded-full hover:bg-primary-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105">
                         <i class="fas fa-calendar-check mr-2"></i> Solicitar Atendimento
                     </button>
-                    <a href="https://web.whatsapp.com/send?phone=5511949676793" target="_blank"
-                        class="hidden md:inline-flex items-center px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-full transition-all shadow-md hover:shadow-lg">
-                        <i class="fab fa-whatsapp mr-2"></i> WhatsApp
-                    </a>
+                    
+                    <!-- Botão Menu Hambúrguer (visível apenas abaixo de lg) -->
+                    <button type="button" id="menuToggle" onclick="toggleMobileMenu()"
+                        class="flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500 lg:hidden">
+                        <i class="fas fa-bars text-2xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Menu Mobile (oculto por padrão, visível apenas abaixo de lg) -->
+            <div id="mobileMenu" class="hidden lg:hidden pb-4">
+                <div class="flex flex-col space-y-2 pt-4 border-t border-gray-200" style="padding-bottom: 1em;">
+                    <a href="#servicos" onclick="closeMobileMenu()" class="px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors">Serviços</a>
+                    <a href="#beneficios" onclick="closeMobileMenu()" class="px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors">Benefícios</a>
+                    <a href="#marcas" onclick="closeMobileMenu()" class="px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors">Marcas</a>
+                    <?php if (!empty($parceiros)): ?>
+                        <a href="#parceiros" onclick="closeMobileMenu()" class="px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors">Parceiros</a>
+                    <?php endif; ?>
+                    <a href="#faq" onclick="closeMobileMenu()" class="px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors">FAQ</a>
+                    <a href="#contato" onclick="closeMobileMenu()" class="px-4 py-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-md transition-colors">Contato</a>
+                    <button type="button" onclick="document.getElementById('modalSolicitacao').classList.remove('hidden'); closeMobileMenu();"
+                        class="mx-4 mt-2 mb-4 inline-flex items-center justify-center px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-full transition-all shadow-md hover:shadow-lg">
+                        <i class="fas fa-calendar-check mr-2"></i> Solicitar Atendimento
+                    </button>
                 </div>
             </div>
         </div>
@@ -108,7 +166,7 @@
 
                         <a href="https://web.whatsapp.com/send?phone=5511949676793" target="_blank"
                             class="inline-flex items-center justify-center px-8 py-4 bg-green-500 text-white font-bold rounded-full hover:bg-green-600 transition-all shadow-xl hover:shadow-2xl hover:scale-105">
-                            <i class="fab fa-whatsapp mr-2 text-xl"></i> (11) 94967-6793
+                            <i class="fab fa-whatsapp mr-2 text-xl"></i> Falar agora
                         </a>
                     </div>
 
@@ -508,7 +566,7 @@
                         <i class="fas fa-chevron-down transition-transform"></i>
                     </button>
                     <div class="faq-content hidden px-6 pb-5 text-gray-600">
-                        Sim! Temos atendimento emergencial 24/7. Entre em contato pelo WhatsApp e responderemos o mais rápido possível.
+                        Sim! Entre em contato pelo WhatsApp e responderemos o mais rápido possível, respeitando nossos clientes e o horário de atendimento.
                     </div>
                 </div>
 
@@ -532,6 +590,127 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Contato Section -->
+    <section id="contato" class="py-20 lg:py-32 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
+                    Entre em <span class="text-primary-600">contato</span>
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Em breve nossa equipe entrará em contato com você!
+                </p>
+            </div>
+
+            <?php echo form_open(base_url('novo/contato'), ['id' => 'formContato', 'class' => 'bg-gray-50 rounded-2xl p-8 lg:p-12 shadow-lg']); ?>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6" style="gap: 1em;">
+                <div class="md:col-span-2">
+                    <label for="nome_contato" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Nome Completo *
+                    </label>
+                    <input type="text" name="nome" id="nome_contato" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
+                        placeholder="Digite seu nome completo"
+                        value="<?php echo set_value('nome', '', false) ?>">
+                    <?php if (!empty(form_error('nome'))): ?>
+                        <small class="text-red-600 mt-1 block"><?php echo form_error('nome') ?></small>
+                    <?php endif; ?>
+                </div>
+
+                <div>
+                    <label for="email_contato" class="block text-sm font-semibold text-gray-700 mb-2">
+                        E-mail *
+                    </label>
+                    <input type="email" name="email" id="email_contato" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
+                        placeholder="Digite seu e-mail"
+                        value="<?php echo set_value('email', '', false) ?>">
+                    <?php if (!empty(form_error('email'))): ?>
+                        <small class="text-red-600 mt-1 block"><?php echo form_error('email') ?></small>
+                    <?php endif; ?>
+                </div>
+
+                <div>
+                    <label for="celular_contato" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Celular *
+                    </label>
+                    <input type="text" name="celular" id="celular_contato" required maxlength="15"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all celular-mask"
+                        placeholder="(11) 99999-9999"
+                        value="<?php echo set_value('celular', '', false) ?>">
+                    <?php if (!empty(form_error('celular'))): ?>
+                        <small class="text-red-600 mt-1 block"><?php echo form_error('celular') ?></small>
+                    <?php endif; ?>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label for="cidade_contato" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Cidade *
+                    </label>
+                    <input type="text" name="cidade" id="cidade_contato" list="cidades-sp-contato" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
+                        placeholder="Selecione sua cidade"
+                        value="<?php echo set_value('cidade', '', false) ?>">
+                    <datalist id="cidades-sp-contato">
+                        <?php
+                        $cidadesSP = \App\Config\CidadesSP::listar();
+                        foreach ($cidadesSP as $cidade):
+                        ?>
+                            <option value="<?php echo esc($cidade) ?>"></option>
+                        <?php endforeach; ?>
+                    </datalist>
+                    <?php if (!empty(form_error('cidade'))): ?>
+                        <small class="text-red-600 mt-1 block"><?php echo form_error('cidade') ?></small>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label for="observacao_contato" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Observação / Tipo de Serviço *
+                </label>
+                <textarea name="observacao" id="observacao_contato" rows="5" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all resize-none"
+                    placeholder="Descreva o serviço necessário: manutenção, instalação, reparo, etc."><?php echo set_value('observacao', '', false) ?></textarea>
+                <?php if (!empty(form_error('observacao'))): ?>
+                    <small class="text-red-600 mt-1 block"><?php echo form_error('observacao') ?></small>
+                <?php endif; ?>
+            </div>
+
+            <div class="text-center mb-6">
+                <p class="text-sm text-red-600">
+                    <strong>Atenção:</strong> Nenhum dos dados acima são salvos/armazenados, são apenas para envio da mensagem via e-mail.
+                </p>
+            </div>
+
+            <div class="flex justify-center mb-10">
+                <div id="recaptcha-contato" class="g-recaptcha <?php echo isset($recaptcha_not_checked) && $recaptcha_not_checked == true ? 'border-2 border-red-500 rounded-lg p-2' : '' ?>" data-sitekey="<?php echo SITE_KEY_RECAPTCHA ?>" data-callback="onSubmitRecaptchaContato" data-expired-callback="onRecaptchaExpired" data-error-callback="onRecaptchaError"></div>
+            </div>
+            <div id="recaptcha-error" class="text-center mb-4 hidden">
+                <p class="text-red-600 text-sm font-semibold">Por favor, marque a caixa de validação do reCAPTCHA acima.</p>
+            </div>
+            <?php if (isset($recaptcha_not_checked) && $recaptcha_not_checked == true): ?>
+                <div class="text-center mb-4">
+                    <p class="text-red-600 text-sm font-semibold">Por favor, marque a caixa de validação do reCAPTCHA acima.</p>
+                </div>
+            <?php endif; ?>
+
+            <div class="flex justify-center">
+                <button type="submit" id="btnEnviarContato" disabled
+                    class="inline-flex items-center justify-center px-10 py-4 bg-gray-300 text-gray-600 font-bold rounded-full transition-all shadow-md cursor-not-allowed">
+                    <span id="btnTextoContato">Solicitar Orçamento</span>
+                    <span id="btnLoadingContato" class="hidden ml-2">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </span>
+                    <i class="fas fa-paper-plane ml-3"></i>
+                </button>
+            </div>
+
+            <?php echo form_close(); ?>
         </div>
     </section>
 
@@ -587,6 +766,7 @@
                             <li><a href="#parceiros" class="hover:text-primary-400 transition-colors">Parceiros</a></li>
                         <?php endif; ?>
                         <li><a href="#faq" class="hover:text-primary-400 transition-colors">FAQ</a></li>
+                        <li><a href="#contato" class="hover:text-primary-400 transition-colors">Contato</a></li>
                     </ul>
                 </div>
 
@@ -732,6 +912,43 @@
     </div>
 
     <script>
+        // Funções para Menu Mobile
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            
+            menu.classList.add('hidden');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+
+        // Fecha o menu ao clicar fora dele
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('mobileMenu');
+            const toggle = document.getElementById('menuToggle');
+            
+            if (menu && !menu.contains(event.target) && !toggle.contains(event.target)) {
+                if (!menu.classList.contains('hidden')) {
+                    closeMobileMenu();
+                }
+            }
+        });
+
         // Máscara de telefone celular (limita a 11 dígitos: 2 DDD + 9 números)
         function mascaraTelefone(input) {
             let valor = input.value.replace(/\D/g, '');
@@ -783,13 +1000,13 @@
         const alertErro = document.getElementById('alertErro');
 
         <?php if (session()->getFlashdata('flash_message')): ?>
-            const flashMessage = <?php echo json_encode(session()->getFlashdata('flash_message')); ?>;
+            const flashMessageModal = <?php echo json_encode(session()->getFlashdata('flash_message')); ?>;
 
             // Abre o modal
             document.getElementById('modalSolicitacao').classList.remove('hidden');
 
             // Mostra o alerta apropriado
-            if (flashMessage.tipo === 'success') {
+            if (flashMessageModal.tipo === 'success') {
                 alertSucesso.classList.remove('hidden');
                 formSolicitacao.classList.add('hidden');
 
@@ -805,7 +1022,7 @@
                 }, 3000);
             } else {
                 alertErro.classList.remove('hidden');
-                document.getElementById('mensagemErro').innerHTML = flashMessage.mensagem;
+                document.getElementById('mensagemErro').innerHTML = flashMessageModal.mensagem;
 
                 // Esconde o erro após 5 segundos
                 setTimeout(function() {
@@ -849,7 +1066,247 @@
                 }
             });
         });
+
+        // Máscara para o campo celular do formulário de contato
+        const celularContato = document.getElementById('celular_contato');
+        if (celularContato) {
+            celularContato.addEventListener('input', function(e) {
+                mascaraTelefone(e.target);
+            });
+
+            celularContato.addEventListener('blur', function(e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                if (valor.length > 0 && valor.length < 10) {
+                    e.target.setCustomValidity('Por favor, informe um número de celular válido (11 dígitos)');
+                } else if (valor.length === 11 && valor[2] !== '9') {
+                    e.target.setCustomValidity('O celular deve começar com 9 após o DDD');
+                } else {
+                    e.target.setCustomValidity('');
+                }
+            });
+        }
+
+        // Feedback do formulário de contato
+        const formContato = document.getElementById('formContato');
+        const btnEnviarContato = document.getElementById('btnEnviarContato');
+        const btnTextoContato = document.getElementById('btnTextoContato');
+        const btnLoadingContato = document.getElementById('btnLoadingContato');
+
+        <?php if (session()->getFlashdata('flash_message')): ?>
+            const flashMessage = <?php echo json_encode(session()->getFlashdata('flash_message')); ?>;
+            
+            // Scroll para o formulário de contato
+            setTimeout(function() {
+                document.getElementById('contato').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+
+            // Mostra feedback
+            if (flashMessage.tipo === 'success') {
+                // Cria toast de sucesso
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3';
+                toast.innerHTML = `
+                    <i class="fas fa-check-circle text-xl"></i>
+                    <div>
+                        <strong>Sucesso!</strong>
+                        <p class="text-sm">${flashMessage.mensagem.replace(/<[^>]*>/g, '')}</p>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                
+                // Remove após 5 segundos
+                setTimeout(() => toast.remove(), 5000);
+                
+                // Limpa o formulário
+                formContato.reset();
+            } else {
+                // Cria toast de erro
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3';
+                toast.innerHTML = `
+                    <i class="fas fa-exclamation-circle text-xl"></i>
+                    <div>
+                        <strong>Erro!</strong>
+                        <p class="text-sm">${flashMessage.mensagem.replace(/<[^>]*>/g, '')}</p>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                
+                // Remove após 5 segundos
+                setTimeout(() => toast.remove(), 5000);
+            }
+        <?php endif; ?>
+
+        // Loading no botão será ativado apenas após validação do reCAPTCHA
     </script>
+
+    <!-- Google reCAPTCHA -->
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script>
+        // Função para mostrar toast (global)
+        function showRecaptchaToast(message, type = 'error') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'error' ? 'red' : 'green';
+            toast.className = `fixed top-4 right-4 bg-${bgColor}-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'} text-xl"></i>
+                <div>
+                    <strong>${type === 'error' ? 'Erro!' : 'Sucesso!'}</strong>
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            // Remove após 5 segundos
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Função para habilitar o botão de submit
+        function habilitarBotaoSubmit() {
+            const btnEnviar = document.getElementById('btnEnviarContato');
+            if (btnEnviar) {
+                btnEnviar.disabled = false;
+                btnEnviar.classList.remove('bg-gray-300', 'text-gray-600', 'cursor-not-allowed', 'shadow-md');
+                btnEnviar.classList.add('bg-primary-600', 'text-white', 'hover:bg-primary-700', 'hover:shadow-xl', 'hover:scale-105', 'shadow-lg');
+            }
+        }
+
+        // Função para desabilitar o botão de submit
+        function desabilitarBotaoSubmit() {
+            const btnEnviar = document.getElementById('btnEnviarContato');
+            if (btnEnviar) {
+                btnEnviar.disabled = true;
+                btnEnviar.classList.remove('bg-primary-600', 'text-white', 'hover:bg-primary-700', 'hover:shadow-xl', 'hover:scale-105', 'shadow-lg');
+                btnEnviar.classList.add('bg-gray-300', 'text-gray-600', 'cursor-not-allowed', 'shadow-md');
+            }
+        }
+
+        // Callback do reCAPTCHA quando validado com sucesso
+        function onSubmitRecaptchaContato(response) {
+            if (response) {
+                // Esconde a mensagem de erro
+                const errorMsg = document.getElementById('recaptcha-error');
+                if (errorMsg) {
+                    errorMsg.classList.add('hidden');
+                }
+                // Remove a borda vermelha do reCAPTCHA
+                const recaptchaDiv = document.getElementById('recaptcha-contato');
+                if (recaptchaDiv) {
+                    recaptchaDiv.classList.remove('border-2', 'border-red-500', 'rounded-lg', 'p-2');
+                }
+                // Habilita o botão de submit
+                habilitarBotaoSubmit();
+            }
+        }
+
+        // Callback quando o reCAPTCHA expirar
+        function onRecaptchaExpired() {
+            desabilitarBotaoSubmit();
+            const errorMsg = document.getElementById('recaptcha-error');
+            if (errorMsg) {
+                errorMsg.classList.remove('hidden');
+                errorMsg.querySelector('p').textContent = 'O reCAPTCHA expirou. Por favor, marque novamente a caixa de validação.';
+            }
+            const recaptchaDiv = document.getElementById('recaptcha-contato');
+            if (recaptchaDiv) {
+                recaptchaDiv.classList.add('border-2', 'border-red-500', 'rounded-lg', 'p-2');
+            }
+        }
+
+        // Callback quando houver erro no reCAPTCHA
+        function onRecaptchaError() {
+            desabilitarBotaoSubmit();
+            const errorMsg = document.getElementById('recaptcha-error');
+            if (errorMsg) {
+                errorMsg.classList.remove('hidden');
+                errorMsg.querySelector('p').textContent = 'Erro ao validar o reCAPTCHA. Por favor, tente novamente.';
+            }
+            const recaptchaDiv = document.getElementById('recaptcha-contato');
+            if (recaptchaDiv) {
+                recaptchaDiv.classList.add('border-2', 'border-red-500', 'rounded-lg', 'p-2');
+            }
+        }
+
+        // Intercepta o submit do formulário para validar o reCAPTCHA e ativar loading
+        const formContatoRecaptcha = document.getElementById('formContato');
+        if (formContatoRecaptcha) {
+            formContatoRecaptcha.addEventListener('submit', function(e) {
+                // Verifica se o botão está desabilitado (não deveria chegar aqui se estiver)
+                const btnEnviar = document.getElementById('btnEnviarContato');
+                if (btnEnviar && btnEnviar.disabled) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (typeof grecaptcha !== 'undefined') {
+                    const recaptchaResponse = grecaptcha.getResponse();
+                    if (!recaptchaResponse) {
+                        e.preventDefault();
+                        desabilitarBotaoSubmit();
+                        
+                        // Mostra toast
+                        showRecaptchaToast('Por favor, marque a caixa de validação do reCAPTCHA.', 'error');
+                        
+                        // Mostra mensagem em vermelho
+                        const errorMsg = document.getElementById('recaptcha-error');
+                        if (errorMsg) {
+                            errorMsg.classList.remove('hidden');
+                        }
+                        
+                        // Adiciona borda vermelha no reCAPTCHA
+                        const recaptchaDiv = document.getElementById('recaptcha-contato');
+                        if (recaptchaDiv) {
+                            recaptchaDiv.classList.add('border-2', 'border-red-500', 'rounded-lg', 'p-2');
+                        }
+                        
+                        // Scroll suave até o reCAPTCHA
+                        recaptchaDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        return false;
+                    } else {
+                        // reCAPTCHA válido - ativa loading e permite envio
+                        btnTextoContato.classList.add('hidden');
+                        btnLoadingContato.classList.remove('hidden');
+                        btnEnviar.disabled = true;
+                        // Não faz preventDefault, permite o envio do formulário
+                    }
+                } else {
+                    // Se o grecaptcha não estiver carregado, impede o envio
+                    e.preventDefault();
+                    showRecaptchaToast('Erro ao carregar o reCAPTCHA. Por favor, recarregue a página.', 'error');
+                    return false;
+                }
+            });
+        }
+    </script>
+
+    <!-- Botão Flutuante WhatsApp -->
+    <a href="https://web.whatsapp.com/send?phone=5511949676793&text=<?php echo urlencode($mensagem_whatsapp ?? 'Olá! Gostaria de saber mais sobre os serviços da MBM Climatização.') ?>"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; width: 64px; height: 64px; background-color: #25d366; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: all 0.3s ease;"
+        onmouseover="this.style.backgroundColor='#20ba5a'; this.style.transform='scale(1.1)'"
+        onmouseout="this.style.backgroundColor='#25d366'; this.style.transform='scale(1)'"
+        title="Fale conosco no WhatsApp">
+        <i class="fab fa-whatsapp" style="font-size: 28px;"></i>
+    </a>
+    
+    <style>
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        a[href*="whatsapp"] {
+            animation: bounce 2s infinite;
+        }
+    </style>
 </body>
 
 </html>

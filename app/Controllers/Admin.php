@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\AuthAdminModel;
 use App\Models\SolicitacaoModel;
+use App\Models\ContatoModel;
 use App\Models\MarcaModel;
 use App\Models\ParceiroModel;
 use App\Models\AcessoModel;
@@ -14,6 +15,7 @@ class Admin extends BaseController
 {
     protected $authAdminModel;
     protected $solicitacaoModel;
+    protected $contatoModel;
     protected $marcaModel;
     protected $parceiroModel;
     protected $acessoModel;
@@ -24,6 +26,7 @@ class Admin extends BaseController
     {
         $this->authAdminModel = new AuthAdminModel();
         $this->solicitacaoModel = new SolicitacaoModel();
+        $this->contatoModel = new ContatoModel();
         $this->marcaModel = new MarcaModel();
         $this->parceiroModel = new ParceiroModel();
         $this->acessoModel = new AcessoModel();
@@ -614,6 +617,148 @@ class Admin extends BaseController
             $this->solicitacaoModel->update($id, ['observacao_admin' => $observacao]);
             $session = session();
             $session->setFlashdata('sucesso', 'Observação adicionada com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/solicitacoes'));
+    }
+
+    /**
+     * Gestão de Contatos
+     */
+    public function contatos()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $status = $this->request->getGet('status');
+        
+        if ($status && $status !== 'todas') {
+            $data['contatos'] = $this->contatoModel->buscarPorStatus($status);
+        } else {
+            $data['contatos'] = $this->contatoModel->buscarPorStatus();
+        }
+
+        $data['status_atual'] = $status ?? 'todas';
+        $data['title'] = 'Gestão de Contatos';
+        $data['content'] = view('admin/contatos', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Atualizar status de contato
+     */
+    public function atualizarStatusContato()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $status = $this->request->getPost('status');
+
+        if ($id && $status) {
+            $this->contatoModel->update($id, ['status' => $status]);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Status atualizado com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/contatos'));
+    }
+
+    /**
+     * Contar contatos não lidos (para atualizar badge)
+     */
+    public function contarContatosNaoLidos()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false, 'count' => 0]);
+        }
+
+        try {
+            $count = $this->contatoModel->where('lido', 0)->countAllResults();
+            return $this->response->setJSON(['success' => true, 'count' => $count]);
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['success' => false, 'count' => 0]);
+        }
+    }
+
+    /**
+     * Marcar contato como lido/não lido
+     */
+    public function marcarContatoLido()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Não autorizado']);
+        }
+
+        $id = $this->request->getPost('id');
+        $lido = $this->request->getPost('lido') == '1' ? 1 : 0;
+
+        if ($id) {
+            try {
+                $this->contatoModel->update($id, ['lido' => $lido]);
+                return $this->response->setJSON([
+                    'success' => true, 
+                    'message' => $lido ? 'Marcado como lido' : 'Marcado como não lido'
+                ]);
+            } catch (\Exception $e) {
+                log_message('error', 'Erro ao marcar contato como lido: ' . $e->getMessage());
+                return $this->response->setJSON([
+                    'success' => false, 
+                    'message' => 'Erro ao atualizar'
+                ]);
+            }
+        }
+
+        return $this->response->setJSON(['success' => false, 'message' => 'ID inválido']);
+    }
+
+    /**
+     * Excluir contato
+     */
+    public function excluirContato()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        if ($id) {
+            try {
+                $this->contatoModel->delete($id);
+                $session = session();
+                $session->setFlashdata('sucesso', 'Contato excluído com sucesso!');
+            } catch (\Exception $e) {
+                log_message('error', 'Erro ao excluir contato: ' . $e->getMessage());
+                $session = session();
+                $session->setFlashdata('erro', 'Erro ao excluir contato.');
+            }
+        }
+
+        return redirect()->to(base_url('admin/contatos'));
+    }
+
+    /**
+     * Excluir solicitação
+     */
+    public function excluirSolicitacao()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        if ($id) {
+            try {
+                $this->solicitacaoModel->delete($id);
+                $session = session();
+                $session->setFlashdata('sucesso', 'Solicitação excluída com sucesso!');
+            } catch (\Exception $e) {
+                log_message('error', 'Erro ao excluir solicitação: ' . $e->getMessage());
+                $session = session();
+                $session->setFlashdata('erro', 'Erro ao excluir solicitação.');
+            }
         }
 
         return redirect()->to(base_url('admin/solicitacoes'));
