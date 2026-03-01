@@ -1,6 +1,10 @@
 writable/debugbar/*
 writable/logs/*.log
 writable/sessions/*
+writable/session/*
+writable/uploads/*
+writable/uploads/marcas/*
+writable/uploads/parceiros/*
 .env
 
 

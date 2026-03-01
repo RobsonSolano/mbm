@@ -10,13 +10,33 @@ if (!function_exists('send_email_contato')) {
      */
     function send_email_contato($title, $subject, $data)
     {
-        // Configurações Gmail que funcionaram no PHPMailer
+        // Em desenvolvimento, usa mailhog. Em produção, usa Gmail
+        if (ENVIRONMENT === 'development') {
+            // Configurações para MailHog (desenvolvimento)
+            // MailHog usa hostname 'mailhog' ou '127.0.0.1' na porta 1025
+            $config = [
+                'protocol' => 'smtp',
+                'SMTPHost' => 'mailhog', // ou '127.0.0.1' se não funcionar
+                'SMTPPort' => 1025,
+                'SMTPUser' => '',
+                'SMTPPass' => '',
+                'SMTPCrypto' => '', // MailHog não usa criptografia
+                'SMTPAuth' => false, // MailHog não precisa autenticação
+                'mailType' => 'html',
+                'charset' => 'UTF-8',
+                'wordWrap' => true,
+                'SMTPTimeout' => 60,
+                'newline' => "\r\n",
+                'CRLF' => "\r\n"
+            ];
+        } else {
+            // Configurações Gmail (produção)
         $config = [
             'protocol' => 'smtp',
             'SMTPHost' => 'smtp.gmail.com',
             'SMTPPort' => 587,
             'SMTPUser' => 'climatizacaombm@gmail.com',
-            'SMTPPass' => 'zzou ofwe jikm jfpo', // Mesma senha que funcionou no PHPMailer
+                'SMTPPass' => 'zzou ofwe jikm jfpo',
             'SMTPCrypto' => 'tls',
             'SMTPAuth' => true,
             'mailType' => 'html',
@@ -26,6 +46,7 @@ if (!function_exists('send_email_contato')) {
             'newline' => "\r\n",
             'CRLF' => "\r\n"
         ];
+        }
         
         $email = \Config\Services::email($config);
         
@@ -40,9 +61,9 @@ if (!function_exists('send_email_contato')) {
 
         $emailData = [
             'nome' => $data['nome'],
-            'email' => $data['email'],
-            'celular' => $data['celular'],
-            'cidade' => $data['cidade'],
+            'email' => $data['email'] ?? '',
+            'celular' => $data['celular'] ?? '',
+            'cidade' => $data['cidade'] ?? '',
             'observacao' => $data['observacao'] ?? ''
         ];
 

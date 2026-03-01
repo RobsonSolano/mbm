@@ -54,7 +54,7 @@ class ContentSecurityPolicy extends BaseConfig
      *
      * @var string|string[]
      */
-    public $scriptSrc = 'self';
+    public $scriptSrc = ['self', 'https://www.google.com', 'https://www.gstatic.com'];
 
     /**
      * Lists allowed stylesheets' URLs.
@@ -124,7 +124,7 @@ class ContentSecurityPolicy extends BaseConfig
      *
      * @var array|string|null
      */
-    public $frameSrc;
+    public $frameSrc = ['self', 'https://www.google.com'];
 
     /**
      * Restricts the origins allowed to deliver video and audio.

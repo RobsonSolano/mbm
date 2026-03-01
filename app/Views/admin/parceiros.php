@@ -16,7 +16,6 @@
                         <th>Nome</th>
                         <th>Logo</th>
                         <th>Link</th>
-                        <th>Descrição</th>
                         <th>Ordem</th>
                         <th>Status</th>
                         <th>Ações</th>
@@ -34,7 +33,7 @@
                                 <td><?php echo esc($parceiro['nome']) ?></td>
                                 <td>
                                     <?php if (!empty($parceiro['logo'])): ?>
-                                        <img src="<?php echo base_url('writable/uploads/parceiros/' . $parceiro['logo']) ?>" 
+                                        <img src="<?php echo base_url('uploads/parceiros/' . $parceiro['logo']) ?>" 
                                              alt="<?php echo esc($parceiro['nome']) ?>" 
                                              style="max-height: 50px;">
                                     <?php else: ?>
@@ -50,7 +49,6 @@
                                         <span class="text-muted">-</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo esc(substr($parceiro['descricao'] ?? '', 0, 50)) ?><?php echo strlen($parceiro['descricao'] ?? '') > 50 ? '...' : '' ?></td>
                                 <td><?php echo $parceiro['ordem'] ?></td>
                                 <td>
                                     <span class="badge bg-<?php echo $parceiro['ativo'] ? 'success' : 'secondary' ?>">

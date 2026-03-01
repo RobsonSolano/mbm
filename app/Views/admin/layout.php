@@ -54,6 +54,25 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link <?php echo (uri_string() == 'admin/contatos') ? 'active' : '' ?>" href="<?php echo base_url('admin/contatos') ?>">
+                                <i class="fas fa-comments me-2"></i> Contatos
+                                <?php 
+                                try {
+                                    $contatoModel = new \App\Models\ContatoModel();
+                                    $naoLidos = $contatoModel->where('lido', 0)->countAllResults();
+                                    if ($naoLidos > 0): 
+                                        $badgeText = $naoLidos > 99 ? '+99' : $naoLidos;
+                                ?>
+                                        <span class="badge bg-danger rounded-pill ms-1"><?php echo $badgeText ?></span>
+                                <?php 
+                                    endif;
+                                } catch (\Exception $e) {
+                                    // Ignora se a tabela ainda não existe
+                                }
+                                ?>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link <?php echo (strpos(uri_string(), 'admin/cliente') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/clientes') ?>">
                                 <i class="fas fa-users me-2"></i> Clientes
                             </a>
