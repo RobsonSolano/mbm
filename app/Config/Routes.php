@@ -68,6 +68,23 @@ $routes->get('/admin/cliente/(:num)/servico/(:num)/editar', 'Admin::clienteServi
 $routes->post('/admin/cliente/(:num)/servico/(:num)/editar', 'Admin::clienteServicoForm/$1/$2');
 $routes->get('/admin/cliente/(:num)/servico/(:num)/deletar', 'Admin::clienteServicoDeletar/$1/$2');
 
+// Fornecedores
+$routes->get('/admin/fornecedores', 'Admin::fornecedores');
+$routes->post('/admin/fornecedores', 'Admin::fornecedores');
+$routes->get('/admin/fornecedor/novo', 'Admin::fornecedorForm');
+$routes->get('/admin/fornecedor/(:num)', 'Admin::fornecedorView/$1');
+$routes->get('/admin/fornecedor/(:num)/editar', 'Admin::fornecedorForm/$1');
+$routes->post('/admin/fornecedores/salvar', 'Admin::fornecedorSalvar');
+
+// Estoque
+$routes->get('/admin/estoque', 'Admin::estoque');
+$routes->post('/admin/estoque', 'Admin::estoque');
+$routes->get('/admin/estoque/peca/novo', 'Admin::estoqueForm');
+$routes->get('/admin/estoque/peca/(:num)', 'Admin::estoqueView/$1');
+$routes->get('/admin/estoque/peca/(:num)/editar', 'Admin::estoqueForm/$1');
+$routes->post('/admin/estoque/salvar', 'Admin::estoqueSalvar');
+$routes->post('/admin/estoque/ajustar', 'Admin::estoqueAjustar');
+
 // Perfil do Admin
 $routes->get('/admin/perfil', 'Admin::perfil');
 $routes->post('/admin/perfil', 'Admin::perfil');
