@@ -5,10 +5,14 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Novo::index');
 $routes->get('/novo', 'Novo::index');
 $routes->post('/novo/solicitar', 'Novo::solicitar');
+$routes->post('/novo/contato', 'Novo::contato');
 $routes->post('/home/solicitar', 'Home::solicitar');
+
+// Uploads - servir imagens
+$routes->get('/uploads/(marcas|parceiros)/(:any)', 'Uploads::index/$1/$2');
 
 // Admin routes
 $routes->get('/admin', 'Admin::index');
@@ -17,6 +21,12 @@ $routes->post('/admin/login', 'Admin::login');
 $routes->get('/admin/logout', 'Admin::logout');
 $routes->get('/admin/solicitacoes', 'Admin::solicitacoes');
 $routes->post('/admin/atualizarStatus', 'Admin::atualizarStatus');
+// Contatos
+$routes->get('/admin/contatos', 'Admin::contatos');
+$routes->post('/admin/atualizarStatusContato', 'Admin::atualizarStatusContato');
+$routes->post('/admin/marcarContatoLido', 'Admin::marcarContatoLido');
+$routes->post('/admin/contarContatosNaoLidos', 'Admin::contarContatosNaoLidos');
+$routes->post('/admin/excluirContato', 'Admin::excluirContato');
 // Marcas
 $routes->get('/admin/marcas', 'Admin::marcas');
 $routes->post('/admin/marcas', 'Admin::marcas');
@@ -37,6 +47,7 @@ $routes->post('/admin/parceiros/salvar', 'Admin::parceiroSalvar');
 $routes->post('/admin/marcarSolicitacaoLida', 'Admin::marcarSolicitacaoLida');
 $routes->post('/admin/contarSolicitacoesNaoLidas', 'Admin::contarSolicitacoesNaoLidas');
 $routes->post('/admin/adicionarObservacaoSolicitacao', 'Admin::adicionarObservacaoSolicitacao');
+$routes->post('/admin/excluirSolicitacao', 'Admin::excluirSolicitacao');
 
 // Clientes
 $routes->get('/admin/clientes', 'Admin::clientes');

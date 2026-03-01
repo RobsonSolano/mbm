@@ -60,10 +60,12 @@
         
         <div class="dados-formulario">
             <h3><u>Dados do contato</u></h3>
-            <p><strong>Nome</strong>: <?php echo $nome ?></p>
-            <p><strong>E-mail</strong>: <a href="mailto:<?php echo $email ?>"><?php echo $email ?></a></p>
-            <p><strong>Celular</strong>: <a href="tel:+<?php echo $celular ?>"><?php echo $celular ?></a></p>
+            <p><strong>Nome</strong>: <?php echo isset($nome) ? $nome : '' ?></p>
+            <p><strong>E-mail</strong>: <?php if (!empty($email)): ?><a href="mailto:<?php echo $email ?>"><?php echo $email ?></a><?php else: ?>Não informado<?php endif; ?></p>
+            <p><strong>Celular</strong>: <?php if (!empty($celular)): ?><a href="tel:+<?php echo $celular ?>"><?php echo $celular ?></a><?php else: ?>Não informado<?php endif; ?></p>
+            <?php if (!empty($cidade)): ?>
             <p><strong>Cidade</strong>: <?php echo $cidade ?></p>
+            <?php endif; ?>
             <p><strong>Observação</strong>:
                 <?php echo isset($observacao) && !empty($observacao) ? $observacao : "Nenhuma observação informada." ?>
             </p>

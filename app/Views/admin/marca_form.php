@@ -10,7 +10,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-8 mx-auto">
+    <div class="col-md-12 mx-auto">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">
@@ -34,7 +34,7 @@
                         <label for="logo_file" class="form-label">Logo (upload opcional)</label>
                         <?php if (isset($marca) && !empty($marca['logo'])): ?>
                             <div class="mb-2">
-                                <img src="<?php echo base_url('writable/uploads/marcas/' . $marca['logo']) ?>" 
+                                <img src="<?php echo base_url('uploads/marcas/' . $marca['logo']) ?>" 
                                      alt="<?php echo esc($marca['nome']) ?>" 
                                      class="img-thumbnail" style="max-height: 100px;">
                                 <p class="text-muted small mt-1">Logo atual</p>

@@ -15,7 +15,6 @@
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Logo</th>
-                        <th>Descrição</th>
                         <th>Ordem</th>
                         <th>Status</th>
                         <th>Ações</th>
@@ -33,14 +32,13 @@
                                 <td><?php echo esc($marca['nome']) ?></td>
                                 <td>
                                     <?php if (!empty($marca['logo'])): ?>
-                                        <img src="<?php echo base_url('writable/uploads/marcas/' . $marca['logo']) ?>" 
+                                        <img src="<?php echo base_url('uploads/marcas/' . $marca['logo']) ?>" 
                                              alt="<?php echo esc($marca['nome']) ?>" 
                                              style="max-height: 50px;">
                                     <?php else: ?>
                                         <span class="text-muted">-</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo esc(substr($marca['descricao'] ?? '', 0, 50)) ?><?php echo strlen($marca['descricao'] ?? '') > 50 ? '...' : '' ?></td>
                                 <td><?php echo $marca['ordem'] ?></td>
                                 <td>
                                     <span class="badge bg-<?php echo $marca['ativo'] ? 'success' : 'secondary' ?>">
