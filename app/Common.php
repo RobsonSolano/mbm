@@ -13,3 +13,8 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+// Carrega o helper de email customizado
+if (file_exists(APPPATH . 'Helpers/email_helper.php')) {
+    require_once APPPATH . 'Helpers/email_helper.php';
+}

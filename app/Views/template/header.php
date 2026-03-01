@@ -7,6 +7,9 @@
 
 	<!--===== Style JS =====-->
 	<link rel="stylesheet" href="<?php echo base_url('assets/css/style.min.css') ?>">
+	<?php if (uri_string() == 'novo' || strpos(uri_string(), 'novo') === 0): ?>
+	<link rel="stylesheet" href="<?php echo base_url('assets/css/novo-home.css') ?>">
+	<?php endif; ?>
 
 	<link rel="shortcut icon" href="<?php echo base_url('assets/img/favicon.png') ?>" type="image/x-icon">
 	<!-- =====BOX ICONS===== -->
@@ -18,7 +21,7 @@
 	<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
 
-	<title><?php echo APPLICATION_NAME ?></title>
+	<title><?php echo isset($title) ? $title . ' - ' . APPLICATION_NAME : APPLICATION_NAME ?></title>
 	<meta name="description" content="MBM Climatização - Garanta o melhor desempenho do seu ar condicionado e o conforto da sua familia com a nossa manutenção especializada">
 </head>
 
