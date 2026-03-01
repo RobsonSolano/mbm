@@ -13,8 +13,6 @@ class NaoEncontrado extends BaseController
         
         $data['title'] = 'Página não encontrada - MBM Climatização';
         
-        return view('template/header', $data) . 
-               view('view_pagina_nao_encontrada') . 
-               view('template/footer');
+        return view('view_pagina_nao_encontrada', $data);
     }
 }
