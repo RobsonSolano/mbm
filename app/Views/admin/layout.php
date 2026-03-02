@@ -87,6 +87,16 @@
                                 <i class="fas fa-handshake me-2"></i> Parceiros
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/fornecedor') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/fornecedores') ?>">
+                                <i class="fas fa-truck me-2"></i> Fornecedores
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/estoque') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/estoque') ?>">
+                                <i class="fas fa-boxes me-2"></i> Estoque
+                            </a>
+                        </li>
                         <li class="nav-item mt-3 border-top pt-3">
                             <a class="nav-link <?php echo (uri_string() == 'admin/perfil') ? 'active' : '' ?>" href="<?php echo base_url('admin/perfil') ?>">
                                 <i class="fas fa-user-cog me-2"></i> Dados Cadastrais

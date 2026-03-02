@@ -10,6 +10,9 @@ use App\Models\ParceiroModel;
 use App\Models\AcessoModel;
 use App\Models\ClienteModel;
 use App\Models\ServicoClienteModel;
+use App\Models\EstoqueModel;
+use App\Models\EstoqueHistoricoModel;
+use App\Models\FornecedorModel;
 
 class Admin extends BaseController
 {
@@ -21,6 +24,9 @@ class Admin extends BaseController
     protected $acessoModel;
     protected $clienteModel;
     protected $servicoClienteModel;
+    protected $estoqueModel;
+    protected $estoqueHistoricoModel;
+    protected $fornecedorModel;
 
     public function __construct()
     {
@@ -32,6 +38,9 @@ class Admin extends BaseController
         $this->acessoModel = new AcessoModel();
         $this->clienteModel = new ClienteModel();
         $this->servicoClienteModel = new ServicoClienteModel();
+        $this->estoqueModel = new EstoqueModel();
+        $this->estoqueHistoricoModel = new EstoqueHistoricoModel();
+        $this->fornecedorModel = new FornecedorModel();
         date_default_timezone_set('America/Sao_Paulo');
     }
 
@@ -554,6 +563,110 @@ class Admin extends BaseController
     }
 
     /**
+     * Listagem de Fornecedores
+     */
+    public function fornecedores()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = $this->request->getPost('id');
+            $this->fornecedorModel->delete($id);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Fornecedor excluído com sucesso!');
+            return redirect()->to(base_url('admin/fornecedores'));
+        }
+
+        $filtroNome = $this->request->getGet('filtro_nome') ?? '';
+        $query = $this->fornecedorModel;
+        if ($filtroNome) {
+            $query = $query->like('nome', $filtroNome);
+        }
+        $data['fornecedores'] = $query->orderBy('nome', 'ASC')->findAll();
+        $data['filtroNome'] = $filtroNome;
+        $data['title'] = 'Gestão de Fornecedores';
+        $data['content'] = view('admin/fornecedores', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Visualizar Fornecedor
+     */
+    public function fornecedorView($id)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['fornecedor'] = $this->fornecedorModel->find($id);
+        if (!$data['fornecedor']) {
+            $session = session();
+            $session->setFlashdata('erro', 'Fornecedor não encontrado.');
+            return redirect()->to(base_url('admin/fornecedores'));
+        }
+
+        $data['title'] = 'Fornecedor - ' . $data['fornecedor']['nome'];
+        $data['content'] = view('admin/fornecedor_view', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Formulário de Fornecedor (criar/editar)
+     */
+    public function fornecedorForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['fornecedor'] = null;
+        if ($id) {
+            $data['fornecedor'] = $this->fornecedorModel->find($id);
+            if (!$data['fornecedor']) {
+                $session = session();
+                $session->setFlashdata('erro', 'Fornecedor não encontrado.');
+                return redirect()->to(base_url('admin/fornecedores'));
+            }
+        }
+
+        $data['title'] = $id ? 'Editar Fornecedor' : 'Novo Fornecedor';
+        $data['content'] = view('admin/fornecedor_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar Fornecedor
+     */
+    public function fornecedorSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $dados = [
+            'nome' => $this->request->getPost('nome'),
+            'contato' => $this->request->getPost('contato'),
+            'email' => $this->request->getPost('email'),
+            'observacoes' => $this->request->getPost('observacoes'),
+            'ativo' => $this->request->getPost('ativo') ? 1 : 0
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->fornecedorModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Fornecedor atualizado com sucesso!');
+        } else {
+            $this->fornecedorModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Fornecedor criado com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/fornecedores'));
+    }
+
+    /**
      * Contar solicitações não lidas (para atualizar badge)
      */
     public function contarSolicitacoesNaoLidas()
@@ -1036,6 +1149,190 @@ class Admin extends BaseController
         $session = session();
         $session->setFlashdata('sucesso', 'Serviço excluído com sucesso!');
         return redirect()->to(base_url("admin/cliente/{$clienteId}/servicos"));
+    }
+
+    /**
+     * Gestão de Estoque
+     */
+    public function estoque()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = $this->request->getPost('id');
+            $this->estoqueHistoricoModel->where('peca_id', $id)->delete();
+            $this->estoqueModel->delete($id);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Peça excluída com sucesso!');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+
+        $filtroNome = $this->request->getGet('filtro_nome') ?? '';
+        $db = \Config\Database::connect();
+        try {
+            $builder = $db->table('estoque_pecas')
+                ->select('estoque_pecas.*, fornecedores.nome as fornecedor_nome')
+                ->join('fornecedores', 'fornecedores.id = estoque_pecas.fornecedor_id', 'left');
+            if ($filtroNome) {
+                $builder->like('estoque_pecas.nome', $filtroNome);
+            }
+            $data['pecas'] = $builder->orderBy('estoque_pecas.nome', 'ASC')->get()->getResultArray();
+        } catch (\Throwable $e) {
+            $query = $this->estoqueModel;
+            if ($filtroNome) {
+                $query = $query->like('nome', $filtroNome);
+            }
+            $data['pecas'] = $query->orderBy('nome', 'ASC')->findAll();
+            foreach ($data['pecas'] as &$p) {
+                $p['fornecedor_nome'] = null;
+            }
+        }
+        $data['filtroNome'] = $filtroNome;
+        $data['title'] = 'Gestão de Estoque';
+        $data['content'] = view('admin/estoque', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar Peça
+     */
+    public function estoqueSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $fornecedorId = $this->request->getPost('fornecedor_id');
+        $dados = [
+            'nome' => $this->request->getPost('nome'),
+            'quantidade' => (int) $this->request->getPost('quantidade'),
+            'descricao' => $this->request->getPost('descricao'),
+            'fornecedor_id' => $fornecedorId ? (int) $fornecedorId : null,
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->estoqueModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Peça atualizada com sucesso!');
+        } else {
+            $this->estoqueModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Peça cadastrada com sucesso!');
+        }
+        return redirect()->to(base_url('admin/estoque'));
+    }
+
+    /**
+     * Formulário de Peça (criar/editar)
+     */
+    public function estoqueForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['peca'] = null;
+        if ($id) {
+            $data['peca'] = $this->estoqueModel->find($id);
+            if (!$data['peca']) {
+                $session = session();
+                $session->setFlashdata('erro', 'Peça não encontrada.');
+                return redirect()->to(base_url('admin/estoque'));
+            }
+        }
+
+        $data['fornecedores'] = $this->fornecedorModel->orderBy('nome', 'ASC')->findAll();
+        $data['title'] = $id ? 'Editar Peça' : 'Nova Peça';
+        $data['content'] = view('admin/estoque_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Visualizar Peça (detalhe + histórico)
+     */
+    public function estoqueView($id)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $peca = $this->estoqueModel->find($id);
+        if (!$peca) {
+            $session = session();
+            $session->setFlashdata('erro', 'Peça não encontrada.');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+        $data['peca'] = $peca;
+        if (!empty($peca['fornecedor_id'])) {
+            $data['fornecedor'] = $this->fornecedorModel->find($peca['fornecedor_id']);
+        } else {
+            $data['fornecedor'] = null;
+        }
+
+        $data['historico'] = $this->estoqueHistoricoModel->buscarPorPeca($id);
+        $data['title'] = 'Peça - ' . $data['peca']['nome'];
+        $data['content'] = view('admin/estoque_view', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Aumentar ou diminuir quantidade (POST)
+     */
+    public function estoqueAjustar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $tipo = $this->request->getPost('tipo'); // 'aumento' ou 'diminuicao'
+        $quantidade = (int) $this->request->getPost('quantidade');
+        $descricao = $this->request->getPost('descricao');
+
+        if (!$id || !in_array($tipo, ['aumento', 'diminuicao']) || $quantidade <= 0) {
+            $session = session();
+            $session->setFlashdata('erro', 'Dados inválidos.');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+
+        $peca = $this->estoqueModel->find($id);
+        if (!$peca) {
+            $session = session();
+            $session->setFlashdata('erro', 'Peça não encontrada.');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+
+        $qtdAtual = (int) $peca['quantidade'];
+        $qtdAnterior = $qtdAtual;
+
+        if ($tipo === 'diminuicao') {
+            if ($quantidade > $qtdAtual) {
+                $session = session();
+                $session->setFlashdata('erro', 'Quantidade a diminuir não pode ser maior que o estoque atual (' . $qtdAtual . ').');
+                return redirect()->to(base_url('admin/estoque'));
+            }
+            $qtdNova = $qtdAtual - $quantidade;
+        } else {
+            $qtdNova = $qtdAtual + $quantidade;
+        }
+
+        $this->estoqueModel->update($id, ['quantidade' => $qtdNova]);
+
+        $this->estoqueHistoricoModel->insert([
+            'peca_id' => $id,
+            'tipo' => $tipo,
+            'quantidade' => $quantidade,
+            'quantidade_anterior' => $qtdAnterior,
+            'quantidade_nova' => $qtdNova,
+            'descricao' => $descricao ?: null,
+            'criado_em' => date('Y-m-d H:i:s'),
+        ]);
+
+        $session = session();
+        $session->setFlashdata('sucesso', $tipo === 'aumento' ? 'Estoque aumentado com sucesso!' : 'Estoque diminuído com sucesso!');
+        return redirect()->to(base_url('admin/estoque'));
     }
 
     /**
