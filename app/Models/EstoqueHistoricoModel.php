@@ -14,10 +14,7 @@ class EstoqueHistoricoModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = ['peca_id', 'tipo', 'quantidade', 'quantidade_anterior', 'quantidade_nova', 'descricao'];
 
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'criado_em';
-    protected $updatedField  = ''; // tabela não tem atualizado_em
+    protected $useTimestamps = false; // tabela só tem criado_em
 
     /**
      * Busca histórico por peça

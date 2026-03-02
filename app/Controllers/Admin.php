@@ -579,7 +579,13 @@ class Admin extends BaseController
             return redirect()->to(base_url('admin/fornecedores'));
         }
 
-        $data['fornecedores'] = $this->fornecedorModel->orderBy('nome', 'ASC')->findAll();
+        $filtroNome = $this->request->getGet('filtro_nome') ?? '';
+        $query = $this->fornecedorModel;
+        if ($filtroNome) {
+            $query = $query->like('nome', $filtroNome);
+        }
+        $data['fornecedores'] = $query->orderBy('nome', 'ASC')->findAll();
+        $data['filtroNome'] = $filtroNome;
         $data['title'] = 'Gestão de Fornecedores';
         $data['content'] = view('admin/fornecedores', $data);
         return view('admin/layout', $data);
@@ -1163,20 +1169,27 @@ class Admin extends BaseController
             return redirect()->to(base_url('admin/estoque'));
         }
 
+        $filtroNome = $this->request->getGet('filtro_nome') ?? '';
         $db = \Config\Database::connect();
         try {
-            $data['pecas'] = $db->table('estoque_pecas')
+            $builder = $db->table('estoque_pecas')
                 ->select('estoque_pecas.*, fornecedores.nome as fornecedor_nome')
-                ->join('fornecedores', 'fornecedores.id = estoque_pecas.fornecedor_id', 'left')
-                ->orderBy('estoque_pecas.nome', 'ASC')
-                ->get()
-                ->getResultArray();
+                ->join('fornecedores', 'fornecedores.id = estoque_pecas.fornecedor_id', 'left');
+            if ($filtroNome) {
+                $builder->like('estoque_pecas.nome', $filtroNome);
+            }
+            $data['pecas'] = $builder->orderBy('estoque_pecas.nome', 'ASC')->get()->getResultArray();
         } catch (\Throwable $e) {
-            $data['pecas'] = $this->estoqueModel->orderBy('nome', 'ASC')->findAll();
+            $query = $this->estoqueModel;
+            if ($filtroNome) {
+                $query = $query->like('nome', $filtroNome);
+            }
+            $data['pecas'] = $query->orderBy('nome', 'ASC')->findAll();
             foreach ($data['pecas'] as &$p) {
                 $p['fornecedor_nome'] = null;
             }
         }
+        $data['filtroNome'] = $filtroNome;
         $data['title'] = 'Gestão de Estoque';
         $data['content'] = view('admin/estoque', $data);
         return view('admin/layout', $data);
@@ -1314,6 +1327,7 @@ class Admin extends BaseController
             'quantidade_anterior' => $qtdAnterior,
             'quantidade_nova' => $qtdNova,
             'descricao' => $descricao ?: null,
+            'criado_em' => date('Y-m-d H:i:s'),
         ]);
 
         $session = session();

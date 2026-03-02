@@ -1,8 +1,29 @@
 <div class="row mb-3">
-    <div class="col-12">
+    <div class="col-md-4">
         <a href="<?php echo base_url('admin/fornecedor/novo') ?>" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i> Novo Fornecedor
         </a>
+    </div>
+    <div class="col-md-8">
+        <form method="get" class="row g-2">
+            <div class="col-md-10">
+                <input type="text" name="filtro_nome" class="form-control" 
+                       placeholder="Filtrar por nome..." 
+                       value="<?php echo esc($filtroNome ?? '') ?>">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100" title="Buscar">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <?php if (!empty($filtroNome)): ?>
+            <div class="col-md-12 mt-2">
+                <a href="<?php echo base_url('admin/fornecedores') ?>" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-times me-1"></i> Limpar Filtro
+                </a>
+            </div>
+            <?php endif; ?>
+        </form>
     </div>
 </div>
 
