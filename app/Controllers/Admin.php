@@ -13,6 +13,7 @@ use App\Models\ServicoClienteModel;
 use App\Models\EstoqueModel;
 use App\Models\EstoqueHistoricoModel;
 use App\Models\FornecedorModel;
+use App\Models\AgendamentoModel;
 
 class Admin extends BaseController
 {
@@ -27,6 +28,7 @@ class Admin extends BaseController
     protected $estoqueModel;
     protected $estoqueHistoricoModel;
     protected $fornecedorModel;
+    protected $agendamentoModel;
 
     public function __construct()
     {
@@ -41,6 +43,7 @@ class Admin extends BaseController
         $this->estoqueModel = new EstoqueModel();
         $this->estoqueHistoricoModel = new EstoqueHistoricoModel();
         $this->fornecedorModel = new FornecedorModel();
+        $this->agendamentoModel = new AgendamentoModel();
         date_default_timezone_set('America/Sao_Paulo');
     }
 
@@ -112,6 +115,14 @@ class Admin extends BaseController
         }
 
         if ($this->request->getMethod() === 'post') {
+            $recaptcha = new \App\Libraries\Mc_recaptcha();
+            $recaptchaValid = $recaptcha->validated();
+
+            if (!$recaptchaValid) {
+                $session->setFlashdata('erro', 'Por favor, marque a opção "Não sou um robô" (reCAPTCHA).');
+                return view('admin/login', ['recaptcha_not_checked' => true]);
+            }
+
             $email = $this->request->getPost('email');
             $senha = $this->request->getPost('senha');
             
@@ -1333,6 +1344,248 @@ class Admin extends BaseController
         $session = session();
         $session->setFlashdata('sucesso', $tipo === 'aumento' ? 'Estoque aumentado com sucesso!' : 'Estoque diminuído com sucesso!');
         return redirect()->to(base_url('admin/estoque'));
+    }
+
+    /**
+     * Agendamentos - Calendário principal (mês ou semana)
+     */
+    public function agendamentos()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $vista = $this->request->getGet('vista') ?? 'mes';
+        $ano = (int) ($this->request->getGet('ano') ?? date('Y'));
+        $mes = (int) ($this->request->getGet('mes') ?? date('m'));
+        $dia = (int) ($this->request->getGet('dia') ?? date('d'));
+        $mes = max(1, min(12, $mes));
+        if ($ano < 2020 || $ano > 2030) $ano = date('Y');
+
+        $data['vista'] = $vista;
+        $data['ano'] = $ano;
+        $data['mes'] = $mes;
+        $data['dia'] = $dia;
+
+        if ($vista === 'semana') {
+            $dataRef = sprintf('%04d-%02d-%02d', $ano, $mes, min($dia, date('t', strtotime("{$ano}-{$mes}-01"))));
+            $ts = strtotime($dataRef);
+            $dow = (int) date('w', $ts); // 0=Dom..6=Sab
+            $domingo = strtotime("-{$dow} days", $ts);
+            $sabado = strtotime('+6 days', $domingo);
+            $data['semanaInicio'] = date('Y-m-d', $domingo);
+            $data['semanaFim'] = date('Y-m-d', $sabado);
+            $data['diasSemana'] = [];
+            for ($i = 0; $i < 7; $i++) {
+                $d = strtotime("+{$i} days", $domingo);
+                $data['diasSemana'][] = [
+                    'data' => date('Y-m-d', $d),
+                    'dia' => (int) date('d', $d),
+                    'mes' => (int) date('m', $d),
+                    'nome' => ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][$i],
+                ];
+            }
+            $db = \Config\Database::connect();
+            $agendamentos = $db->table('agendamentos')
+                ->select('agendamentos.*')
+                ->where('data >=', $data['semanaInicio'])
+                ->where('data <=', $data['semanaFim'])
+                ->whereIn('status', ['agendado', 'concluido'])
+                ->orderBy('data', 'ASC')
+                ->orderBy('hora_inicio', 'ASC')
+                ->get()
+                ->getResultArray();
+            $porDataHora = [];
+            foreach ($agendamentos as $a) {
+                $cliente = $db->table('clientes')->select('nome_completo')->where('id', $a['cliente_id'])->get()->getRowArray();
+                $a['cliente_nome'] = $cliente['nome_completo'] ?? '-';
+                $raw = $a['data'] ?? '';
+                $ts = strtotime((string)$raw);
+                $dataKey = $ts ? date('Y-m-d', $ts) : substr((string)$raw, 0, 10);
+                if (!isset($porDataHora[$dataKey])) $porDataHora[$dataKey] = [];
+                $porDataHora[$dataKey][] = $a;
+            }
+            $data['agendamentosPorDia'] = $porDataHora;
+            $data['tituloSemana'] = date('d/m', $domingo) . ' – ' . date('d/m/Y', $sabado);
+            $mesesPT = ['', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+            $data['tituloMes'] = 'Semana de ' . date('d', $domingo) . ' a ' . date('d', $sabado) . ' de ' . $mesesPT[(int) date('m', $domingo)] . ' ' . date('Y', $domingo);
+        } else {
+            $data['contagemPorDia'] = $this->agendamentoModel->contarPorDiaNoMes($ano, $mes);
+            $mesesPT = ['', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+            $data['tituloMes'] = ucfirst($mesesPT[$mes]) . ' ' . $ano;
+        }
+
+        $data['novo'] = (bool) $this->request->getGet('novo');
+        $data['dataInicial'] = $this->request->getGet('data'); // para auto-abrir modal ao vir da listagem
+        if ($data['novo']) {
+            $data['clientes'] = $this->clienteModel->where('deletado', 0)->where('bloqueado', 0)->orderBy('nome_completo', 'ASC')->findAll();
+            $data['slots'] = AgendamentoModel::getSlotsHorario();
+        } else {
+            $data['clientes'] = [];
+            $data['slots'] = AgendamentoModel::getSlotsHorario();
+        }
+
+        $data['title'] = 'Agendamentos';
+        $data['content'] = view('admin/agendamentos', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * API: slots ocupados no dia (JSON)
+     */
+    public function agendamentosSlotsOcupados($dataStr)
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false]);
+        }
+        $ocupados = $this->agendamentoModel->getSlotsOcupados($dataStr);
+        return $this->response->setJSON(['success' => true, 'ocupados' => $ocupados]);
+    }
+
+    /**
+     * Agendamentos do dia (JSON para modal)
+     */
+    public function agendamentosDia($dataStr)
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false]);
+        }
+
+        $agendamentos = $this->agendamentoModel->buscarPorDia($dataStr);
+        $db = \Config\Database::connect();
+        $comCliente = [];
+        foreach ($agendamentos as $a) {
+            $cliente = $db->table('clientes')->select('nome_completo, celular')->where('id', $a['cliente_id'])->get()->getRowArray();
+            $a['cliente_nome'] = $cliente['nome_completo'] ?? '-';
+            $a['cliente_celular'] = $cliente['celular'] ?? '';
+            $comCliente[] = $a;
+        }
+        return $this->response->setJSON(['success' => true, 'agendamentos' => $comCliente, 'data' => $dataStr]);
+    }
+
+    /**
+     * Formulário novo/editar agendamento
+     */
+    public function agendamentoForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['agendamento'] = null;
+        $data['dataPreenchida'] = $this->request->getGet('data') ?? date('Y-m-d');
+        $data['horaPreenchida'] = $this->request->getGet('hora') ?? null;
+
+        if ($id) {
+            $data['agendamento'] = $this->agendamentoModel->find($id);
+            if (!$data['agendamento']) {
+                session()->setFlashdata('erro', 'Agendamento não encontrado.');
+                return redirect()->to(base_url('admin/agendamentos'));
+            }
+            $data['dataPreenchida'] = $data['agendamento']['data'];
+        }
+
+        $data['clientes'] = $this->clienteModel->where('deletado', 0)->where('bloqueado', 0)->orderBy('nome_completo', 'ASC')->findAll();
+        $data['slots'] = AgendamentoModel::getSlotsHorario();
+        $data['title'] = $id ? 'Editar Agendamento' : 'Novo Agendamento';
+        $data['content'] = view('admin/agendamento_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar agendamento
+     */
+    public function agendamentoSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $dataAgend = $this->request->getPost('data');
+        $horaInicio = $this->request->getPost('hora_inicio');
+        $horaFim = $this->request->getPost('hora_fim') ?: date('H:i', strtotime($horaInicio . ' +1 hour'));
+
+        if ($this->agendamentoModel->temConflito($dataAgend, $horaInicio, $horaFim, $id ? (int) $id : null)) {
+            session()->setFlashdata('erro', 'Este horário já está ocupado. Escolha outro.');
+            return redirect()->back()->withInput();
+        }
+
+        $dados = [
+            'cliente_id'   => (int) $this->request->getPost('cliente_id'),
+            'data'         => $dataAgend,
+            'hora_inicio'  => $horaInicio,
+            'hora_fim'     => $horaFim,
+            'descricao'    => $this->request->getPost('descricao'),
+            'status'       => $this->request->getPost('status') ?: 'agendado',
+            'observacoes'  => $this->request->getPost('observacoes') ?: null,
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->agendamentoModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Agendamento atualizado!');
+        } else {
+            $this->agendamentoModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Agendamento criado!');
+        }
+        return redirect()->to(base_url('admin/agendamentos'));
+    }
+
+    /**
+     * API: verificar conflito de horário (JSON)
+     */
+    public function agendamentoVerificarConflito()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false]);
+        }
+
+        $data = $this->request->getGet('data');
+        $horaInicio = $this->request->getGet('hora_inicio');
+        $horaFim = $this->request->getGet('hora_fim');
+        $id = $this->request->getGet('id') ? (int) $this->request->getGet('id') : null;
+
+        if (!$data || !$horaInicio) {
+            return $this->response->setJSON(['success' => true, 'conflito' => false]);
+        }
+
+        $conflito = $this->agendamentoModel->temConflito($data, $horaInicio, $horaFim ?? '', $id);
+        return $this->response->setJSON(['success' => true, 'conflito' => $conflito]);
+    }
+
+    /**
+     * Cancelar agendamento (status)
+     */
+    public function agendamentoCancelar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        if ($id) {
+            $this->agendamentoModel->update($id, ['status' => 'cancelado']);
+            session()->setFlashdata('sucesso', 'Agendamento cancelado.');
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Marcar como concluído
+     */
+    public function agendamentoConcluir()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        if ($id) {
+            $this->agendamentoModel->update($id, ['status' => 'concluido']);
+            session()->setFlashdata('sucesso', 'Agendamento marcado como concluído.');
+        }
+        return redirect()->back();
     }
 
     /**

@@ -76,6 +76,17 @@ $routes->get('/admin/fornecedor/(:num)', 'Admin::fornecedorView/$1');
 $routes->get('/admin/fornecedor/(:num)/editar', 'Admin::fornecedorForm/$1');
 $routes->post('/admin/fornecedores/salvar', 'Admin::fornecedorSalvar');
 
+// Agendamentos
+$routes->get('/admin/agendamentos', 'Admin::agendamentos');
+$routes->get('/admin/agendamentos/dia/(:segment)', 'Admin::agendamentosDia/$1');
+$routes->get('/admin/agendamentos/slots-ocupados/(:segment)', 'Admin::agendamentosSlotsOcupados/$1');
+$routes->get('/admin/agendamento/verificar-conflito', 'Admin::agendamentoVerificarConflito');
+$routes->get('/admin/agendamento/novo', 'Admin::agendamentoForm');
+$routes->get('/admin/agendamento/(:num)/editar', 'Admin::agendamentoForm/$1');
+$routes->post('/admin/agendamento/salvar', 'Admin::agendamentoSalvar');
+$routes->post('/admin/agendamento/cancelar', 'Admin::agendamentoCancelar');
+$routes->post('/admin/agendamento/concluir', 'Admin::agendamentoConcluir');
+
 // Estoque
 $routes->get('/admin/estoque', 'Admin::estoque');
 $routes->post('/admin/estoque', 'Admin::estoque');
