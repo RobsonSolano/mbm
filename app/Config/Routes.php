@@ -96,9 +96,21 @@ $routes->get('/admin/estoque/peca/(:num)/editar', 'Admin::estoqueForm/$1');
 $routes->post('/admin/estoque/salvar', 'Admin::estoqueSalvar');
 $routes->post('/admin/estoque/ajustar', 'Admin::estoqueAjustar');
 
+// Colaboradores
+$routes->get('/admin/colaboradores', 'Admin::colaboradores');
+$routes->post('/admin/colaboradores', 'Admin::colaboradores');
+$routes->get('/admin/colaborador/novo', 'Admin::colaboradorForm');
+$routes->get('/admin/colaborador/(:num)/editar', 'Admin::colaboradorForm/$1');
+$routes->post('/admin/colaboradores/salvar', 'Admin::colaboradorSalvar');
+
 // Perfil do Admin
 $routes->get('/admin/perfil', 'Admin::perfil');
 $routes->post('/admin/perfil', 'Admin::perfil');
+
+// Cron — lembrete diário de agendamentos (token obrigatório)
+$routes->get('/cron/lembretes', 'Cron::lembretes');
+// Teste do cron via painel admin (sem token, requer login)
+$routes->get('/admin/testar-lembretes', 'Admin::testarLembretes');
 
 if (ENVIRONMENT == 'development') {
     $routes->get('/view_email_contato', 'Home::view_email_contato');

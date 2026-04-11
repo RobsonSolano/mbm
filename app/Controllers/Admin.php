@@ -14,6 +14,7 @@ use App\Models\EstoqueModel;
 use App\Models\EstoqueHistoricoModel;
 use App\Models\FornecedorModel;
 use App\Models\AgendamentoModel;
+use App\Models\FuncionarioModel;
 
 class Admin extends BaseController
 {
@@ -29,6 +30,7 @@ class Admin extends BaseController
     protected $estoqueHistoricoModel;
     protected $fornecedorModel;
     protected $agendamentoModel;
+    protected $funcionarioModel;
 
     public function __construct()
     {
@@ -44,6 +46,7 @@ class Admin extends BaseController
         $this->estoqueHistoricoModel = new EstoqueHistoricoModel();
         $this->fornecedorModel = new FornecedorModel();
         $this->agendamentoModel = new AgendamentoModel();
+        $this->funcionarioModel = new FuncionarioModel();
         date_default_timezone_set('America/Sao_Paulo');
     }
 
@@ -1512,13 +1515,14 @@ class Admin extends BaseController
         }
 
         $dados = [
-            'cliente_id'   => (int) $this->request->getPost('cliente_id'),
-            'data'         => $dataAgend,
-            'hora_inicio'  => $horaInicio,
-            'hora_fim'     => $horaFim,
-            'descricao'    => $this->request->getPost('descricao'),
-            'status'       => $this->request->getPost('status') ?: 'agendado',
-            'observacoes'  => $this->request->getPost('observacoes') ?: null,
+            'cliente_id'     => (int) $this->request->getPost('cliente_id'),
+            'responsavel_id' => (int) ($this->request->getPost('responsavel_id') ?: 1),
+            'data'           => $dataAgend,
+            'hora_inicio'    => $horaInicio,
+            'hora_fim'       => $horaFim,
+            'descricao'      => $this->request->getPost('descricao'),
+            'status'         => $this->request->getPost('status') ?: 'agendado',
+            'observacoes'    => $this->request->getPost('observacoes') ?: null,
         ];
 
         $session = session();
@@ -1529,6 +1533,18 @@ class Admin extends BaseController
             $this->agendamentoModel->insert($dados);
             $session->setFlashdata('sucesso', 'Agendamento criado!');
         }
+
+        // Notificação ao responsável apenas na criação
+        if (!$id) {
+            helper('email_helper');
+            $responsavel = $this->funcionarioModel->find($dados['responsavel_id']);
+            if ($responsavel && !empty($responsavel['email'])) {
+                $cliente = $this->clienteModel->find($dados['cliente_id']);
+                $clienteNome = $cliente['nome_completo'] ?? $cliente['nome'] ?? '';
+                send_email_agendamento('criado', $responsavel['email'], $dados, $clienteNome);
+            }
+        }
+
         return redirect()->to(base_url('admin/agendamentos'));
     }
 
@@ -1567,6 +1583,18 @@ class Admin extends BaseController
         if ($id) {
             $this->agendamentoModel->update($id, ['status' => 'cancelado']);
             session()->setFlashdata('sucesso', 'Agendamento cancelado.');
+
+            // Notificação ao responsável
+            helper('email_helper');
+            $agendamento = $this->agendamentoModel->find($id);
+            if ($agendamento) {
+                $responsavel = $this->funcionarioModel->find($agendamento['responsavel_id'] ?? 1);
+                if ($responsavel && !empty($responsavel['email'])) {
+                    $cliente = $this->clienteModel->find($agendamento['cliente_id']);
+                    $clienteNome = $cliente['nome_completo'] ?? $cliente['nome'] ?? '';
+                    send_email_agendamento('cancelado', $responsavel['email'], $agendamento, $clienteNome);
+                }
+            }
         }
         return redirect()->back();
     }
@@ -1584,6 +1612,18 @@ class Admin extends BaseController
         if ($id) {
             $this->agendamentoModel->update($id, ['status' => 'concluido']);
             session()->setFlashdata('sucesso', 'Agendamento marcado como concluído.');
+
+            // Notificação ao responsável
+            helper('email_helper');
+            $agendamento = $this->agendamentoModel->find($id);
+            if ($agendamento) {
+                $responsavel = $this->funcionarioModel->find($agendamento['responsavel_id'] ?? 1);
+                if ($responsavel && !empty($responsavel['email'])) {
+                    $cliente = $this->clienteModel->find($agendamento['cliente_id']);
+                    $clienteNome = $cliente['nome_completo'] ?? $cliente['nome'] ?? '';
+                    send_email_agendamento('concluido', $responsavel['email'], $agendamento, $clienteNome);
+                }
+            }
         }
         return redirect()->back();
     }
@@ -1640,5 +1680,192 @@ class Admin extends BaseController
         $data['title'] = 'Meu Perfil';
         $data['content'] = view('admin/perfil', $data);
         return view('admin/layout', $data);
+    }
+
+    public function colaboradores()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = (int) $this->request->getPost('id');
+            $this->funcionarioModel->update($id, ['deletado' => 1]);
+            session()->setFlashdata('sucesso', 'Colaborador removido com sucesso!');
+            return redirect()->to(base_url('admin/colaboradores'));
+        }
+
+        $filtroNome  = $this->request->getGet('filtro_nome') ?? '';
+        $filtroNivel = $this->request->getGet('filtro_nivel') ?? '';
+
+        $query = $this->funcionarioModel->where('deletado', 0);
+
+        if ($filtroNome) {
+            $query->like('nome', $filtroNome);
+        }
+        if ($filtroNivel) {
+            $query->where('nivel', $filtroNivel);
+        }
+
+        $data['colaboradores'] = $query->orderBy('nome', 'ASC')->findAll();
+        $data['filtroNome']    = $filtroNome;
+        $data['filtroNivel']   = $filtroNivel;
+        $data['title']         = 'Gestão de Colaboradores';
+        $data['content']       = view('admin/colaboradores', $data);
+        return view('admin/layout', $data);
+    }
+
+    public function colaboradorForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['colaborador'] = null;
+        if ($id) {
+            $data['colaborador'] = $this->funcionarioModel->find($id);
+            if (!$data['colaborador'] || $data['colaborador']['deletado']) {
+                session()->setFlashdata('erro', 'Colaborador não encontrado.');
+                return redirect()->to(base_url('admin/colaboradores'));
+            }
+        }
+
+        $data['title']   = $id ? 'Editar Colaborador' : 'Novo Colaborador';
+        $data['content'] = view('admin/colaborador_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    public function colaboradorSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = (int) $this->request->getPost('id');
+
+        $dados = [
+            'nome'                 => $this->request->getPost('nome'),
+            'email'                => $this->request->getPost('email') ?: null,
+            'telefone'             => $this->request->getPost('telefone') ?: null,
+            'nivel'                => $this->request->getPost('nivel'),
+            'data_inicio_contrato' => $this->request->getPost('data_inicio_contrato') ?: null,
+            'data_fim_contrato'    => $this->request->getPost('data_fim_contrato') ?: null,
+            'bloqueado'            => $this->request->getPost('bloqueado') ? 1 : 0,
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->funcionarioModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Colaborador atualizado com sucesso!');
+        } else {
+            $this->funcionarioModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Colaborador criado com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/colaboradores'));
+    }
+
+    /**
+     * Teste do lembrete diário — dispara os e-mails de agendamentos de hoje.
+     * Acessível apenas para admin logado.
+     */
+    public function testarLembretes()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        helper('email_helper');
+
+        $clienteModel = new \App\Models\ClienteModel();
+        $hoje         = date('Y-m-d');
+
+        $agendamentos = $this->agendamentoModel
+            ->where('data', $hoje)
+            ->where('status', 'agendado')
+            ->orderBy('hora_inicio', 'ASC')
+            ->findAll();
+
+        $sep = str_repeat('=', 53);
+
+        if (empty($agendamentos)) {
+            $corpo = implode("\n", [
+                $sep,
+                '[' . date('Y-m-d H:i:s') . '] Nenhum agendamento para hoje (' . date('d/m/Y') . ')',
+                $sep,
+            ]);
+            $this->salvarLogLembrete($hoje, $corpo);
+            return $this->response
+                ->setHeader('Content-Type', 'text/plain; charset=utf-8')
+                ->setBody($corpo);
+        }
+
+        // Agrupar por responsável
+        $porResponsavel = [];
+        foreach ($agendamentos as $ag) {
+            $rid = $ag['responsavel_id'] ?? 1;
+            $porResponsavel[$rid][] = $ag;
+        }
+
+        $linhas = [
+            $sep,
+            '[' . date('Y-m-d H:i:s') . '] Data: ' . date('d/m/Y') . ' | ' . count($agendamentos) . ' agendamento(s)',
+            '',
+        ];
+
+        foreach ($porResponsavel as $responsavelId => $lista) {
+            $responsavel = $this->funcionarioModel->find($responsavelId);
+
+            if (!$responsavel || empty($responsavel['email'])) {
+                $linhas[] = "Responsável ID {$responsavelId}: sem e-mail, ignorado.";
+                continue;
+            }
+
+            $itens = [];
+            foreach ($lista as $ag) {
+                $cliente = $clienteModel->find($ag['cliente_id']);
+                $itens[] = [
+                    'hora_inicio'  => $ag['hora_inicio'],
+                    'hora_fim'     => $ag['hora_fim'] ?? '',
+                    'descricao'    => $ag['descricao'],
+                    'observacoes'  => $ag['observacoes'] ?? '',
+                    'cliente_nome' => $cliente['nome_completo'] ?? 'N/A',
+                    'endereco'     => $cliente['endereco'] ?? '',
+                    'cidade'       => $cliente['cidade'] ?? '',
+                ];
+            }
+
+            $enviado = send_email_lembrete_diario(
+                $responsavel['email'],
+                $responsavel['nome'],
+                $itens,
+                $hoje
+            );
+
+            $status   = $enviado ? '✓ ENVIADO' : '✗ FALHOU';
+            $linhas[] = "{$status} — {$responsavel['nome']} <{$responsavel['email']}> (" . count($itens) . " agendamento(s))";
+        }
+
+        $linhas[] = $sep;
+
+        $corpo = implode("\n", $linhas);
+        $this->salvarLogLembrete($hoje, $corpo);
+
+        return $this->response
+            ->setHeader('Content-Type', 'text/plain; charset=utf-8')
+            ->setBody($corpo);
+    }
+
+    private function salvarLogLembrete(string $data, string $conteudo): void
+    {
+        $dir = WRITEPATH . 'logs/agendamentos/';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0775, true);
+        }
+        file_put_contents(
+            $dir . 'lembrete_' . $data . '.log',
+            $conteudo . PHP_EOL . PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
     }
 }

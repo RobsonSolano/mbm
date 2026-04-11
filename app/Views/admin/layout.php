@@ -66,18 +66,23 @@
                                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                             </a>
                         </li>
+
+                        <!-- Atendimento -->
+                        <li class="nav-item mt-3 border-bottom" style="border-color: #dbdbd9 !important;">
+                            <small class="text-uppercase text-white px-3 fw-semibold" style="font-size:.7rem; letter-spacing:.08em;">Atendimento</small>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link <?php echo (uri_string() == 'admin/solicitacoes') ? 'active' : '' ?>" href="<?php echo base_url('admin/solicitacoes') ?>">
                                 <i class="fas fa-envelope me-2"></i> Solicitações
-                                <?php 
+                                <?php
                                 try {
                                     $solicitacaoModel = new \App\Models\SolicitacaoModel();
                                     $naoLidas = $solicitacaoModel->where('lido', 0)->countAllResults();
-                                    if ($naoLidas > 0): 
+                                    if ($naoLidas > 0):
                                         $badgeText = $naoLidas > 99 ? '+99' : $naoLidas;
                                 ?>
                                         <span class="badge bg-danger rounded-pill ms-1"><?php echo $badgeText ?></span>
-                                <?php 
+                                <?php
                                     endif;
                                 } catch (\Exception $e) {
                                     // Ignora se a coluna 'lido' ainda não existe
@@ -88,15 +93,15 @@
                         <li class="nav-item">
                             <a class="nav-link <?php echo (uri_string() == 'admin/contatos') ? 'active' : '' ?>" href="<?php echo base_url('admin/contatos') ?>">
                                 <i class="fas fa-comments me-2"></i> Contatos
-                                <?php 
+                                <?php
                                 try {
                                     $contatoModel = new \App\Models\ContatoModel();
                                     $naoLidos = $contatoModel->where('lido', 0)->countAllResults();
-                                    if ($naoLidos > 0): 
+                                    if ($naoLidos > 0):
                                         $badgeText = $naoLidos > 99 ? '+99' : $naoLidos;
                                 ?>
                                         <span class="badge bg-danger rounded-pill ms-1"><?php echo $badgeText ?></span>
-                                <?php 
+                                <?php
                                     endif;
                                 } catch (\Exception $e) {
                                     // Ignora se a tabela ainda não existe
@@ -105,13 +110,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/cliente') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/clientes') ?>">
-                                <i class="fas fa-users me-2"></i> Clientes
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/agendamento') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/agendamentos') ?>">
+                                <i class="fas fa-calendar-alt me-2"></i> Agendamentos
                             </a>
                         </li>
+
+                        <!-- Cadastros -->
+                        <li class="nav-item mt-3 border-bottom" style="border-color: #dbdbd9 !important;">
+                            <small class="text-uppercase text-white px-3 fw-semibold" style="font-size:.7rem; letter-spacing:.08em;">Cadastros</small>
+                        </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo (uri_string() == 'admin/marcas') ? 'active' : '' ?>" href="<?php echo base_url('admin/marcas') ?>">
-                                <i class="fas fa-tags me-2"></i> Marcas
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/cliente') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/clientes') ?>">
+                                <i class="fas fa-users me-2"></i> Clientes
                             </a>
                         </li>
                         <li class="nav-item">
@@ -125,15 +135,27 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/estoque') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/estoque') ?>">
-                                <i class="fas fa-boxes me-2"></i> Estoque
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/colaborador') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/colaboradores') ?>">
+                                <i class="fas fa-user-tie me-2"></i> Colaboradores
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/agendamento') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/agendamentos') ?>">
-                                <i class="fas fa-calendar-alt me-2"></i> Agendamentos
+                            <a class="nav-link <?php echo (uri_string() == 'admin/marcas') ? 'active' : '' ?>" href="<?php echo base_url('admin/marcas') ?>">
+                                <i class="fas fa-tags me-2"></i> Marcas
                             </a>
                         </li>
+
+                        <!-- Estoque -->
+                        <li class="nav-item mt-3 border-bottom" style="border-color: #dbdbd9 !important;">
+                            <small class="text-uppercase text-white px-3 fw-semibold" style="font-size:.7rem; letter-spacing:.08em;">Estoque</small>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/estoque') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/estoque') ?>">
+                                <i class="fas fa-boxes me-2"></i> Peças e Materiais
+                            </a>
+                        </li>
+
+                        <!-- Conta -->
                         <li class="nav-item mt-3 border-top pt-3">
                             <a class="nav-link <?php echo (uri_string() == 'admin/perfil') ? 'active' : '' ?>" href="<?php echo base_url('admin/perfil') ?>">
                                 <i class="fas fa-user-cog me-2"></i> Dados Cadastrais
@@ -230,11 +252,11 @@
             });
         });
         <?php if ($flash_message): ?>
-            showToast('<?php echo addslashes($flash_message) ?>', 'success');
+            showToast('<?php echo addslashes(is_array($flash_message) ? implode(' ', $flash_message) : $flash_message) ?>', 'success');
         <?php endif; ?>
-        
+
         <?php if ($flash_erro): ?>
-            showToast('<?php echo addslashes($flash_erro) ?>', 'error');
+            showToast('<?php echo addslashes(is_array($flash_erro) ? implode(' ', $flash_erro) : $flash_erro) ?>', 'error');
         <?php endif; ?>
     });
     </script>

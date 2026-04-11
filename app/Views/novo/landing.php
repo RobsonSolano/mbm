@@ -999,8 +999,8 @@
         const alertSucesso = document.getElementById('alertSucesso');
         const alertErro = document.getElementById('alertErro');
 
-        <?php if (session()->getFlashdata('flash_message')): ?>
-            const flashMessageModal = <?php echo json_encode(session()->getFlashdata('flash_message')); ?>;
+        <?php if (session()->getFlashdata('flash_message_modal')): ?>
+            const flashMessageModal = <?php echo json_encode(session()->getFlashdata('flash_message_modal')); ?>;
 
             // Abre o modal
             document.getElementById('modalSolicitacao').classList.remove('hidden');

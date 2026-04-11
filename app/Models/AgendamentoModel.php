@@ -13,7 +13,7 @@ class AgendamentoModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'cliente_id', 'data', 'hora_inicio', 'hora_fim',
+        'cliente_id', 'responsavel_id', 'data', 'hora_inicio', 'hora_fim',
         'descricao', 'status', 'observacoes'
     ];
 
