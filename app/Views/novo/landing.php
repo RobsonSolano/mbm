@@ -177,7 +177,7 @@
                             <i class="fas fa-star text-yellow-400 mr-1"></i>
                             <i class="fas fa-star text-yellow-400 mr-1"></i>
                             <i class="fas fa-star text-yellow-400 mr-2"></i>
-                            <span>4.9/5 Avaliação</span>
+                            <span>5/5 Avaliação</span>
                         </div>
                         <div class="border-l border-primary-400 h-4"></div>
                         <div>
@@ -248,12 +248,12 @@
                     <p class="text-gray-600 font-medium mt-2">Clientes Atendidos</p>
                 </div>
                 <div class="text-center">
-                    <div class="stat-number">98%</div>
+                    <div class="stat-number">100%</div>
                     <p class="text-gray-600 font-medium mt-2">Satisfação</p>
                 </div>
                 <div class="text-center">
-                    <div class="stat-number">24h</div>
-                    <p class="text-gray-600 font-medium mt-2">Suporte Disponível</p>
+                    <div class="stat-number">Suporte</div>
+                    <p class="text-gray-600 font-medium mt-2">Suporte Online</p>
                 </div>
             </div>
         </div>
@@ -999,8 +999,8 @@
         const alertSucesso = document.getElementById('alertSucesso');
         const alertErro = document.getElementById('alertErro');
 
-        <?php if (session()->getFlashdata('flash_message')): ?>
-            const flashMessageModal = <?php echo json_encode(session()->getFlashdata('flash_message')); ?>;
+        <?php if (session()->getFlashdata('flash_message_modal')): ?>
+            const flashMessageModal = <?php echo json_encode(session()->getFlashdata('flash_message_modal')); ?>;
 
             // Abre o modal
             document.getElementById('modalSolicitacao').classList.remove('hidden');

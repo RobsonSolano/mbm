@@ -10,6 +10,33 @@
         .sidebar {
             min-height: 100vh;
             background: #343a40;
+            transition: transform .25s ease, margin .25s ease;
+        }
+        @media (max-width: 767.98px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                z-index: 1050;
+                transform: translateX(-100%);
+                width: 260px;
+                box-shadow: 4px 0 15px rgba(0,0,0,.2);
+            }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+            body.sidebar-open .sidebar-overlay {
+                opacity: 1;
+                visibility: visible;
+            }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,.4);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .25s, visibility .25s;
+            }
+            main { margin-left: 0 !important; }
         }
         .sidebar .nav-link {
             color: rgba(255,255,255,0.8);
@@ -19,13 +46,18 @@
             color: #fff;
             background: rgba(255,255,255,0.1);
         }
+        .btn-sidebar-toggle {
+            padding: .35rem .6rem;
+            margin-right: .5rem;
+        }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <div class="sidebar-overlay d-md-none" id="sidebarOverlay" onclick="document.body.classList.remove('sidebar-open')"></div>
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="adminSidebar">
                 <div class="position-sticky pt-3">
                     <h5 class="text-white px-3 mb-3">MBM Admin</h5>
                     <ul class="nav flex-column">
@@ -34,18 +66,23 @@
                                 <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                             </a>
                         </li>
+
+                        <!-- Atendimento -->
+                        <li class="nav-item mt-3 border-bottom" style="border-color: #dbdbd9 !important;">
+                            <small class="text-uppercase text-white px-3 fw-semibold" style="font-size:.7rem; letter-spacing:.08em;">Atendimento</small>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link <?php echo (uri_string() == 'admin/solicitacoes') ? 'active' : '' ?>" href="<?php echo base_url('admin/solicitacoes') ?>">
                                 <i class="fas fa-envelope me-2"></i> Solicitações
-                                <?php 
+                                <?php
                                 try {
                                     $solicitacaoModel = new \App\Models\SolicitacaoModel();
                                     $naoLidas = $solicitacaoModel->where('lido', 0)->countAllResults();
-                                    if ($naoLidas > 0): 
+                                    if ($naoLidas > 0):
                                         $badgeText = $naoLidas > 99 ? '+99' : $naoLidas;
                                 ?>
                                         <span class="badge bg-danger rounded-pill ms-1"><?php echo $badgeText ?></span>
-                                <?php 
+                                <?php
                                     endif;
                                 } catch (\Exception $e) {
                                     // Ignora se a coluna 'lido' ainda não existe
@@ -56,15 +93,15 @@
                         <li class="nav-item">
                             <a class="nav-link <?php echo (uri_string() == 'admin/contatos') ? 'active' : '' ?>" href="<?php echo base_url('admin/contatos') ?>">
                                 <i class="fas fa-comments me-2"></i> Contatos
-                                <?php 
+                                <?php
                                 try {
                                     $contatoModel = new \App\Models\ContatoModel();
                                     $naoLidos = $contatoModel->where('lido', 0)->countAllResults();
-                                    if ($naoLidos > 0): 
+                                    if ($naoLidos > 0):
                                         $badgeText = $naoLidos > 99 ? '+99' : $naoLidos;
                                 ?>
                                         <span class="badge bg-danger rounded-pill ms-1"><?php echo $badgeText ?></span>
-                                <?php 
+                                <?php
                                     endif;
                                 } catch (\Exception $e) {
                                     // Ignora se a tabela ainda não existe
@@ -73,13 +110,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/cliente') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/clientes') ?>">
-                                <i class="fas fa-users me-2"></i> Clientes
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/agendamento') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/agendamentos') ?>">
+                                <i class="fas fa-calendar-alt me-2"></i> Agendamentos
                             </a>
                         </li>
+
+                        <!-- Cadastros -->
+                        <li class="nav-item mt-3 border-bottom" style="border-color: #dbdbd9 !important;">
+                            <small class="text-uppercase text-white px-3 fw-semibold" style="font-size:.7rem; letter-spacing:.08em;">Cadastros</small>
+                        </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo (uri_string() == 'admin/marcas') ? 'active' : '' ?>" href="<?php echo base_url('admin/marcas') ?>">
-                                <i class="fas fa-tags me-2"></i> Marcas
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/cliente') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/clientes') ?>">
+                                <i class="fas fa-users me-2"></i> Clientes
                             </a>
                         </li>
                         <li class="nav-item">
@@ -93,10 +135,27 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/estoque') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/estoque') ?>">
-                                <i class="fas fa-boxes me-2"></i> Estoque
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/colaborador') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/colaboradores') ?>">
+                                <i class="fas fa-user-tie me-2"></i> Colaboradores
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo (uri_string() == 'admin/marcas') ? 'active' : '' ?>" href="<?php echo base_url('admin/marcas') ?>">
+                                <i class="fas fa-tags me-2"></i> Marcas
+                            </a>
+                        </li>
+
+                        <!-- Estoque -->
+                        <li class="nav-item mt-3 border-bottom" style="border-color: #dbdbd9 !important;">
+                            <small class="text-uppercase text-white px-3 fw-semibold" style="font-size:.7rem; letter-spacing:.08em;">Estoque</small>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?php echo (strpos(uri_string(), 'admin/estoque') !== false) ? 'active' : '' ?>" href="<?php echo base_url('admin/estoque') ?>">
+                                <i class="fas fa-boxes me-2"></i> Peças e Materiais
+                            </a>
+                        </li>
+
+                        <!-- Conta -->
                         <li class="nav-item mt-3 border-top pt-3">
                             <a class="nav-link <?php echo (uri_string() == 'admin/perfil') ? 'active' : '' ?>" href="<?php echo base_url('admin/perfil') ?>">
                                 <i class="fas fa-user-cog me-2"></i> Dados Cadastrais
@@ -114,7 +173,12 @@
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2"><?php echo isset($title) ? $title : 'Dashboard' ?></h1>
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-outline-secondary btn-sidebar-toggle d-md-none" id="btnSidebarToggle" aria-label="Alternar menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h1 class="h2 mb-0"><?php echo isset($title) ? $title : 'Dashboard' ?></h1>
+                    </div>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <span class="text-muted">Olá, <?php echo session()->get('admin_nome') ?></span>
                     </div>
@@ -178,12 +242,21 @@
     
     // Exibe toasts de flash messages ao carregar a página
     document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('btnSidebarToggle');
+        if (btn) btn.addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
+        document.querySelectorAll('#adminSidebar .nav-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) document.body.classList.remove('sidebar-open');
+            });
+        });
         <?php if ($flash_message): ?>
-            showToast('<?php echo addslashes($flash_message) ?>', 'success');
+            showToast('<?php echo addslashes(is_array($flash_message) ? implode(' ', $flash_message) : $flash_message) ?>', 'success');
         <?php endif; ?>
-        
+
         <?php if ($flash_erro): ?>
-            showToast('<?php echo addslashes($flash_erro) ?>', 'error');
+            showToast('<?php echo addslashes(is_array($flash_erro) ? implode(' ', $flash_erro) : $flash_erro) ?>', 'error');
         <?php endif; ?>
     });
     </script>

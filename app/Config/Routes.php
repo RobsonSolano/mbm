@@ -76,6 +76,17 @@ $routes->get('/admin/fornecedor/(:num)', 'Admin::fornecedorView/$1');
 $routes->get('/admin/fornecedor/(:num)/editar', 'Admin::fornecedorForm/$1');
 $routes->post('/admin/fornecedores/salvar', 'Admin::fornecedorSalvar');
 
+// Agendamentos
+$routes->get('/admin/agendamentos', 'Admin::agendamentos');
+$routes->get('/admin/agendamentos/dia/(:segment)', 'Admin::agendamentosDia/$1');
+$routes->get('/admin/agendamentos/slots-ocupados/(:segment)', 'Admin::agendamentosSlotsOcupados/$1');
+$routes->get('/admin/agendamento/verificar-conflito', 'Admin::agendamentoVerificarConflito');
+$routes->get('/admin/agendamento/novo', 'Admin::agendamentoForm');
+$routes->get('/admin/agendamento/(:num)/editar', 'Admin::agendamentoForm/$1');
+$routes->post('/admin/agendamento/salvar', 'Admin::agendamentoSalvar');
+$routes->post('/admin/agendamento/cancelar', 'Admin::agendamentoCancelar');
+$routes->post('/admin/agendamento/concluir', 'Admin::agendamentoConcluir');
+
 // Estoque
 $routes->get('/admin/estoque', 'Admin::estoque');
 $routes->post('/admin/estoque', 'Admin::estoque');
@@ -85,9 +96,21 @@ $routes->get('/admin/estoque/peca/(:num)/editar', 'Admin::estoqueForm/$1');
 $routes->post('/admin/estoque/salvar', 'Admin::estoqueSalvar');
 $routes->post('/admin/estoque/ajustar', 'Admin::estoqueAjustar');
 
+// Colaboradores
+$routes->get('/admin/colaboradores', 'Admin::colaboradores');
+$routes->post('/admin/colaboradores', 'Admin::colaboradores');
+$routes->get('/admin/colaborador/novo', 'Admin::colaboradorForm');
+$routes->get('/admin/colaborador/(:num)/editar', 'Admin::colaboradorForm/$1');
+$routes->post('/admin/colaboradores/salvar', 'Admin::colaboradorSalvar');
+
 // Perfil do Admin
 $routes->get('/admin/perfil', 'Admin::perfil');
 $routes->post('/admin/perfil', 'Admin::perfil');
+
+// Cron — lembrete diário de agendamentos (token obrigatório)
+$routes->get('/cron/lembretes', 'Cron::lembretes');
+// Teste do cron via painel admin (sem token, requer login)
+$routes->get('/admin/testar-lembretes', 'Admin::testarLembretes');
 
 if (ENVIRONMENT == 'development') {
     $routes->get('/view_email_contato', 'Home::view_email_contato');
