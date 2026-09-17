@@ -6,8 +6,11 @@ writable/uploads/*
 writable/uploads/marcas/*
 writable/uploads/parceiros/*
 .env
+/.env
 
 
 # Ignore node_modules and vendor
+/node_modules/*
+/vendor/*
 node_modules/*
 vendor/*

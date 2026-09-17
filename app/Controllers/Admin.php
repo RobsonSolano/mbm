@@ -10,6 +10,11 @@ use App\Models\ParceiroModel;
 use App\Models\AcessoModel;
 use App\Models\ClienteModel;
 use App\Models\ServicoClienteModel;
+use App\Models\EstoqueModel;
+use App\Models\EstoqueHistoricoModel;
+use App\Models\FornecedorModel;
+use App\Models\AgendamentoModel;
+use App\Models\FuncionarioModel;
 
 class Admin extends BaseController
 {
@@ -21,6 +26,11 @@ class Admin extends BaseController
     protected $acessoModel;
     protected $clienteModel;
     protected $servicoClienteModel;
+    protected $estoqueModel;
+    protected $estoqueHistoricoModel;
+    protected $fornecedorModel;
+    protected $agendamentoModel;
+    protected $funcionarioModel;
 
     public function __construct()
     {
@@ -32,6 +42,11 @@ class Admin extends BaseController
         $this->acessoModel = new AcessoModel();
         $this->clienteModel = new ClienteModel();
         $this->servicoClienteModel = new ServicoClienteModel();
+        $this->estoqueModel = new EstoqueModel();
+        $this->estoqueHistoricoModel = new EstoqueHistoricoModel();
+        $this->fornecedorModel = new FornecedorModel();
+        $this->agendamentoModel = new AgendamentoModel();
+        $this->funcionarioModel = new FuncionarioModel();
         date_default_timezone_set('America/Sao_Paulo');
     }
 
@@ -103,6 +118,14 @@ class Admin extends BaseController
         }
 
         if ($this->request->getMethod() === 'post') {
+            $recaptcha = new \App\Libraries\Mc_recaptcha();
+            $recaptchaValid = $recaptcha->validated();
+
+            if (!$recaptchaValid) {
+                $session->setFlashdata('erro', 'Por favor, marque a opção "Não sou um robô" (reCAPTCHA).');
+                return view('admin/login', ['recaptcha_not_checked' => true]);
+            }
+
             $email = $this->request->getPost('email');
             $senha = $this->request->getPost('senha');
             
@@ -551,6 +574,110 @@ class Admin extends BaseController
         }
 
         return redirect()->to(base_url('admin/parceiros'));
+    }
+
+    /**
+     * Listagem de Fornecedores
+     */
+    public function fornecedores()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = $this->request->getPost('id');
+            $this->fornecedorModel->delete($id);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Fornecedor excluído com sucesso!');
+            return redirect()->to(base_url('admin/fornecedores'));
+        }
+
+        $filtroNome = $this->request->getGet('filtro_nome') ?? '';
+        $query = $this->fornecedorModel;
+        if ($filtroNome) {
+            $query = $query->like('nome', $filtroNome);
+        }
+        $data['fornecedores'] = $query->orderBy('nome', 'ASC')->findAll();
+        $data['filtroNome'] = $filtroNome;
+        $data['title'] = 'Gestão de Fornecedores';
+        $data['content'] = view('admin/fornecedores', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Visualizar Fornecedor
+     */
+    public function fornecedorView($id)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['fornecedor'] = $this->fornecedorModel->find($id);
+        if (!$data['fornecedor']) {
+            $session = session();
+            $session->setFlashdata('erro', 'Fornecedor não encontrado.');
+            return redirect()->to(base_url('admin/fornecedores'));
+        }
+
+        $data['title'] = 'Fornecedor - ' . $data['fornecedor']['nome'];
+        $data['content'] = view('admin/fornecedor_view', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Formulário de Fornecedor (criar/editar)
+     */
+    public function fornecedorForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['fornecedor'] = null;
+        if ($id) {
+            $data['fornecedor'] = $this->fornecedorModel->find($id);
+            if (!$data['fornecedor']) {
+                $session = session();
+                $session->setFlashdata('erro', 'Fornecedor não encontrado.');
+                return redirect()->to(base_url('admin/fornecedores'));
+            }
+        }
+
+        $data['title'] = $id ? 'Editar Fornecedor' : 'Novo Fornecedor';
+        $data['content'] = view('admin/fornecedor_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar Fornecedor
+     */
+    public function fornecedorSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $dados = [
+            'nome' => $this->request->getPost('nome'),
+            'contato' => $this->request->getPost('contato'),
+            'email' => $this->request->getPost('email'),
+            'observacoes' => $this->request->getPost('observacoes'),
+            'ativo' => $this->request->getPost('ativo') ? 1 : 0
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->fornecedorModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Fornecedor atualizado com sucesso!');
+        } else {
+            $this->fornecedorModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Fornecedor criado com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/fornecedores'));
     }
 
     /**
@@ -1039,6 +1166,469 @@ class Admin extends BaseController
     }
 
     /**
+     * Gestão de Estoque
+     */
+    public function estoque()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = $this->request->getPost('id');
+            $this->estoqueHistoricoModel->where('peca_id', $id)->delete();
+            $this->estoqueModel->delete($id);
+            $session = session();
+            $session->setFlashdata('sucesso', 'Peça excluída com sucesso!');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+
+        $filtroNome = $this->request->getGet('filtro_nome') ?? '';
+        $db = \Config\Database::connect();
+        try {
+            $builder = $db->table('estoque_pecas')
+                ->select('estoque_pecas.*, fornecedores.nome as fornecedor_nome')
+                ->join('fornecedores', 'fornecedores.id = estoque_pecas.fornecedor_id', 'left');
+            if ($filtroNome) {
+                $builder->like('estoque_pecas.nome', $filtroNome);
+            }
+            $data['pecas'] = $builder->orderBy('estoque_pecas.nome', 'ASC')->get()->getResultArray();
+        } catch (\Throwable $e) {
+            $query = $this->estoqueModel;
+            if ($filtroNome) {
+                $query = $query->like('nome', $filtroNome);
+            }
+            $data['pecas'] = $query->orderBy('nome', 'ASC')->findAll();
+            foreach ($data['pecas'] as &$p) {
+                $p['fornecedor_nome'] = null;
+            }
+        }
+        $data['filtroNome'] = $filtroNome;
+        $data['title'] = 'Gestão de Estoque';
+        $data['content'] = view('admin/estoque', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar Peça
+     */
+    public function estoqueSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $fornecedorId = $this->request->getPost('fornecedor_id');
+        $dados = [
+            'nome' => $this->request->getPost('nome'),
+            'quantidade' => (int) $this->request->getPost('quantidade'),
+            'descricao' => $this->request->getPost('descricao'),
+            'fornecedor_id' => $fornecedorId ? (int) $fornecedorId : null,
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->estoqueModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Peça atualizada com sucesso!');
+        } else {
+            $this->estoqueModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Peça cadastrada com sucesso!');
+        }
+        return redirect()->to(base_url('admin/estoque'));
+    }
+
+    /**
+     * Formulário de Peça (criar/editar)
+     */
+    public function estoqueForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['peca'] = null;
+        if ($id) {
+            $data['peca'] = $this->estoqueModel->find($id);
+            if (!$data['peca']) {
+                $session = session();
+                $session->setFlashdata('erro', 'Peça não encontrada.');
+                return redirect()->to(base_url('admin/estoque'));
+            }
+        }
+
+        $data['fornecedores'] = $this->fornecedorModel->orderBy('nome', 'ASC')->findAll();
+        $data['title'] = $id ? 'Editar Peça' : 'Nova Peça';
+        $data['content'] = view('admin/estoque_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Visualizar Peça (detalhe + histórico)
+     */
+    public function estoqueView($id)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $peca = $this->estoqueModel->find($id);
+        if (!$peca) {
+            $session = session();
+            $session->setFlashdata('erro', 'Peça não encontrada.');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+        $data['peca'] = $peca;
+        if (!empty($peca['fornecedor_id'])) {
+            $data['fornecedor'] = $this->fornecedorModel->find($peca['fornecedor_id']);
+        } else {
+            $data['fornecedor'] = null;
+        }
+
+        $data['historico'] = $this->estoqueHistoricoModel->buscarPorPeca($id);
+        $data['title'] = 'Peça - ' . $data['peca']['nome'];
+        $data['content'] = view('admin/estoque_view', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Aumentar ou diminuir quantidade (POST)
+     */
+    public function estoqueAjustar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $tipo = $this->request->getPost('tipo'); // 'aumento' ou 'diminuicao'
+        $quantidade = (int) $this->request->getPost('quantidade');
+        $descricao = $this->request->getPost('descricao');
+
+        if (!$id || !in_array($tipo, ['aumento', 'diminuicao']) || $quantidade <= 0) {
+            $session = session();
+            $session->setFlashdata('erro', 'Dados inválidos.');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+
+        $peca = $this->estoqueModel->find($id);
+        if (!$peca) {
+            $session = session();
+            $session->setFlashdata('erro', 'Peça não encontrada.');
+            return redirect()->to(base_url('admin/estoque'));
+        }
+
+        $qtdAtual = (int) $peca['quantidade'];
+        $qtdAnterior = $qtdAtual;
+
+        if ($tipo === 'diminuicao') {
+            if ($quantidade > $qtdAtual) {
+                $session = session();
+                $session->setFlashdata('erro', 'Quantidade a diminuir não pode ser maior que o estoque atual (' . $qtdAtual . ').');
+                return redirect()->to(base_url('admin/estoque'));
+            }
+            $qtdNova = $qtdAtual - $quantidade;
+        } else {
+            $qtdNova = $qtdAtual + $quantidade;
+        }
+
+        $this->estoqueModel->update($id, ['quantidade' => $qtdNova]);
+
+        $this->estoqueHistoricoModel->insert([
+            'peca_id' => $id,
+            'tipo' => $tipo,
+            'quantidade' => $quantidade,
+            'quantidade_anterior' => $qtdAnterior,
+            'quantidade_nova' => $qtdNova,
+            'descricao' => $descricao ?: null,
+            'criado_em' => date('Y-m-d H:i:s'),
+        ]);
+
+        $session = session();
+        $session->setFlashdata('sucesso', $tipo === 'aumento' ? 'Estoque aumentado com sucesso!' : 'Estoque diminuído com sucesso!');
+        return redirect()->to(base_url('admin/estoque'));
+    }
+
+    /**
+     * Agendamentos - Calendário principal (mês ou semana)
+     */
+    public function agendamentos()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $vista = $this->request->getGet('vista') ?? 'mes';
+        $ano = (int) ($this->request->getGet('ano') ?? date('Y'));
+        $mes = (int) ($this->request->getGet('mes') ?? date('m'));
+        $dia = (int) ($this->request->getGet('dia') ?? date('d'));
+        $mes = max(1, min(12, $mes));
+        if ($ano < 2020 || $ano > 2030) $ano = date('Y');
+
+        $data['vista'] = $vista;
+        $data['ano'] = $ano;
+        $data['mes'] = $mes;
+        $data['dia'] = $dia;
+
+        if ($vista === 'semana') {
+            $dataRef = sprintf('%04d-%02d-%02d', $ano, $mes, min($dia, date('t', strtotime("{$ano}-{$mes}-01"))));
+            $ts = strtotime($dataRef);
+            $dow = (int) date('w', $ts); // 0=Dom..6=Sab
+            $domingo = strtotime("-{$dow} days", $ts);
+            $sabado = strtotime('+6 days', $domingo);
+            $data['semanaInicio'] = date('Y-m-d', $domingo);
+            $data['semanaFim'] = date('Y-m-d', $sabado);
+            $data['diasSemana'] = [];
+            for ($i = 0; $i < 7; $i++) {
+                $d = strtotime("+{$i} days", $domingo);
+                $data['diasSemana'][] = [
+                    'data' => date('Y-m-d', $d),
+                    'dia' => (int) date('d', $d),
+                    'mes' => (int) date('m', $d),
+                    'nome' => ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][$i],
+                ];
+            }
+            $db = \Config\Database::connect();
+            $agendamentos = $db->table('agendamentos')
+                ->select('agendamentos.*')
+                ->where('data >=', $data['semanaInicio'])
+                ->where('data <=', $data['semanaFim'])
+                ->whereIn('status', ['agendado', 'concluido'])
+                ->orderBy('data', 'ASC')
+                ->orderBy('hora_inicio', 'ASC')
+                ->get()
+                ->getResultArray();
+            $porDataHora = [];
+            foreach ($agendamentos as $a) {
+                $cliente = $db->table('clientes')->select('nome_completo')->where('id', $a['cliente_id'])->get()->getRowArray();
+                $a['cliente_nome'] = $cliente['nome_completo'] ?? '-';
+                $raw = $a['data'] ?? '';
+                $ts = strtotime((string)$raw);
+                $dataKey = $ts ? date('Y-m-d', $ts) : substr((string)$raw, 0, 10);
+                if (!isset($porDataHora[$dataKey])) $porDataHora[$dataKey] = [];
+                $porDataHora[$dataKey][] = $a;
+            }
+            $data['agendamentosPorDia'] = $porDataHora;
+            $data['tituloSemana'] = date('d/m', $domingo) . ' – ' . date('d/m/Y', $sabado);
+            $mesesPT = ['', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+            $data['tituloMes'] = 'Semana de ' . date('d', $domingo) . ' a ' . date('d', $sabado) . ' de ' . $mesesPT[(int) date('m', $domingo)] . ' ' . date('Y', $domingo);
+        } else {
+            $data['contagemPorDia'] = $this->agendamentoModel->contarPorDiaNoMes($ano, $mes);
+            $mesesPT = ['', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+            $data['tituloMes'] = ucfirst($mesesPT[$mes]) . ' ' . $ano;
+        }
+
+        $data['novo'] = (bool) $this->request->getGet('novo');
+        $data['dataInicial'] = $this->request->getGet('data'); // para auto-abrir modal ao vir da listagem
+        if ($data['novo']) {
+            $data['clientes'] = $this->clienteModel->where('deletado', 0)->where('bloqueado', 0)->orderBy('nome_completo', 'ASC')->findAll();
+            $data['slots'] = AgendamentoModel::getSlotsHorario();
+        } else {
+            $data['clientes'] = [];
+            $data['slots'] = AgendamentoModel::getSlotsHorario();
+        }
+
+        $data['title'] = 'Agendamentos';
+        $data['content'] = view('admin/agendamentos', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * API: slots ocupados no dia (JSON)
+     */
+    public function agendamentosSlotsOcupados($dataStr)
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false]);
+        }
+        $ocupados = $this->agendamentoModel->getSlotsOcupados($dataStr);
+        return $this->response->setJSON(['success' => true, 'ocupados' => $ocupados]);
+    }
+
+    /**
+     * Agendamentos do dia (JSON para modal)
+     */
+    public function agendamentosDia($dataStr)
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false]);
+        }
+
+        $agendamentos = $this->agendamentoModel->buscarPorDia($dataStr);
+        $db = \Config\Database::connect();
+        $comCliente = [];
+        foreach ($agendamentos as $a) {
+            $cliente = $db->table('clientes')->select('nome_completo, celular')->where('id', $a['cliente_id'])->get()->getRowArray();
+            $a['cliente_nome'] = $cliente['nome_completo'] ?? '-';
+            $a['cliente_celular'] = $cliente['celular'] ?? '';
+            $comCliente[] = $a;
+        }
+        return $this->response->setJSON(['success' => true, 'agendamentos' => $comCliente, 'data' => $dataStr]);
+    }
+
+    /**
+     * Formulário novo/editar agendamento
+     */
+    public function agendamentoForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['agendamento'] = null;
+        $data['dataPreenchida'] = $this->request->getGet('data') ?? date('Y-m-d');
+        $data['horaPreenchida'] = $this->request->getGet('hora') ?? null;
+
+        if ($id) {
+            $data['agendamento'] = $this->agendamentoModel->find($id);
+            if (!$data['agendamento']) {
+                session()->setFlashdata('erro', 'Agendamento não encontrado.');
+                return redirect()->to(base_url('admin/agendamentos'));
+            }
+            $data['dataPreenchida'] = $data['agendamento']['data'];
+        }
+
+        $data['clientes'] = $this->clienteModel->where('deletado', 0)->where('bloqueado', 0)->orderBy('nome_completo', 'ASC')->findAll();
+        $data['slots'] = AgendamentoModel::getSlotsHorario();
+        $data['title'] = $id ? 'Editar Agendamento' : 'Novo Agendamento';
+        $data['content'] = view('admin/agendamento_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    /**
+     * Salvar agendamento
+     */
+    public function agendamentoSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        $dataAgend = $this->request->getPost('data');
+        $horaInicio = $this->request->getPost('hora_inicio');
+        $horaFim = $this->request->getPost('hora_fim') ?: date('H:i', strtotime($horaInicio . ' +1 hour'));
+
+        if ($this->agendamentoModel->temConflito($dataAgend, $horaInicio, $horaFim, $id ? (int) $id : null)) {
+            session()->setFlashdata('erro', 'Este horário já está ocupado. Escolha outro.');
+            return redirect()->back()->withInput();
+        }
+
+        $dados = [
+            'cliente_id'     => (int) $this->request->getPost('cliente_id'),
+            'responsavel_id' => (int) ($this->request->getPost('responsavel_id') ?: 1),
+            'data'           => $dataAgend,
+            'hora_inicio'    => $horaInicio,
+            'hora_fim'       => $horaFim,
+            'descricao'      => $this->request->getPost('descricao'),
+            'status'         => $this->request->getPost('status') ?: 'agendado',
+            'observacoes'    => $this->request->getPost('observacoes') ?: null,
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->agendamentoModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Agendamento atualizado!');
+        } else {
+            $this->agendamentoModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Agendamento criado!');
+        }
+
+        // Notificação ao responsável apenas na criação
+        if (!$id) {
+            helper('email_helper');
+            $responsavel = $this->funcionarioModel->find($dados['responsavel_id']);
+            if ($responsavel && !empty($responsavel['email'])) {
+                $cliente = $this->clienteModel->find($dados['cliente_id']);
+                $clienteNome = $cliente['nome_completo'] ?? $cliente['nome'] ?? '';
+                send_email_agendamento('criado', $responsavel['email'], $dados, $clienteNome);
+            }
+        }
+
+        return redirect()->to(base_url('admin/agendamentos'));
+    }
+
+    /**
+     * API: verificar conflito de horário (JSON)
+     */
+    public function agendamentoVerificarConflito()
+    {
+        if ($this->verificarLogin()) {
+            return $this->response->setJSON(['success' => false]);
+        }
+
+        $data = $this->request->getGet('data');
+        $horaInicio = $this->request->getGet('hora_inicio');
+        $horaFim = $this->request->getGet('hora_fim');
+        $id = $this->request->getGet('id') ? (int) $this->request->getGet('id') : null;
+
+        if (!$data || !$horaInicio) {
+            return $this->response->setJSON(['success' => true, 'conflito' => false]);
+        }
+
+        $conflito = $this->agendamentoModel->temConflito($data, $horaInicio, $horaFim ?? '', $id);
+        return $this->response->setJSON(['success' => true, 'conflito' => $conflito]);
+    }
+
+    /**
+     * Cancelar agendamento (status)
+     */
+    public function agendamentoCancelar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        if ($id) {
+            $this->agendamentoModel->update($id, ['status' => 'cancelado']);
+            session()->setFlashdata('sucesso', 'Agendamento cancelado.');
+
+            // Notificação ao responsável
+            helper('email_helper');
+            $agendamento = $this->agendamentoModel->find($id);
+            if ($agendamento) {
+                $responsavel = $this->funcionarioModel->find($agendamento['responsavel_id'] ?? 1);
+                if ($responsavel && !empty($responsavel['email'])) {
+                    $cliente = $this->clienteModel->find($agendamento['cliente_id']);
+                    $clienteNome = $cliente['nome_completo'] ?? $cliente['nome'] ?? '';
+                    send_email_agendamento('cancelado', $responsavel['email'], $agendamento, $clienteNome);
+                }
+            }
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Marcar como concluído
+     */
+    public function agendamentoConcluir()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = $this->request->getPost('id');
+        if ($id) {
+            $this->agendamentoModel->update($id, ['status' => 'concluido']);
+            session()->setFlashdata('sucesso', 'Agendamento marcado como concluído.');
+
+            // Notificação ao responsável
+            helper('email_helper');
+            $agendamento = $this->agendamentoModel->find($id);
+            if ($agendamento) {
+                $responsavel = $this->funcionarioModel->find($agendamento['responsavel_id'] ?? 1);
+                if ($responsavel && !empty($responsavel['email'])) {
+                    $cliente = $this->clienteModel->find($agendamento['cliente_id']);
+                    $clienteNome = $cliente['nome_completo'] ?? $cliente['nome'] ?? '';
+                    send_email_agendamento('concluido', $responsavel['email'], $agendamento, $clienteNome);
+                }
+            }
+        }
+        return redirect()->back();
+    }
+
+    /**
      * Perfil do Admin
      */
     public function perfil()
@@ -1090,5 +1680,192 @@ class Admin extends BaseController
         $data['title'] = 'Meu Perfil';
         $data['content'] = view('admin/perfil', $data);
         return view('admin/layout', $data);
+    }
+
+    public function colaboradores()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        if ($this->request->getMethod() === 'post' && $this->request->getPost('acao') === 'excluir') {
+            $id = (int) $this->request->getPost('id');
+            $this->funcionarioModel->update($id, ['deletado' => 1]);
+            session()->setFlashdata('sucesso', 'Colaborador removido com sucesso!');
+            return redirect()->to(base_url('admin/colaboradores'));
+        }
+
+        $filtroNome  = $this->request->getGet('filtro_nome') ?? '';
+        $filtroNivel = $this->request->getGet('filtro_nivel') ?? '';
+
+        $query = $this->funcionarioModel->where('deletado', 0);
+
+        if ($filtroNome) {
+            $query->like('nome', $filtroNome);
+        }
+        if ($filtroNivel) {
+            $query->where('nivel', $filtroNivel);
+        }
+
+        $data['colaboradores'] = $query->orderBy('nome', 'ASC')->findAll();
+        $data['filtroNome']    = $filtroNome;
+        $data['filtroNivel']   = $filtroNivel;
+        $data['title']         = 'Gestão de Colaboradores';
+        $data['content']       = view('admin/colaboradores', $data);
+        return view('admin/layout', $data);
+    }
+
+    public function colaboradorForm($id = null)
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $data['colaborador'] = null;
+        if ($id) {
+            $data['colaborador'] = $this->funcionarioModel->find($id);
+            if (!$data['colaborador'] || $data['colaborador']['deletado']) {
+                session()->setFlashdata('erro', 'Colaborador não encontrado.');
+                return redirect()->to(base_url('admin/colaboradores'));
+            }
+        }
+
+        $data['title']   = $id ? 'Editar Colaborador' : 'Novo Colaborador';
+        $data['content'] = view('admin/colaborador_form', $data);
+        return view('admin/layout', $data);
+    }
+
+    public function colaboradorSalvar()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        $id = (int) $this->request->getPost('id');
+
+        $dados = [
+            'nome'                 => $this->request->getPost('nome'),
+            'email'                => $this->request->getPost('email') ?: null,
+            'telefone'             => $this->request->getPost('telefone') ?: null,
+            'nivel'                => $this->request->getPost('nivel'),
+            'data_inicio_contrato' => $this->request->getPost('data_inicio_contrato') ?: null,
+            'data_fim_contrato'    => $this->request->getPost('data_fim_contrato') ?: null,
+            'bloqueado'            => $this->request->getPost('bloqueado') ? 1 : 0,
+        ];
+
+        $session = session();
+        if ($id) {
+            $this->funcionarioModel->update($id, $dados);
+            $session->setFlashdata('sucesso', 'Colaborador atualizado com sucesso!');
+        } else {
+            $this->funcionarioModel->insert($dados);
+            $session->setFlashdata('sucesso', 'Colaborador criado com sucesso!');
+        }
+
+        return redirect()->to(base_url('admin/colaboradores'));
+    }
+
+    /**
+     * Teste do lembrete diário — dispara os e-mails de agendamentos de hoje.
+     * Acessível apenas para admin logado.
+     */
+    public function testarLembretes()
+    {
+        if ($this->verificarLogin()) {
+            return redirect()->to(base_url('admin/login'));
+        }
+
+        helper('email_helper');
+
+        $clienteModel = new \App\Models\ClienteModel();
+        $hoje         = date('Y-m-d');
+
+        $agendamentos = $this->agendamentoModel
+            ->where('data', $hoje)
+            ->where('status', 'agendado')
+            ->orderBy('hora_inicio', 'ASC')
+            ->findAll();
+
+        $sep = str_repeat('=', 53);
+
+        if (empty($agendamentos)) {
+            $corpo = implode("\n", [
+                $sep,
+                '[' . date('Y-m-d H:i:s') . '] Nenhum agendamento para hoje (' . date('d/m/Y') . ')',
+                $sep,
+            ]);
+            $this->salvarLogLembrete($hoje, $corpo);
+            return $this->response
+                ->setHeader('Content-Type', 'text/plain; charset=utf-8')
+                ->setBody($corpo);
+        }
+
+        // Agrupar por responsável
+        $porResponsavel = [];
+        foreach ($agendamentos as $ag) {
+            $rid = $ag['responsavel_id'] ?? 1;
+            $porResponsavel[$rid][] = $ag;
+        }
+
+        $linhas = [
+            $sep,
+            '[' . date('Y-m-d H:i:s') . '] Data: ' . date('d/m/Y') . ' | ' . count($agendamentos) . ' agendamento(s)',
+            '',
+        ];
+
+        foreach ($porResponsavel as $responsavelId => $lista) {
+            $responsavel = $this->funcionarioModel->find($responsavelId);
+
+            if (!$responsavel || empty($responsavel['email'])) {
+                $linhas[] = "Responsável ID {$responsavelId}: sem e-mail, ignorado.";
+                continue;
+            }
+
+            $itens = [];
+            foreach ($lista as $ag) {
+                $cliente = $clienteModel->find($ag['cliente_id']);
+                $itens[] = [
+                    'hora_inicio'  => $ag['hora_inicio'],
+                    'hora_fim'     => $ag['hora_fim'] ?? '',
+                    'descricao'    => $ag['descricao'],
+                    'observacoes'  => $ag['observacoes'] ?? '',
+                    'cliente_nome' => $cliente['nome_completo'] ?? 'N/A',
+                    'endereco'     => $cliente['endereco'] ?? '',
+                    'cidade'       => $cliente['cidade'] ?? '',
+                ];
+            }
+
+            $enviado = send_email_lembrete_diario(
+                $responsavel['email'],
+                $responsavel['nome'],
+                $itens,
+                $hoje
+            );
+
+            $status   = $enviado ? '✓ ENVIADO' : '✗ FALHOU';
+            $linhas[] = "{$status} — {$responsavel['nome']} <{$responsavel['email']}> (" . count($itens) . " agendamento(s))";
+        }
+
+        $linhas[] = $sep;
+
+        $corpo = implode("\n", $linhas);
+        $this->salvarLogLembrete($hoje, $corpo);
+
+        return $this->response
+            ->setHeader('Content-Type', 'text/plain; charset=utf-8')
+            ->setBody($corpo);
+    }
+
+    private function salvarLogLembrete(string $data, string $conteudo): void
+    {
+        $dir = WRITEPATH . 'logs/agendamentos/';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0775, true);
+        }
+        file_put_contents(
+            $dir . 'lembrete_' . $data . '.log',
+            $conteudo . PHP_EOL . PHP_EOL,
+            FILE_APPEND | LOCK_EX
+        );
     }
 }

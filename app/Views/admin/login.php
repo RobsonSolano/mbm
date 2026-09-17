@@ -41,6 +41,13 @@
                         <label for="senha" class="form-label">Senha</label>
                         <input type="password" class="form-control" id="senha" name="senha" required>
                     </div>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <div class="g-recaptcha <?php echo isset($recaptcha_not_checked) && $recaptcha_not_checked ? 'border border-2 border-danger rounded' : '' ?>" 
+                             data-sitekey="<?php echo SITE_KEY_RECAPTCHA ?>"></div>
+                    </div>
+                    <?php if (isset($recaptcha_not_checked) && $recaptcha_not_checked): ?>
+                    <p class="text-danger small mb-2">Marque a opção "Não sou um robô" para continuar.</p>
+                    <?php endif; ?>
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-sign-in-alt me-2"></i> Entrar
                     </button>
@@ -48,6 +55,7 @@
             </div>
         </div>
     </div>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Toast Container -->
@@ -94,7 +102,7 @@
     // Exibe toast de erro ao carregar a página
     document.addEventListener('DOMContentLoaded', function() {
         <?php if ($flash_erro): ?>
-            showToast('<?php echo addslashes($flash_erro) ?>', 'error');
+            showToast('<?php echo addslashes(is_string($flash_erro) ? $flash_erro : '') ?>', 'error');
         <?php endif; ?>
     });
     </script>

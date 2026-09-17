@@ -54,13 +54,8 @@ class Novo extends BaseController
 
     public function solicitar()
     {
-        // Verificar reCAPTCHA primeiro
-        $recaptcha = new \App\Libraries\Mc_recaptcha();
-        $recaptcha_valid = $recaptcha->validated();
-        $recaptcha_not_checked = !$recaptcha_valid;
-
         $validation = \Config\Services::validation();
-        
+
         $validation->setRules([
             'nome' => [
                 'label' => 'Nome Completo',
@@ -95,35 +90,12 @@ class Novo extends BaseController
             ]
         ]);
 
-        if (!$validation->withRequest($this->request)->run() || !$recaptcha_valid) {
+        if (!$validation->withRequest($this->request)->run()) {
             $session = session();
-            if (!$recaptcha_valid) {
-                $session->setFlashdata('flash_message', [
-                    'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, marque a caixa de validação do reCAPTCHA.', 
-                    'tipo' => 'danger'
-                ]);
-                // Passa o erro do reCAPTCHA para a view
-                $data['recaptcha_not_checked'] = true;
-                $data['marcas'] = $this->marcaModel->buscarAtivas();
-                $data['parceiros'] = $this->parceiroModel->buscarAtivos();
-                
-                $cumprimento = "";
-                if (date('H') < 12) {
-                    $cumprimento = "Bom dia,%20";
-                } elseif (date('H') >= 12 && date('H') < 18) {
-                    $cumprimento = "Boa tarde,%20";
-                } else {
-                    $cumprimento = "Boa noite,%20";
-                }
-                $data['mensagem_whatsapp'] = $cumprimento . "%0Aconheci%20o%20site%20" . base_url() . "%0Ae%20gostaria%20de%20saber%20mais.";
-                $data['title'] = 'MBM Climatização';
-                return view('novo/landing', $data);
-            } else {
-                $session->setFlashdata('flash_message', [
-                    'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, preencha todos os campos corretamente.', 
-                    'tipo' => 'danger'
-                ]);
-            }
+            $session->setFlashdata('flash_message_modal', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, preencha todos os campos corretamente.',
+                'tipo' => 'danger'
+            ]);
             return redirect()->to(base_url('novo'));
         }
 
@@ -132,8 +104,8 @@ class Novo extends BaseController
         $nome_completo = explode(' ', trim($nome));
         if (empty($nome_completo[0]) || empty($nome_completo[1])) {
             $session = session();
-            $session->setFlashdata('flash_message', [
-                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe o nome completo.', 
+            $session->setFlashdata('flash_message_modal', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe o nome completo.',
                 'tipo' => 'danger'
             ]);
             return redirect()->to(base_url('novo'));
@@ -146,8 +118,8 @@ class Novo extends BaseController
         }
         if (strlen($celular) < 10) {
             $session = session();
-            $session->setFlashdata('flash_message', [
-                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe um número de celular válido (11 dígitos).', 
+            $session->setFlashdata('flash_message_modal', [
+                'mensagem' => '<strong>Erro ao enviar solicitação.</strong><br>Por favor, informe um número de celular válido (11 dígitos).',
                 'tipo' => 'danger'
             ]);
             return redirect()->to(base_url('novo'));
@@ -176,8 +148,8 @@ class Novo extends BaseController
         }
 
         $session = session();
-        $session->setFlashdata('flash_message', [
-            'mensagem' => '<strong>Solicitação enviada com sucesso!</strong><br>Em breve nossa equipe entrará em contato.<br><small>Nós agradecemos o contato</small>.', 
+        $session->setFlashdata('flash_message_modal', [
+            'mensagem' => '<strong>Solicitação enviada com sucesso!</strong><br>Em breve nossa equipe entrará em contato.<br><small>Nós agradecemos o contato</small>.',
             'tipo' => 'success'
         ]);
 
